@@ -1,7 +1,7 @@
 import React from "react";
 
-function Reading() {
+function ReadingMain() {
   return <div>Reading</div>;
 }
 
-export default Reading;
+export default ReadingMain;
