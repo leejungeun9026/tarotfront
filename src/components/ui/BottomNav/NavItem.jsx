@@ -1,9 +1,9 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components'
+import React from "react";
+import { NavLink } from "react-router-dom";
+import styled from "styled-components";
 
 const Li = styled.li`
-  width: calc((100% - 32px)/5);
+  width: calc((100% - 32px) / 5);
   max-width: 68px;
 `;
 
@@ -41,15 +41,13 @@ function NavItem({ title, icon, link }) {
       <NavLink to={link}>
         <Item>
           <Icon>
-            <span className="material-symbols-rounded">
-              {icon || "home"}
-            </span>
+            <span className="material-symbols-rounded">{icon || "home"}</span>
           </Icon>
           <p>{title || "홈"}</p>
         </Item>
       </NavLink>
     </Li>
-  )
+  );
 }
 
-export default NavItem
+export default NavItem;

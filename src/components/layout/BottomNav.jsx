@@ -1,9 +1,9 @@
-import NavItem from "../ui/BottomNav/NavItem"
+import NavItem from "../ui/BottomNav/NavItem";
 
 function BottomNav() {
   return (
-    <div className="BottomNav border-t py-2">
-      <ul className="flex justify-center align-center gap-2 ">
+    <div className="BottomNav">
+      <ul className="flex justify-center align-center gap-2 border-t py-2 ">
         <NavItem title={"메인"} icon={"home"} link={"/"} />
         <NavItem title={"타로정보"} icon={"cards_star"} link={"/"} />
         <NavItem title={"운세보기"} icon={"star_shine"} link={"/"} />
@@ -11,7 +11,7 @@ function BottomNav() {
         <NavItem title={"마이페이지"} icon={"heart_smile"} link={"/"} />
       </ul>
     </div>
-  )
+  );
 }
 
-export default BottomNav
+export default BottomNav;
