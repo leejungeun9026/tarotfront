@@ -1,9 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import BottomNav from "./components/layout/common/BottomNav";
-import Home from "./pages/Home";
-import ReadingMain from "./pages/reading/ReadingMain";
 import Guide from "./pages/guide/Guide";
-import ReadingShuffle from "./pages/reading/ReadingShuffle";
+import Home from "./pages/Home";
+import Reading from "./pages/reading/Reading";
 
 const minMaxHeight = {
   height: "calc(100vh - 67px)",
@@ -12,12 +11,11 @@ const minMaxHeight = {
 function App() {
   return (
     <div className="App m-auto min-w-xs max-w-3xl max-h-lvh h-full flex flex-col justify-start align-stretch ">
-      <div className="container py-4 px-3 overflow-y-auto" style={minMaxHeight}>
+      <div className="container py-4 px-3 max-w-3xl overflow-x-hidden overflow-y-auto" style={minMaxHeight}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/guide" element={<Guide />} />
-          <Route path="/reading" element={<ReadingMain />} />
-          <Route path="/reading/shuffle" element={<ReadingShuffle />} />
+          <Route path="/reading" element={<Reading />} />
         </Routes>
       </div>
       <BottomNav />

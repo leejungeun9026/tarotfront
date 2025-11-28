@@ -1,17 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-
-const CardItem = styled.div`
-  width: 100%;
-  max-width: 50px;
-  aspect-ratio: 7/12;
-  background: gray;
-  border-radius: 0.25em;
-`;
-
-function Card({ id }) {
+function CardItem({ num }) {
   return (
-    <CardItem key={id} id={id}>cardItem</CardItem>
+    <div className={["card_item", `card_${num}`].join(" ")} >{num}</div>
   )
 }
 

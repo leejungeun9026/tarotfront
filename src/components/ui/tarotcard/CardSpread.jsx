@@ -1,12 +1,8 @@
-import { useState } from "react";
 import CardItem from "./CardItem";
 
-function CardFan() {
-  const TOTAL = 78;
-  const cards = [];
-  for (let i = 0; i < TOTAL; i++) {
-    cards.push(i);
-  }
+function CardSpread({ deck }) {
+  const TOTAL = deck.length();
+
   const WRAP_WIDTH = 400;
   const WRAP_HEIGHT = 400;
 
@@ -17,7 +13,7 @@ function CardFan() {
   const centerIndex = (TOTAL - 1) / 2; // 카드 중심
   const baseTop = WRAP_HEIGHT; // 카드 Y 위치
 
-  const [angle, setAngle] = useState(0);
+  // const [angle, setAngle] = useState(0);
 
   return (
     <div>
@@ -30,7 +26,7 @@ function CardFan() {
           margin: "0 auto",
         }}
       >
-        {cards.map((num, index) => {
+        {deck.map((num, index) => {
           const offset = index - centerIndex;
           const moveX = offset * GAP_X;
           // 곡선: offset을 정규화한 다음 제곱으로 사용
@@ -64,4 +60,4 @@ function CardFan() {
   );
 }
 
-export default CardFan;
+export default CardSpread;
