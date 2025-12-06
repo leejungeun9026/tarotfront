@@ -1,0 +1,34 @@
+body {
+  font-family: "SUIT Variable", sans-serif;
+  background: #e9e9e9;
+  overflow: hidden;
+}
+
+.ff_kyobo {
+  font-family: "KyoboHandwriting2019";
+}
+
+.ff_start {
+  font-family: "MangoBoardByeolbyeol";
+}
+
+.App {
+  background: var(--background);
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+/* 크롬 autofill 배경 덮어쓰기 */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+}
+
+/* readOnly + autofill일 때만 따로 처리도 가능 */
+input[readonly].likedisabled,
+input[readonly].likedisabled:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px oklab(98.463% -0.00064 -0.00169) inset !important;
+}
