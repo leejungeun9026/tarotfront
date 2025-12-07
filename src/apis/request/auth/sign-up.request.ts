@@ -1,3 +1,5 @@
+import type { TermsResponseDTO } from "@/apis/response/terms";
+
 export default interface SignUpRequestDTO {
   username: string;
   certificationNum: string;
@@ -5,3 +7,7 @@ export default interface SignUpRequestDTO {
   name: string;
   agreedTermIds: Array<number>;
 }
+
+export type TermsWithChecked = TermsResponseDTO & {
+  checked?: boolean; // 선택 여부
+};

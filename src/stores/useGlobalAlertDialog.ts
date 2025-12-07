@@ -14,19 +14,19 @@ interface DialogState extends DialogOptions {
   closeDialog: () => void;
 }
 
-export const useGlobalDialog = create<DialogState>((set) => ({
+export const useGlobalAlertDialog = create<DialogState>((set) => ({
   open: false,
   title: "제목",
   description: "설명",
   confirmText: "확인",
-  cancelText: "취소",
+  cancelText: null,
   onConfirm: undefined,
 
   showDialog: (options) =>
     set({
       open: true,
-      ...options
+      ...options,
     }),
 
-  closeDialog: () => set({ open: false })
+  closeDialog: () => set({ open: false }),
 }));

@@ -1,20 +1,33 @@
-import type { CheckCertificationRequestDTO, EmailCertificationRequestDTO, SignUpRequestDTO } from "@/apis/request/auth";
-import type { CheckCertificationResponseDTO, EmailCertificationResponseDTO, SignUpResponseDTO } from "@/apis/response/auth";
+import type {
+  CheckCertificationRequestDTO,
+  EmailCertificationRequestDTO,
+  SignUpRequestDTO,
+} from "@/apis/request/auth";
+import type {
+  CheckCertificationResponseDTO,
+  EmailCertificationResponseDTO,
+  SignUpResponseDTO,
+} from "@/apis/response/auth";
+import type { TermsBase } from "@/apis/response/tarotcard/tarotcard-list.response";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useGlobalDialog } from "@/stores/useGlobalAlertDialog";
+import { TERMS_CONST } from "@/constants/terms";
+import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
 import type { ResponseBody } from "@/types/indes";
-import { type Terms, type TermsBase, type TermsWithChecked } from "@/types/terms/terms";
 import type { SignUpUser } from "@/types/user";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { checkCertificationRequest, emailCertificationRequest, signUpRequest, termsRequest } from "../../apis";
+import {
+  checkCertificationRequest,
+  emailCertificationRequest,
+  signUpRequest,
+  termsListRequest,
+} from "../../apis";
 import { Card, CardContent, CardHeader } from "../../components/ui/card";
 import { Spinner } from "../../components/ui/spinner";
-import { TERMS } from "../../constants/terms";
 import { ResponseCode } from "../../types/enums";
 
 // 정규식
@@ -28,7 +41,8 @@ const validateCertificationNum = (certificationNum: string) => {
   return regex.test(certificationNum);
 };
 const validatePassword = (pw: string) => {
-  const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=])[A-Za-z\d!@#$%^&*()_+\-=]{8,20}$/;
+  const regex =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=])[A-Za-z\d!@#$%^&*()_+\-=]{8,20}$/;
   return regex.test(pw);
 };
 const validateNickname = (name: string) => {
@@ -36,11 +50,9 @@ const validateNickname = (name: string) => {
   return regex.test(name);
 };
 
-
-
 function Join() {
   const navigate = useNavigate();
-  const { showDialog } = useGlobalDialog();
+  const { showDialog } = useGlobalAlertDialog();
 
   const [user, setUser] = useState<SignUpUser>({
     username: "",
@@ -67,8 +79,8 @@ function Join() {
     name: "",
   });
 
-  const termList = TERMS;
-  const [terms, setTerms] = useState<TermsWithChecked[]>(termList);
+  const termList = TERMS_CONST;
+  const [terms, setTerms] = useState<TermsBase[]>(termList);
   const requiredIds = terms.filter((t) => t.required === true).map((t) => t.id); // 필수약관
   const [requiredTermIds, setRequiredTermIds] = useState(requiredIds);
 
@@ -87,10 +99,10 @@ function Join() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [codeSuccess, setCodeSuccess] = useState(false);
 
-
-
   // api response
-  const emailCertificationResponse = (responseBody: ResponseBody<EmailCertificationResponseDTO>) => {
+  const emailCertificationResponse = (
+    responseBody: ResponseBody<EmailCertificationResponseDTO>
+  ) => {
     if (!responseBody) return;
 
     const { code } = responseBody;
@@ -99,20 +111,26 @@ function Join() {
       setSubmitMailReadonly(false); // username input readonly
       setIsSending(false); // 전송중 버튼 숨김
       setSubmitMail(true); //메일인증 버튼 보임
-      setValid((prev) => ({ ...prev, username: false }))
-      setValidMessages((prev) => ({ ...prev, username: "다른 이메일을 이용해주세요." }))
+      setValid((prev) => ({ ...prev, username: false }));
+      setValidMessages((prev) => ({
+        ...prev,
+        username: "다른 이메일을 이용해주세요.",
+      }));
     }
     if (code === ResponseCode.MAIL_FAIL) {
       setIsSending(false); // 전송중 버튼 숨김
       setSubmitMail(true); //메일인증 버튼 보임
-      setValid((prev) => ({ ...prev, username: false }))
-      setValidMessages((prev) => ({ ...prev, username: "인증번호 메일 발송을 실패했어요." }))
+      setValid((prev) => ({ ...prev, username: false }));
+      setValidMessages((prev) => ({
+        ...prev,
+        username: "인증번호 메일 발송을 실패했어요.",
+      }));
     }
     if (code === ResponseCode.DATABASE_ERROR) {
       setIsSending(false); // 전송중 버튼 숨김
       setSubmitMail(true); //메일인증 버튼 보임
-      setValid((prev) => ({ ...prev, username: false }))
-      setValidMessages((prev) => ({ ...prev, username: "데이터베이스 오류" }))
+      setValid((prev) => ({ ...prev, username: false }));
+      setValidMessages((prev) => ({ ...prev, username: "데이터베이스 오류" }));
     }
     if (code === ResponseCode.SUCCESS) {
       setSubmitMailReadonly(true); // username input readonly
@@ -126,9 +144,11 @@ function Join() {
       }));
       startTimer(300);
     }
-  }
+  };
 
-  const checkCertificationResponse = (responseBody: ResponseBody<CheckCertificationResponseDTO>) => {
+  const checkCertificationResponse = (
+    responseBody: ResponseBody<CheckCertificationResponseDTO>
+  ) => {
     if (!responseBody) return;
 
     const { code } = responseBody;
@@ -137,19 +157,25 @@ function Join() {
       setIsVerifying(false); // 확인중 버튼 숨김
       setSubmitCode(true); // 인증확인 버튼 보임
       setSubmitCodeReadonly(false);
-      setValid((prev) => ({ ...prev, certificationNum: false }))
-      setValidMessages((prev) => ({ ...prev, certificationNum: "인증번호가 일치하지 않아요" }))
+      setValid((prev) => ({ ...prev, certificationNum: false }));
+      setValidMessages((prev) => ({
+        ...prev,
+        certificationNum: "인증번호가 일치하지 않아요",
+      }));
     }
 
     if (code === ResponseCode.DATABASE_ERROR) {
       setIsVerifying(false); // 확인중 버튼 숨김
       setSubmitCode(true); // 인증확인 버튼 보임
       setSubmitCodeReadonly(false);
-      setValid((prev) => ({ ...prev, certificationNum: false }))
-      setValidMessages((prev) => ({ ...prev, certificationNum: "데이터베이스 오류" }))
+      setValid((prev) => ({ ...prev, certificationNum: false }));
+      setValidMessages((prev) => ({
+        ...prev,
+        certificationNum: "데이터베이스 오류",
+      }));
     }
     if (code === ResponseCode.SUCCESS) {
-      setSubmitMailReadonly(true)
+      setSubmitMailReadonly(true);
       setIsVerifying(false); // 확인중 버튼 숨김
       setCodeSuccess(true); // 확인완료 버튼 보임
       setValid((prev) => ({
@@ -162,7 +188,7 @@ function Join() {
       }));
       stopTimer();
     }
-  }
+  };
 
   const signUpResponse = (responseBody: ResponseBody<SignUpResponseDTO>) => {
     if (!responseBody) return;
@@ -170,7 +196,7 @@ function Join() {
     const { code } = responseBody;
 
     if (code === ResponseCode.DATABASE_ERROR) {
-      alert("DB오류")
+      alert("DB오류");
     }
     if (code === ResponseCode.DUPLICATE_EMAIL) {
       alert("다른 이메일을 이용해주세요");
@@ -178,7 +204,7 @@ function Join() {
     }
     if (code === ResponseCode.CERTIFICATE_FAIL) {
       alert("인증 실패. 회원가입을 다시 시도해주세요");
-      navigate("/join")
+      navigate("/join");
     }
     if (code === ResponseCode.SUCCESS) {
       showDialog({
@@ -187,34 +213,35 @@ function Join() {
         confirmText: "확인",
         cancelText: "",
         onConfirm: () => {
-          navigate("/login")
-        }
-      })
+          navigate("/login");
+        },
+      });
     }
-  }
+  };
 
   // DB에서 약관 가져오기
   useEffect(() => {
-    termsRequest()
-      .then(data => {
-        console.log("dbterms :", data)
+    termsListRequest()
+      .then((data) => {
+        console.log("dbterms :", data);
         // 성공시 terms state 업데이트
-        const termList = data ?? [];
-        setTerms(termList);
+        const dbTermsList = data.termsList;
+        setTerms(dbTermsList);
         // 필수 약관 아이디 다시 저장
         const requiredIds = termList
           .filter((t: TermsBase) => t.required === true)
           .map((t: TermsBase) => t.id);
         setRequiredTermIds(requiredIds);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         // 실패시 상수값 그대로 사용
-        setTerms(TERMS);
-        setRequiredTermIds(TERMS.filter((t) => t.required).map((t) => t.id));
-      })
+        setTerms(TERMS_CONST);
+        setRequiredTermIds(
+          TERMS_CONST.filter((t) => t.required).map((t) => t.id)
+        );
+      });
   }, []);
-
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 공백제거
@@ -263,7 +290,7 @@ function Join() {
           ...prev,
           certificationNum: "숫자만 입력해주세요.",
         }));
-        setUser((prev) => ({ ...prev, certificationNum: "" }))
+        setUser((prev) => ({ ...prev, certificationNum: "" }));
       } else {
         setValidMessages((prev) => ({
           ...prev,
@@ -287,8 +314,7 @@ function Join() {
           password: "사용할 수 없는 특수문자예요. (사용 가능: !@#$%^&*()_+-=)",
         }));
         setValid((prev) => ({ ...prev, password: false }));
-      }
-      else if (!validatePassword(trimValue)) {
+      } else if (!validatePassword(trimValue)) {
         setValidMessages((prev) => ({
           ...prev,
           password: "영문/숫자/특수문자 조합 8자 이상 작성해주세요.",
@@ -396,14 +422,17 @@ function Join() {
   const minutes = String(Math.floor(remainSec / 60)).padStart(2, "0");
   const seconds = String(remainSec % 60).padStart(2, "0");
 
-
   // 메일 인증 버튼
   const handleSendMail = () => {
     if (!user.username) return;
 
     // 재인증시 코드 초기화하기
     setUser((prev) => ({ ...prev, certificationNum: "" }));
-    setValidMessages((prev) => ({ ...prev, username: "", certificationNum: "" }));
+    setValidMessages((prev) => ({
+      ...prev,
+      username: "",
+      certificationNum: "",
+    }));
 
     // 버튼 상태 변경
     setSubmitMail(false); // 메일인증 버튼 숨김
@@ -414,8 +443,7 @@ function Join() {
     const requestBody: EmailCertificationRequestDTO = {
       username: user.username,
     };
-    emailCertificationRequest(requestBody)
-      .then(emailCertificationResponse)
+    emailCertificationRequest(requestBody).then(emailCertificationResponse);
   };
 
   // 코드 확인 버튼
@@ -432,10 +460,8 @@ function Join() {
       certificationNum: user.certificationNum,
     };
 
-    checkCertificationRequest(requestBody)
-      .then(checkCertificationResponse);
+    checkCertificationRequest(requestBody).then(checkCertificationResponse);
   };
-
 
   // 동의한 약관의 아이디를 유저 정보에 넣기
   const toggleTermAgree = (termId: number, checked: boolean) => {
@@ -479,11 +505,10 @@ function Join() {
       certificationNum: user.certificationNum,
       password: user.password,
       name: user.name,
-      agreedTermIds: user.agreedTermIds
+      agreedTermIds: user.agreedTermIds,
     };
 
-    signUpRequest(responseBody)
-      .then(signUpResponse);
+    signUpRequest(responseBody).then(signUpResponse);
   };
 
   return (
@@ -528,15 +553,21 @@ function Join() {
                       전송중...
                     </Button>
                   )}
-                  {sendSuccess && !isSending &&
+                  {sendSuccess &&
+                    !isSending &&
                     !(!codeSuccess && remainSec === 0) && (
-                      <Button variant="outline" className="w-24 h-11 cursor-pointer" disabled>
+                      <Button
+                        variant="outline"
+                        className="w-24 h-11 cursor-pointer"
+                        disabled
+                      >
                         발송 성공
                       </Button>
                     )}
-                  {sendSuccess && !isSending &&
-                    (!codeSuccess &&
-                      remainSec === 0) && (
+                  {sendSuccess &&
+                    !isSending &&
+                    !codeSuccess &&
+                    remainSec === 0 && (
                       <Button
                         id="reSubmitMail"
                         variant="outline"
@@ -549,8 +580,9 @@ function Join() {
                 </div>
               </div>
               <p
-                className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
-                  }`}
+                className={`text-xs mt-1 ${
+                  valid.username ? "text-green-600" : "text-red-500"
+                }`}
               >
                 {validMessages.username}
               </p>
@@ -605,8 +637,11 @@ function Join() {
                   <div className="flex gap-1 mt-1">
                     {remainSec > 0 && (
                       <p
-                        className={`text-xs ${valid.certificationNum ? "text-green-600" : "text-red-500"
-                          }`}
+                        className={`text-xs ${
+                          valid.certificationNum
+                            ? "text-green-600"
+                            : "text-red-500"
+                        }`}
                       >
                         {validMessages.certificationNum}
                       </p>
@@ -632,6 +667,7 @@ function Join() {
             <div>
               <Input
                 type="password"
+                id="password"
                 name="password"
                 className="tracking-widest placeholder:tracking-normal"
                 placeholder="영문/숫자/특수문자 조합 8~20자"
@@ -639,8 +675,9 @@ function Join() {
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
-                  }`}
+                className={`text-xs mt-1 ${
+                  valid.password ? "text-green-600" : "text-red-500"
+                }`}
               >
                 {validMessages.password}
               </p>
@@ -653,8 +690,9 @@ function Join() {
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${valid.passwordChk ? "text-green-600" : "text-red-500"
-                  }`}
+                className={`text-xs mt-1 ${
+                  valid.passwordChk ? "text-green-600" : "text-red-500"
+                }`}
               >
                 {validMessages.passwordChk}
               </p>
@@ -666,14 +704,16 @@ function Join() {
             <div>
               <Input
                 type="text"
+                id="name"
                 name="name"
                 placeholder="한글/영문/숫자 조합 2~10자"
                 value={user.name}
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${valid.name ? "text-green-600" : "text-red-500"
-                  }`}
+                className={`text-xs mt-1 ${
+                  valid.name ? "text-green-600" : "text-red-500"
+                }`}
               >
                 {validMessages.name}
               </p>
@@ -693,8 +733,8 @@ function Join() {
                       isAllChecked
                         ? true
                         : isIndeterminate
-                          ? "indeterminate"
-                          : false
+                        ? "indeterminate"
+                        : false
                     }
                     className="bg-white"
                     onCheckedChange={(checked) => {
