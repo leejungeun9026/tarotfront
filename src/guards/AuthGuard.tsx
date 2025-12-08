@@ -1,6 +1,6 @@
-import { Navigate } from "react-router-dom";
-import useUserStore from "@/stores/useUserStore";
+import useAuthStore from "@/stores/useAuthStore";
 import type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -8,7 +8,8 @@ interface AuthGuardProps {
 }
 
 const AuthGuard = ({ children, roles }: AuthGuardProps) => {
-  const currentUser = useUserStore((state) => state.user);
+  const currentUser = useAuthStore((state) => state.user);
+
   const authorize = () => {
     if (!currentUser) {
       return <Navigate replace to="/login" />

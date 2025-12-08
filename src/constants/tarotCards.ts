@@ -1,7 +1,7 @@
-import type { TarotCard, TarotCardBase } from "@/types/tarotcard/tarotcard";
-import { getCardImg } from "../utils/tarotImage";
+import type { ReadingCardWithImg, TarotCardBase } from "@/apis/response/tarotcard"
+import { mapCardWithImg } from "@/utils/tarotCardMapper";
 
-export const TAROT_CARDS_BASE: TarotCardBase[] = [
+export const TAROT_CARDS_CONST: TarotCardBase[] = [
   {
     "id": 1,
     "nameEn": "The Fool",
@@ -783,12 +783,3 @@ export const TAROT_CARDS_BASE: TarotCardBase[] = [
     "reverseKeyword": "독단적인, 완고한, 욕심이 많은, 남의 말을 듣지 않는, 타협이 불가능한, 엄격한, 고집스러운"
   }
 ]
-
-
-export const TAROT_CARDS: TarotCard[] = TAROT_CARDS_BASE.map((card) => {
-  const imgUrl = getCardImg(card.id);
-  return {
-    ...card,
-    imgUrl: imgUrl ?? "",
-  };
-});

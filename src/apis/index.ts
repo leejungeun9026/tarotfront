@@ -63,8 +63,8 @@ export const termsListRequest = async (): Promise<TermsListResponseDTO> => {
 /* ------------------------------------- */
 export const tarotCardRequest = async (): Promise<TarotCardListResponseDTO> => {
   const result = await axios
-    .get<TarotCardListResponseDTO>(TAROT_CARD_URL())
-    .then(responseHandler);
+    .get(TAROT_CARD_URL())
+    .then(responseHandler<TarotCardListResponseDTO>);
   return result;
 };
 

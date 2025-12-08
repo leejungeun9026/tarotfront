@@ -1,5 +1,16 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import CardItem from "./CardItem";
+import type { ReadingCard } from "@/types/tarotcard/tarotcard";
+
+interface CardDeckProps {
+  cardList: ReadingCard[];
+  shuffle: boolean;
+  spread: boolean;
+  progress: number;
+  angle: number;
+  setAngle: React.Dispatch<React.SetStateAction<number>>;
+  onCardClick: (card: ReadingCard) => void;
+}
 
 function CardDeck({
   cardList,
@@ -9,20 +20,38 @@ function CardDeck({
   angle,
   setAngle,
   onCardClick,
-}) {
+}: CardDeckProps) {
+
   const total = cardList.length;
 
-  const deckRef = useRef(null);
-  const cardRef = useRef(null);
+  const deckRef = useRef<HTMLDivElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   // 실제 DOM 사이즈를 저장할 상태값
-  const [deckWidth, setDeckWidth] = useState(1400); // 기본값
-  const [cardWidth, setCardWidth] = useState(100); // 기본값
+  const [deckWidth, setDeckWidth] = useState<number>(1400); // 기본값
+  const [cardWidth, setCardWidth] = useState<number>(100); // 기본값
   function calcHeight(width: number) {
     const ratioW = 7;
     const ratioH = 12;
     return (width * ratioH) / ratioW;
   }
+
+  // 마지막 카드 반지름 위치 (deck 가로길이 반 - 카드 세로길이 반)
+  const RADIUS = deckWidth / 2 - calcHeight(cardWidth) / 2;
+  const START_DEG = -90;
+  const END_DEG = 0;
+  const START_RAD = (START_DEG * Math.PI) / 180;
+  const END_RAD = (END_DEG * Math.PI) / 180;
+
+  // 드래그 상태
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragMoved, setDragMoved] = useState<boolean>(false);
+  const dragStartX = useRef<number>(0);
+  const dragStartAngle = useRef<number>(0);
+  const [cursor, setCursor] = useState<string>("default");
+  const baseAngle = spread ? 45 : 0;
+  const totalAngle = baseAngle + angle;
+
 
   // window resize 감지
   useLayoutEffect(() => {
@@ -48,13 +77,7 @@ function CardDeck({
     // ✅ 카드 개수가 바뀔 때만 다시 실행
   }, [cardList.length]);
 
-  const RADIUS = deckWidth / 2 - calcHeight(cardWidth) / 2; // 마지막 카드 반지름 위치 (deck 가로길이 반 - 카드 세로길이 반)
-  const START_DEG = -90;
-  const END_DEG = 0;
-  const START_RAD = (START_DEG * Math.PI) / 180;
-  const END_RAD = (END_DEG * Math.PI) / 180;
-
-  const isInCardArea = (clientX, clientY) => {
+  const isInCardArea = (clientX: number, clientY: number) => {
     if (!deckRef.current) return false;
 
     const rect = deckRef.current.getBoundingClientRect();
@@ -81,19 +104,9 @@ function CardDeck({
     return dist >= minR && dist <= maxR;
   };
 
-  // 드래그 상태
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragMoved, setDragMoved] = useState(false);
-  const dragStartX = useRef(0);
-  const dragStartAngle = useRef(0);
-
-  const [cursor, setCursor] = useState("default");
-
-  const baseAngle = spread ? 45 : 0;
-  const totalAngle = baseAngle + angle;
 
   // 드래그 이벤트
-  const onMouseDown = (e) => {
+  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
     if (!spread) return;
     if (!isInCardArea(e.clientX, e.clientY)) return;
     setIsDragging(true);
@@ -102,7 +115,7 @@ function CardDeck({
     dragStartAngle.current = angle;
   };
 
-  const onMouseMove = (e) => {
+  const onMouseMove: React.MouseEventHandler<HTMLDivElement> = (e) => {
     if (spread) {
       if (isInCardArea(e.clientX, e.clientY)) {
         setCursor("pointer");
@@ -124,16 +137,16 @@ function CardDeck({
     setAngle(clamped);
   };
 
-  const onMouseUp = () => {
+  const onMouseUp: React.MouseEventHandler<HTMLDivElement> = () => {
     setIsDragging(false);
   };
-  const onMouseLeave = () => {
+  const onMouseLeave: React.MouseEventHandler<HTMLDivElement> = () => {
     setIsDragging(false);
     setCursor("default");
   };
 
   // 모바일 터치 대응
-  const onTouchStart = (e) => {
+  const onTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
     if (!spread) return;
     const touch = e.touches[0];
     if (!isInCardArea(touch.clientX, touch.clientY)) return;
@@ -143,7 +156,7 @@ function CardDeck({
     dragStartAngle.current = angle;
   };
 
-  const onTouchMove = (e) => {
+  const onTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
     if (!isDragging) return;
 
     const diff = e.touches[0].clientX - dragStartX.current;
@@ -155,7 +168,7 @@ function CardDeck({
     setAngle(clamped);
   };
 
-  const onTouchEnd = () => {
+  const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = () => {
     setIsDragging(false);
   };
 

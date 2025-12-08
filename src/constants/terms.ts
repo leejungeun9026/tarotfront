@@ -1,4 +1,7 @@
-import type { TermsBase } from "@/apis/response/tarotcard/tarotcard-list.response";
+
+import type { TermsResponseDTO } from "@/apis/response/terms";
+
+type TermsBase = Omit<TermsResponseDTO, "code" | "message">
 
 export const TERMS_CONST: TermsBase[] = [
   {

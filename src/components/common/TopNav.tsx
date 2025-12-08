@@ -11,6 +11,7 @@ function TopNav() {
     "/archive": "보관함",
     "/login": "로그인",
     "/join": "회원가입",
+    "/mypage": "마이페이지",
   };
 
   const title = titleMap[location.pathname] ?? "";

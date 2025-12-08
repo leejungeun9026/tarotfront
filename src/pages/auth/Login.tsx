@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import useAuthStore from "@/stores/useAuthStore";
 import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
 import { ResponseCode } from "@/types/enums";
 import type { ResponseBody } from "@/types/indes";
+import { getLoginIcon } from "@/utils/loginIcon";
 import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,46 +21,11 @@ const validateEmail = (email: string) => {
 };
 
 function Login() {
-  const [, setCookie] = useCookies();
   const navigate = useNavigate();
+  const currentUser = useAuthStore((state) => state.user);
+  const setCurrentUser = useAuthStore((state) => state.setCurrentUser);
+  const [, setCookie] = useCookies();
   const { open, showDialog } = useGlobalAlertDialog();
-
-  const signInResponse = (responseBody: ResponseBody<SignInResponseDTO>) => {
-    if (!responseBody) return;
-
-    const { code } = responseBody;
-
-    if (code === ResponseCode.VALIDATION_FAIL) {
-      showDialog({
-        title: "로그인 실패",
-        description: "아이디와 비밀번호를 입력해주세요.",
-        confirmText: "확인",
-      });
-    }
-    if (code === ResponseCode.SIGN_IN_FAIL) {
-      showDialog({
-        title: "로그인 실패",
-        description: "아이디와 비밀번호를 입력해주세요.",
-        confirmText: "확인",
-      });
-    }
-    if (code === ResponseCode.DATABASE_ERROR) {
-      showDialog({
-        title: "로그인 실패",
-        description: "DB에러, 잠시 후 다시 시도해주세요.",
-        confirmText: "확인",
-      });
-    }
-    if (code !== ResponseCode.SUCCESS) return;
-
-    const { token, expirationTime } = responseBody as SignInResponseDTO;
-    const now = new Date().getTime() * 1000;
-    const expires = new Date(now + expirationTime);
-
-    setCookie("accessToken", token, { expires, path: "/" });
-    navigate("/");
-  };
-
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -75,9 +42,13 @@ function Login() {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+
   useEffect(() => {
+    if (currentUser?.id) {
+      navigate("/profile")
+    }
     usernameRef.current?.focus();
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (!open) {
@@ -91,6 +62,60 @@ function Login() {
       }
     }
   }, [open]);
+
+  const signInResponse = (responseBody: ResponseBody<SignInResponseDTO>) => {
+    if (!responseBody) return;
+
+    const { code } = responseBody;
+
+    if (code === ResponseCode.VALIDATION_FAIL) {
+      showDialog({
+        title: "로그인 실패",
+        description: "아이디와 비밀번호를 입력해주세요.",
+        confirmText: "확인",
+      });
+    }
+    if (code === ResponseCode.SIGN_IN_FAIL) {
+      showDialog({
+        title: "로그인 실패",
+        description: "아이디와 비밀번호를 확인해주세요.",
+        confirmText: "확인",
+      });
+    }
+    if (code === ResponseCode.DATABASE_ERROR) {
+      showDialog({
+        title: "로그인 실패",
+        description: "DB에러, 잠시 후 다시 시도해주세요.",
+        confirmText: "확인",
+      });
+    }
+    if (code !== ResponseCode.SUCCESS) return;
+
+    const {
+      id,
+      username,
+      name,
+      role,
+      token,
+      expirationTime,
+    } = responseBody as SignInResponseDTO;
+
+    // store에 유저 정보 담기
+    setCurrentUser({
+      id,
+      username,
+      name,
+      role
+    })
+
+    // 쿠키에 토큰 담기
+    const now = new Date().getTime()
+    const expires = new Date(now + expirationTime * 1000);
+    setCookie("accessToken", token, { expires, path: "/" });
+
+    navigate("/");
+  };
+
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 공백제거
@@ -138,23 +163,30 @@ function Login() {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget);
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     setCurrentInput(e.currentTarget.name);
-    console.log(currentInput);
+    console.log(currentInput)
+
     if (e.key === "Enter" || e.key === "NumpadEnter") {
-      e.currentTarget.blur();
-      handleOnLogin();
+      if (currentInput === "username") {
+        if (!user.username) return;
+        passwordRef.current?.focus();
+        setValid((prev) => ({ ...prev, password: true }));
+        setValidMessages((prev) => ({ ...prev, password: "", }));
+      }
+      if (currentInput === "password") {
+        if (!user.password) return;
+        handleLogin();
+        e.currentTarget.blur();
+      }
     }
   };
 
-  const handleOnLogin = () => {
+  const handleLogin = () => {
     if (!user.username || !user.password) {
       setValid((prev) => ({ ...prev, password: false }));
-      setValidMessages((prev) => ({
-        ...prev,
-        password: "아이디와 비밀번호를 입력해주세요.",
-      }));
+      setValidMessages((prev) => ({ ...prev, password: "아이디 또는 비밀번호를 입력해주세요.", }));
+      return;
     }
     const requestBody = {
       username: user.username,
@@ -164,7 +196,7 @@ function Login() {
     signInRequest(requestBody).then(signInResponse);
   };
 
-  const handleOnSnsLogin = (provider: "kakao" | "naver") => {
+  const handleSnsLogin = (provider: "kakao" | "naver") => {
     window.location.href = SNS_SIGN_IN_URL(provider);
   };
 
@@ -184,12 +216,11 @@ function Login() {
                   ref={usernameRef}
                   placeholder="example@xxx.com"
                   onChange={handleOnChange}
-                  onKeyDown={handleKeyDown}
+                  onKeyDown={handleOnKeyDown}
                 />
                 <p
-                  className={`text-xs mt-1 ${
-                    valid.username ? "text-green-600" : "text-red-500"
-                  }`}
+                  className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
+                    }`}
                 >
                   {validMessages.username}
                 </p>
@@ -207,12 +238,11 @@ function Login() {
                   ref={passwordRef}
                   placeholder="비밀번호를 입력해주세요"
                   onChange={handleOnChange}
-                  onKeyDown={handleKeyDown}
+                  onKeyDown={handleOnKeyDown}
                 />
                 <p
-                  className={`text-xs mt-1 ${
-                    valid.password ? "text-green-600" : "text-red-500"
-                  }`}
+                  className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
+                    }`}
                 >
                   {validMessages.password}
                 </p>
@@ -221,9 +251,9 @@ function Login() {
             <div className="flex flex-col gap-3">
               <Button
                 size="xl"
-                className="w-full cursor-pointer"
-                onClick={handleOnLogin}
-                onKeyDown={() => handleKeyDown}
+                className="w-full"
+                onClick={handleLogin}
+                onKeyDown={() => handleOnKeyDown}
               >
                 로그인
               </Button>
@@ -231,7 +261,7 @@ function Login() {
                 onClick={() => navigate("/join")}
                 variant="outline"
                 size="xl"
-                className="w-full cursor-pointer"
+                className="w-full"
               >
                 회원가입
               </Button>
@@ -254,20 +284,24 @@ function Login() {
             <Separator className="" />
           </div>
           <section>
-            <Button
-              onClick={() => {
-                handleOnSnsLogin("kakao");
-              }}
-            >
-              카카오 로그인
-            </Button>
-            <Button
-              onClick={() => {
-                handleOnSnsLogin("naver");
-              }}
-            >
-              네이버 로그인
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button size="lg" className="bg-yellow-400 text-stone-900 hover:bg-yellow-400/90 focus-visible:ring-yellow-400/20 dark:focus-visible:ring-yellow-400/40 dark:bg-yellow-400/60"
+                onClick={() => {
+                  handleSnsLogin("kakao");
+                }}
+              >
+                {getLoginIcon("kakao")}
+                카카오로 시작하기
+              </Button>
+              <Button size="lg" className="bg-green-500 text-white hover:bg-green-500/90 focus-visible:ring-green-500/20 dark:focus-visible:ring-green-500/40 dark:bg-green-500/60"
+                onClick={() => {
+                  handleSnsLogin("naver");
+                }}
+              >
+                {getLoginIcon("naver")}
+                네이버로 시작하기
+              </Button>
+            </div>
           </section>
         </div>
       </div>

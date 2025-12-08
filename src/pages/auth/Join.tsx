@@ -499,7 +499,7 @@ function Join() {
     requiredTermIds.length > 0 &&
     requiredTermIds.every((id) => user.agreedTermIds.includes(id));
 
-  const handleSubmitUser = () => {
+  const handleJoin = () => {
     const responseBody: SignUpRequestDTO = {
       username: user.username,
       certificationNum: user.certificationNum,
@@ -534,7 +534,7 @@ function Join() {
                     <Button
                       id="sumbitMail"
                       variant="outline"
-                      className="w-24 h-11 cursor-pointer"
+                      className="w-24 h-11"
                       disabled={!user.username || !valid.username}
                       onClick={handleSendMail}
                     >
@@ -544,7 +544,7 @@ function Join() {
                   {isSending && (
                     <Button
                       variant="outline"
-                      className="w-24 h-11 gap-1.5 cursor-pointer"
+                      className="w-24 h-11 gap-1.5"
                       disabled
                     >
                       <div className="shrink-0">
@@ -558,7 +558,7 @@ function Join() {
                     !(!codeSuccess && remainSec === 0) && (
                       <Button
                         variant="outline"
-                        className="w-24 h-11 cursor-pointer"
+                        className="w-24 h-11"
                         disabled
                       >
                         발송 성공
@@ -571,7 +571,7 @@ function Join() {
                       <Button
                         id="reSubmitMail"
                         variant="outline"
-                        className="w-24 h-11 cursor-pointer"
+                        className="w-24 h-11"
                         onClick={handleSendMail}
                       >
                         재인증
@@ -580,9 +580,8 @@ function Join() {
                 </div>
               </div>
               <p
-                className={`text-xs mt-1 ${
-                  valid.username ? "text-green-600" : "text-red-500"
-                }`}
+                className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
+                  }`}
               >
                 {validMessages.username}
               </p>
@@ -604,7 +603,7 @@ function Join() {
                       {submitCode && (
                         <Button
                           variant="outline"
-                          className="w-24 h-11 cursor-pointer"
+                          className="w-24 h-11"
                           disabled={remainSec === 0 || !user.certificationNum}
                           onClick={handleVerifyCode}
                         >
@@ -614,7 +613,7 @@ function Join() {
                       {isVerifying && (
                         <Button
                           variant="outline"
-                          className="w-24 h-11 gap-1.5 cursor-pointer"
+                          className="w-24 h-11 gap-1.5"
                           disabled
                         >
                           <div className="shrink-0">
@@ -626,7 +625,7 @@ function Join() {
                       {codeSuccess && (
                         <Button
                           variant="outline"
-                          className="w-24 h-11 cursor-pointer"
+                          className="w-24 h-11"
                           disabled
                         >
                           인증 완료
@@ -637,11 +636,10 @@ function Join() {
                   <div className="flex gap-1 mt-1">
                     {remainSec > 0 && (
                       <p
-                        className={`text-xs ${
-                          valid.certificationNum
-                            ? "text-green-600"
-                            : "text-red-500"
-                        }`}
+                        className={`text-xs ${valid.certificationNum
+                          ? "text-green-600"
+                          : "text-red-500"
+                          }`}
                       >
                         {validMessages.certificationNum}
                       </p>
@@ -675,9 +673,8 @@ function Join() {
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${
-                  valid.password ? "text-green-600" : "text-red-500"
-                }`}
+                className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
+                  }`}
               >
                 {validMessages.password}
               </p>
@@ -690,9 +687,8 @@ function Join() {
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${
-                  valid.passwordChk ? "text-green-600" : "text-red-500"
-                }`}
+                className={`text-xs mt-1 ${valid.passwordChk ? "text-green-600" : "text-red-500"
+                  }`}
               >
                 {validMessages.passwordChk}
               </p>
@@ -711,9 +707,8 @@ function Join() {
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${
-                  valid.name ? "text-green-600" : "text-red-500"
-                }`}
+                className={`text-xs mt-1 ${valid.name ? "text-green-600" : "text-red-500"
+                  }`}
               >
                 {validMessages.name}
               </p>
@@ -725,7 +720,7 @@ function Join() {
               <CardHeader className="block p-0 [.border-b]:pb-0 bg-muted border-b">
                 <Label
                   htmlFor="AllTermsChk"
-                  className="items-start gap-3 cursor-pointer p-4"
+                  className="items-start gap-3 p-4"
                 >
                   <Checkbox
                     id="AllTermsChk"
@@ -733,8 +728,8 @@ function Join() {
                       isAllChecked
                         ? true
                         : isIndeterminate
-                        ? "indeterminate"
-                        : false
+                          ? "indeterminate"
+                          : false
                     }
                     className="bg-white"
                     onCheckedChange={(checked) => {
@@ -770,7 +765,7 @@ function Join() {
                     return (
                       <li key={item.id} className=" not-last:border-b">
                         <div className="flex items-center">
-                          <Label className="items-center gap-3 cursor-pointer p-4 grow">
+                          <Label className="items-center gap-3 p-4 grow">
                             <Checkbox
                               name="agreedTermIds"
                               id={checkboxId}
@@ -795,7 +790,7 @@ function Join() {
                                 variant="outline"
                                 size="icon"
                                 aria-label="Submit"
-                                className="border-0 rounded-sm shadow-none cursor-pointer"
+                                className="border-0 rounded-sm shadow-none"
                               >
                                 <ChevronRight />
                               </Button>
@@ -812,9 +807,9 @@ function Join() {
         </section>
         <Button
           disabled={!isFormValid}
-          onClick={handleSubmitUser}
+          onClick={handleJoin}
           size="xl"
-          className="w-full cursor-pointer"
+          className="w-full"
         >
           가입하기
         </Button>

@@ -1,39 +1,48 @@
+import SpeechBubble from "@/components/bubble/Bubble";
+import CardItem from "@/components/tarotcard/CardItem";
+import { TAROT_CARDS_CONST } from "@/constants/tarotCards";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import {
   Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+  CardContent
 } from "../components/ui/card";
-import { TAROT_CARDS } from "../constants/tarotCards";
-import { todayDate } from "../constants/today";
+import "../styles/home.css";
 
 function Home() {
-  const deck = TAROT_CARDS
+  const deck = TAROT_CARDS_CONST
   console.log("deck", deck)
 
   const navigate = useNavigate();
   return (
     <div className="Home divide-gray-100 divide-y-10">
-      <section className="todayReading px-4 py-6">
-        <Card className="relative border-0 bg-violet-50 overflow-hidden">
-          <div className="absolute bottom-3 right-3">
-          </div>
-          <CardHeader className="ff_kyobo">
-            <CardTitle>
-              <h5 className="mb-2">{todayDate}</h5>
-              <h2 className="text-xl font-extrabold tracking-tight text-balance">
+      <section className="todayReading px-4 pt-2.5 pb-6 border-0">
+        <SpeechBubble
+          fullWidth
+          side="top"
+          pointerSize={10}
+          tailPosition={34}
+          bubbleClassName="rounded-xl bg-[#e0d0fe]"
+          childClassName="rounded-xl card_bg_gradient"
+        >
+          <Card className="w-full border-0 overflow-hidden bg-transparent">
+            <CardContent className="text-center">
+              <h2 className="ff_kyobo text-xl font-medium tracking-tight text-balance text-center">
                 오늘의 운세는 어떨까?
               </h2>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => navigate("/reading")}>
-              오늘의 운세 보러가기
-            </Button>
-          </CardContent>
-        </Card>
+              <div className="card_container relative w-full h-58">
+                <div className="card_bounce">
+                  <div className="card_wrap ">
+                    <CardItem card={{ type: "back", id: null }} />
+                  </div>
+                </div>
+              </div>
+              <Button onClick={() => navigate("/reading")} className="cursor-pointer">
+                오늘의 운세 보러가기
+              </Button>
+            </CardContent>
+          </Card>
+        </SpeechBubble>
       </section>
       <section className="askList px-4 py-6">
         <div className="section_title pb-4">
@@ -66,7 +75,7 @@ function Home() {
         </div>
         <div className="section_content"></div>
       </section>
-    </div>
+    </div >
   );
 }
 

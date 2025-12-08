@@ -1,32 +1,36 @@
 import { tarotCardRequest } from "@/apis";
-import { useEffect, useState } from "react";
+import type { ReadingCard, ReadingCardWithImg, TarotCardBase } from "@/apis/response/tarotcard";
+import CardDeck from "@/components/tarotcard/CardDeck";
+import CardItem from "@/components/tarotcard/CardItem";
+import { TAROT_CARDS_CONST } from "@/constants/tarotCards";
+import { getCardImg } from "@/utils/tarotImage";
+import { useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import CardDeck from "../../components/layout/tarotcard/CardDeck";
-import CardItem from "../../components/layout/tarotcard/CardItem";
 import { Button } from "../../components/ui/button";
 import { Spinner } from "../../components/ui/spinner";
 import "../../styles/tarotcard.css";
 import LoadingScreen from "./LoadingScreen";
-import type { TarotCardListResponseDTO } from "@/apis/response/tarotcard/tarotcard.response";
 
 function Reading({ type, maxCard }: { type: string, maxCard: number }) {
-  const [cardList, setCardList] = useState<TarotCardListResponseDTO>([]);
-  const [shuffledCard, setShuffledCard] = useState([]);
-  const [shuffle, setShuffle] = useState(false);
-  const [spread, setSpread] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [angle, setAngle] = useState(0);
+  const tarotCards = TAROT_CARDS_CONST;
+  const [cardList, setCardList] = useState<TarotCardBase[]>(tarotCards);
+  const [shuffledCard, setShuffledCard] = useState<ReadingCard[]>([]);
+  const [activeList, setActiveList] = useState<ReadingCardWithImg[]>([]);
 
-  const [btnShuffleHidden, setBtnShuffleHidden] = useState(false);
-  const [btnSpreadHidden, setBtnSpreadHidden] = useState(false);
-  const [btnSpreadDisabled, setBtnSpreadDisabled] = useState(false);
-  const [btnSeleteHidden, setBtnSeleteHidden] = useState(true);
-  const [btnSeletedisabled, setBtnSeletedisabled] = useState(true);
-  const [activeList, setActiveList] = useState([]);
-  const [confirmCard, setConfirmCard] = useState(false);
-  const [btnConfirmCard, setBtnConfirmCard] = useState("선택 완료");
+  const [shuffle, setShuffle] = useState<boolean>(false);
+  const [spread, setSpread] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [angle, setAngle] = useState<number>(0);
 
-  const [loading, setLoading] = useState(false);
+  const [btnShuffleHidden, setBtnShuffleHidden] = useState<boolean>(false);
+  const [btnSpreadHidden, setBtnSpreadHidden] = useState<boolean>(false);
+  const [btnSpreadDisabled, setBtnSpreadDisabled] = useState<boolean>(false);
+  const [btnSeleteHidden, setBtnSeleteHidden] = useState<boolean>(true);
+  const [btnSeletedisabled, setBtnSeletedisabled] = useState<boolean>(true);
+
+  const [confirmCard, setConfirmCard] = useState<boolean>(false);
+  const [btnConfirmCard, setBtnConfirmCard] = useState<ReactNode>("선택 완료");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const MAX_SELECT = 3;
   // const MAX_SELECT = maxCard;
@@ -34,18 +38,16 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
 
   useEffect(() => {
     tarotCardRequest()
-      .then(data => console.log(data))
-
-    // // DB에서 카드 정보 가져오기
-    // getAllCard()
-    //   .then((res) => {
-    //     setCardList(res.data);
-    //   })
-    //   .catch((err) => {
-    //     // 실패시 저장해둔 카드 정보 가져오기
-    //     console.log("DB 카드 불러오기 실패 : ", err);
-    //     setCardList(TAROT_CARDS);
-    //   });
+      .then((data) => {
+        console.log("dbtards :", data);
+        const dbCardsList = data.tarotCardList;
+        setCardList(dbCardsList);
+      })
+      .catch((err) => {
+        console.log(err);
+        // 실패시 상수값 그대로 사용
+        setCardList(TAROT_CARDS_CONST);
+      })
   }, []);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
     }, 2000);
   }, [cardList]);
 
-  const fisherYatesShuffle = (cardList) => {
+  const fisherYatesShuffle = (cardList: TarotCardBase[] | ReadingCard[]) => {
     const newCard = [...cardList];
     //Fisher-Yates shuffle
     for (let i = 0; i < newCard.length; i++) {
@@ -70,9 +72,10 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
       newCard[rnd] = tmp;
     }
     // 정방향, 역방향 설정
-    const result = newCard.map((card) => ({
+    const result: ReadingCard[] = newCard.map((card) => ({
       ...card,
       reverse: Math.random() < 0.5, // true 또는 false
+      isSelected: false
     }));
     setShuffledCard(result);
   };
@@ -105,7 +108,7 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
     }, 16); // interval 60fps 느낌
   };
 
-  const handleSelectCard = (clickedCard) => {
+  const handleSelectCard = (clickedCard: ReadingCard) => {
     if (!spread) return;
     if (confirmCard) return;
 
@@ -118,9 +121,13 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
       toast.warning("모든 카드를 선택했어요!");
       return;
     }
+    const cardWithImg: ReadingCardWithImg = {
+      ...clickedCard,
+      imgUrl: getCardImg(clickedCard.id) ?? "",
+    };
 
     setActiveList((prev) => {
-      const next = [...prev, clickedCard];
+      const next = [...prev, cardWithImg];
       if (next.length === MAX_SELECT) {
         setBtnSeletedisabled(false);
       }
@@ -138,11 +145,16 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
     );
   };
 
-  const handleUnSelectCard = (e, activeCard) => {
+  const handleUnSelectCard = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+    activeCard: ReadingCardWithImg) => {
     if (confirmCard) return;
-    e.target.closest(".card_item").classList.add("inactive");
+
+    const el = e.currentTarget.closest(".card_item");
+    el?.classList.add("inactive");
+
     setTimeout(() => {
-      e.target.closest(".card_item").classList.remove("inactive");
+      el?.classList.remove("inactive");
+
       setActiveList(() => {
         const next = activeList.filter((card) => card.id !== activeCard.id);
         if (next.length !== MAX_SELECT) {
@@ -161,8 +173,10 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
     );
   };
 
-  const handleOnConfirm = (e) => {
-    e.target.setAttribute("disabled", "disabled");
+  const handleOnConfirm = (e: React.MouseEvent | React.TouchEvent) => {
+    const button = e.currentTarget as HTMLButtonElement;
+    button.disabled = true;
+
     setBtnConfirmCard(<Spinner className="size-4" />);
     setConfirmCard(true);
 
@@ -192,7 +206,7 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
             cardList={shuffledCard}
           />
         </section>
-        <section className="py-[50px] sm:py-[80px]">
+        <section className="py-[50px] sm:py-20">
           {activeList.length > 0 && (
             <ul className="flex flex-row justify-center items-center gap-3 h-full">
               {activeList.map((activeCard) => {
@@ -207,7 +221,7 @@ function Reading({ type, maxCard }: { type: string, maxCard: number }) {
                       ].join(" ")}
                       onClick={(e) => handleUnSelectCard(e, activeCard)}
                     >
-                      <CardItem card={activeCard} />
+                      <CardItem card={{ type: "readingCardWithImg", data: activeCard }} />
                     </div>
                   </li>
                 );
