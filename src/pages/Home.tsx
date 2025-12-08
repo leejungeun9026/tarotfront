@@ -1,19 +1,38 @@
+import { readingCategoryListRequest } from "@/apis";
+import type { ReadingCategoryBase } from "@/apis/response/reading";
 import SpeechBubble from "@/components/bubble/Bubble";
 import CardItem from "@/components/tarotcard/CardItem";
-import { TAROT_CARDS_CONST } from "@/constants/tarotCards";
-import { useNavigate } from "react-router-dom";
+import { READING_CATEGORY_CONST } from "@/constants/readingCategory";
+import Lottie from "lottie-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
-import {
-  Card,
-  CardContent
-} from "../components/ui/card";
+import { Card, CardContent } from "../components/ui/card";
 import "../styles/home.css";
 
-function Home() {
-  const deck = TAROT_CARDS_CONST
-  console.log("deck", deck)
+import starsLottie from "../assets/lottie/stars.json";
 
+function Home() {
   const navigate = useNavigate();
+  const categoryList = READING_CATEGORY_CONST;
+  const [readingCategory, setReadingCategory] =
+    useState<ReadingCategoryBase[]>(categoryList);
+  const uniqueTypes = [
+    ...new Map(readingCategory.map((item) => [item.typeEn, item])).values(),
+  ].map((item) => ({
+    id: item.id,
+    typeEn: item.typeEn,
+    typeKr: item.typeKr,
+  }));
+  useEffect(() => {
+    readingCategoryListRequest().then((responseData) => {
+      console.log(responseData);
+      const { readingCategoryList } = responseData;
+      setReadingCategory(readingCategoryList);
+      console.log(readingCategory);
+    });
+  }, []);
+
   return (
     <div className="Home divide-gray-100 divide-y-10">
       <section className="todayReading px-4 pt-2.5 pb-6 border-0">
@@ -25,21 +44,42 @@ function Home() {
           bubbleClassName="rounded-xl bg-[#e0d0fe]"
           childClassName="rounded-xl card_bg_gradient"
         >
-          <Card className="w-full border-0 overflow-hidden bg-transparent">
-            <CardContent className="text-center">
-              <h2 className="ff_kyobo text-xl font-medium tracking-tight text-balance text-center">
-                오늘의 운세는 어떨까?
-              </h2>
-              <div className="card_container relative w-full h-58">
-                <div className="card_bounce">
-                  <div className="card_wrap ">
-                    <CardItem card={{ type: "back", id: null }} />
+          <Card className="w-full py-0 border-0 overflow-hidden bg-transparent">
+            <CardContent className="py-6 text-center relative">
+              <div className="relative z-9">
+                <h2 className="ff_kyobo text-xl font-medium tracking-tight text-balance text-center">
+                  오늘의 운세는 어떨까?
+                </h2>
+                <div className="card_container relative w-full h-58">
+                  <div className="card_bounce">
+                    <div className="card_wrap ">
+                      <CardItem card={{ type: "back", id: null }} />
+                    </div>
                   </div>
                 </div>
+                <Button
+                  onClick={() => navigate("/reading")}
+                  className="cursor-pointer"
+                >
+                  오늘의 운세 보러가기
+                </Button>
               </div>
-              <Button onClick={() => navigate("/reading")} className="cursor-pointer">
-                오늘의 운세 보러가기
-              </Button>
+              <div className="absolute left-0 top-0 z-0 w-1/2 object-cover opacity-50">
+                <Lottie
+                  width={"100%"}
+                  height={"100%"}
+                  animationData={starsLottie}
+                  loop={true}
+                />
+              </div>
+              <div className="absolute right-0 top-0 z-0 w-1/2 object-cover opacity-50">
+                <Lottie
+                  width={"100%"}
+                  height={"100%"}
+                  animationData={starsLottie}
+                  loop={true}
+                />
+              </div>
             </CardContent>
           </Card>
         </SpeechBubble>
@@ -52,18 +92,18 @@ function Home() {
         </div>
         <div className="section_content">
           <div className="grid grid-flow-row grid-cols-2 sm:grid-cols-3 gap-3">
-            {/* {askList.map((item, index) => {
+            {uniqueTypes.map((category) => {
               return (
-                <Link to={item.type} key={index}>
+                <Link to={category.typeEn} key={category.id}>
                   <Card className="hover:bg-violet-50 hover:border-violet-200 hover:shadow-md transition-all">
                     <CardContent className="flex flex-col justify-center items-center gap-1">
-                      <span>{item.icon}</span>
-                      <span className="ff_kyobo">{item.name}</span>
+                      <span></span>
+                      <span className="ff_kyobo">{category.typeKr}</span>
                     </CardContent>
                   </Card>
                 </Link>
               );
-            })} */}
+            })}
           </div>
         </div>
       </section>
@@ -75,7 +115,7 @@ function Home() {
         </div>
         <div className="section_content"></div>
       </section>
-    </div >
+    </div>
   );
 }
 

@@ -1,7 +1,4 @@
-
-import type { TermsResponseDTO } from "@/apis/response/terms";
-
-type TermsBase = Omit<TermsResponseDTO, "code" | "message">
+import type { TermsBase } from "@/apis/response/terms";
 
 export const TERMS_CONST: TermsBase[] = [
   {

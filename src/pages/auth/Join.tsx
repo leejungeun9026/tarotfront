@@ -8,15 +8,14 @@ import type {
   EmailCertificationResponseDTO,
   SignUpResponseDTO,
 } from "@/apis/response/auth";
-import type { TermsBase } from "@/apis/response/tarotcard/tarotcard-list.response";
+import type { TermsBase } from "@/apis/response/terms";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TERMS_CONST } from "@/constants/terms";
 import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
-import type { ResponseBody } from "@/types/indes";
-import type { SignUpUser } from "@/types/user";
+import type { ResponseBody } from "@/types";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -54,7 +53,7 @@ function Join() {
   const navigate = useNavigate();
   const { showDialog } = useGlobalAlertDialog();
 
-  const [user, setUser] = useState<SignUpUser>({
+  const [user, setUser] = useState<SignUpRequestDTO & { passwordChk: string }>({
     username: "",
     certificationNum: "",
     password: "",
@@ -556,11 +555,7 @@ function Join() {
                   {sendSuccess &&
                     !isSending &&
                     !(!codeSuccess && remainSec === 0) && (
-                      <Button
-                        variant="outline"
-                        className="w-24 h-11"
-                        disabled
-                      >
+                      <Button variant="outline" className="w-24 h-11" disabled>
                         발송 성공
                       </Button>
                     )}
@@ -580,8 +575,9 @@ function Join() {
                 </div>
               </div>
               <p
-                className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
-                  }`}
+                className={`text-xs mt-1 ${
+                  valid.username ? "text-green-600" : "text-red-500"
+                }`}
               >
                 {validMessages.username}
               </p>
@@ -636,10 +632,11 @@ function Join() {
                   <div className="flex gap-1 mt-1">
                     {remainSec > 0 && (
                       <p
-                        className={`text-xs ${valid.certificationNum
-                          ? "text-green-600"
-                          : "text-red-500"
-                          }`}
+                        className={`text-xs ${
+                          valid.certificationNum
+                            ? "text-green-600"
+                            : "text-red-500"
+                        }`}
                       >
                         {validMessages.certificationNum}
                       </p>
@@ -673,8 +670,9 @@ function Join() {
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
-                  }`}
+                className={`text-xs mt-1 ${
+                  valid.password ? "text-green-600" : "text-red-500"
+                }`}
               >
                 {validMessages.password}
               </p>
@@ -687,8 +685,9 @@ function Join() {
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${valid.passwordChk ? "text-green-600" : "text-red-500"
-                  }`}
+                className={`text-xs mt-1 ${
+                  valid.passwordChk ? "text-green-600" : "text-red-500"
+                }`}
               >
                 {validMessages.passwordChk}
               </p>
@@ -707,8 +706,9 @@ function Join() {
                 onChange={handleOnChange}
               />
               <p
-                className={`text-xs mt-1 ${valid.name ? "text-green-600" : "text-red-500"
-                  }`}
+                className={`text-xs mt-1 ${
+                  valid.name ? "text-green-600" : "text-red-500"
+                }`}
               >
                 {validMessages.name}
               </p>
@@ -718,18 +718,15 @@ function Join() {
           <div className="grid w-full items-center gap-3 mt-12 mb-8">
             <Card className="gap-0 p-0 rounded-md overflow-hidden">
               <CardHeader className="block p-0 [.border-b]:pb-0 bg-muted border-b">
-                <Label
-                  htmlFor="AllTermsChk"
-                  className="items-start gap-3 p-4"
-                >
+                <Label htmlFor="AllTermsChk" className="items-start gap-3 p-4">
                   <Checkbox
                     id="AllTermsChk"
                     checked={
                       isAllChecked
                         ? true
                         : isIndeterminate
-                          ? "indeterminate"
-                          : false
+                        ? "indeterminate"
+                        : false
                     }
                     className="bg-white"
                     onCheckedChange={(checked) => {

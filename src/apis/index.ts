@@ -16,6 +16,7 @@ import {
   type SignUpResponseDTO,
 } from "./response/auth";
 import type { TermsListResponseDTO } from "./response/terms";
+import type { ReadingCategoryListResponseDTO } from "./response/reading";
 
 const responseHandler = <T>(response: AxiosResponse<T>): T => {
   return response.data;
@@ -34,39 +35,20 @@ const errorHandler = (error: any): ResponseDTO | null => {
 const DOMAIN = "http://localhost:8085";
 const API_DOMAIN = `${DOMAIN}/api/v1`;
 
-const TERMS_LIST_URL = () => `${API_DOMAIN}/terms/terms-list`;
-const TERMS_URL = () => `${API_DOMAIN}/terms/`;
-
-const TAROT_CARD_URL = () => `${API_DOMAIN}/tarotcard`;
-
-const ID_CHECK_URL = () => `${API_DOMAIN}/auth/id-check`;
-const EMAIL_CERTIFICATION_URL = () => `${API_DOMAIN}/auth/email-certification`;
-const CHECK_CERTIFICATION_URL = () => `${API_DOMAIN}/auth/check-certification`;
-
 export const SNS_SIGN_IN_URL = (provider: "kakao" | "naver") =>
   `${API_DOMAIN}/auth/oauth2/${provider}`;
 const SIGN_UP_URL = () => `${API_DOMAIN}/auth/sign-up`;
 const SIGN_IN_URL = () => `${API_DOMAIN}/auth/sign-in`;
+const ID_CHECK_URL = () => `${API_DOMAIN}/auth/id-check`;
+const EMAIL_CERTIFICATION_URL = () => `${API_DOMAIN}/auth/email-certification`;
+const CHECK_CERTIFICATION_URL = () => `${API_DOMAIN}/auth/check-certification`;
 
-/* ------------------------------------- */
-/* 약관                                  */
-/* ------------------------------------- */
-export const termsListRequest = async (): Promise<TermsListResponseDTO> => {
-  const result = await axios
-    .get(TERMS_LIST_URL())
-    .then(responseHandler<TermsListResponseDTO>);
-  return result;
-};
+const TERMS_URL = () => `${API_DOMAIN}/terms/`;
+const TERMS_LIST_URL = () => `${API_DOMAIN}/terms/terms-list`;
 
-/* ------------------------------------- */
-/* 타로 카드                             */
-/* ------------------------------------- */
-export const tarotCardRequest = async (): Promise<TarotCardListResponseDTO> => {
-  const result = await axios
-    .get(TAROT_CARD_URL())
-    .then(responseHandler<TarotCardListResponseDTO>);
-  return result;
-};
+const TAROT_CARD_URL = () => `${API_DOMAIN}/tarotcard`;
+
+const READING_CATEGORY_LIST_URL = () => `${API_DOMAIN}/reading/category-list`;
 
 /* ------------------------------------- */
 /* auth                                  */
@@ -122,3 +104,34 @@ export const checkCertificationRequest = async (
     .catch(errorHandler);
   return result;
 };
+
+/* ------------------------------------- */
+/* 약관                                  */
+/* ------------------------------------- */
+export const termsListRequest = async (): Promise<TermsListResponseDTO> => {
+  const result = await axios
+    .get(TERMS_LIST_URL())
+    .then(responseHandler<TermsListResponseDTO>);
+  return result;
+};
+
+/* ------------------------------------- */
+/* 타로 카드                             */
+/* ------------------------------------- */
+export const tarotCardRequest = async (): Promise<TarotCardListResponseDTO> => {
+  const result = await axios
+    .get(TAROT_CARD_URL())
+    .then(responseHandler<TarotCardListResponseDTO>);
+  return result;
+};
+
+/* ------------------------------------- */
+/* 상황별 운세                           */
+/* ------------------------------------- */
+export const readingCategoryListRequest =
+  async (): Promise<ReadingCategoryListResponseDTO> => {
+    const result = await axios
+      .get(READING_CATEGORY_LIST_URL())
+      .then(responseHandler<ReadingCategoryListResponseDTO>);
+    return result;
+  };

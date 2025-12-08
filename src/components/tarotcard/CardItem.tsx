@@ -1,4 +1,7 @@
-import type { ReadingCard, ReadingCardWithImg } from "@/apis/response/tarotcard";
+import type {
+  ReadingCard,
+  ReadingCardWithImg,
+} from "@/apis/response/tarotcard";
 import { memo } from "react";
 import cardBack from "../../assets/back01.jpg";
 import { getCardImg } from "../../utils/tarotImage";
@@ -13,32 +16,31 @@ type CardType =
   | { type: "front"; id: number; reverse: boolean }
   | { type: "back"; id: number | null };
 
-
 const CardItem = memo(function CardItem({ card }: CardItemProps) {
   let id: number | null = null;
   let reverse = false;
-  let imgSrc = "";
+  let imgSrc = null;
 
   if (card.type === "readingCard") {
     id = card.data.id;
-    imgSrc = getCardImg(id) ?? "";
+    imgSrc = getCardImg(id) ?? null;
   }
 
   if (card.type === "readingCardWithImg") {
     id = card.data.id;
-    imgSrc = card.data.imgUrl ?? getCardImg(id) ?? "";
+    imgSrc = card.data.imgUrl ?? getCardImg(id) ?? null;
     reverse = card.data.reverse;
   }
 
   if (card.type === "front") {
     id = card.id;
     reverse = card.reverse;
-    imgSrc = getCardImg(id) ?? "";
+    imgSrc = getCardImg(id) ?? null;
   }
 
   if (card.type === "back") {
     id = card.id;
-    imgSrc = "";
+    imgSrc = null;
   }
 
   return (
@@ -60,6 +62,5 @@ const CardItem = memo(function CardItem({ card }: CardItemProps) {
     </div>
   );
 });
-
 
 export default CardItem;
