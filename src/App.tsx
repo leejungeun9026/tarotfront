@@ -10,10 +10,13 @@ import Archive from "./pages/archive/Archive";
 import Join from "./pages/auth/Join";
 import Login from "./pages/auth/Login";
 import OAuth from "./pages/auth/OAuth";
-import Reading from "./pages/reading/Reading";
+import ReadingCategory from "./pages/reading/ReadingCategory";
+import ReadingQuestion from "./pages/reading/ReadingQuestion";
 import MyPage from "./pages/user/MyPage";
-import { Role } from "./types/role";
 import { UserRole } from "./types/enums";
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 function App() {
   return (
@@ -25,8 +28,10 @@ function App() {
       >
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/reading" element={<Reading />} />
-
+          <Route path="/reading/:type">
+            <Route index element={<ReadingCategory />} />
+            <Route path=":id" element={<ReadingQuestion />} />
+          </Route>
           <Route
             path="/archive"
             element={

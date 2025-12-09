@@ -3,7 +3,7 @@ import type { ReadingCard, ReadingCardWithImg, TarotCardBase } from "@/apis/resp
 import CardDeck from "@/components/tarotcard/CardDeck";
 import CardItem from "@/components/tarotcard/CardItem";
 import { TAROT_CARDS_CONST } from "@/constants/tarotCards";
-import { getCardImg } from "@/utils/tarotImage";
+import { getCardImg } from "@/utils/imageMapper";
 import { useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "../../components/ui/button";

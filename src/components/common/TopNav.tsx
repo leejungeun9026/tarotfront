@@ -4,18 +4,30 @@ import { topNavHeight } from "../../constants/appHeight";
 function TopNav() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const titleMap: Record<string, string> = {
     "/": "타로버블팁",
     "/guide": "타로 정보",
     "/reading": "운세 보기",
+    // "/reading/love": "애정",
+    // "/reading/money": "금전",
+    // "/reading/job": "직업·커리어",
+    // "/reading/study": "학업·진로운",
+    // "/reading/life": "일상·건강",
+    // "/reading/human": "대인관계",
     "/archive": "보관함",
     "/login": "로그인",
     "/join": "회원가입",
     "/mypage": "마이페이지",
   };
 
-  const title = titleMap[location.pathname] ?? "";
-  // console.log("location.pathname :", location.pathname)
+  const getTitle = (path: string) => {
+    if (path.startsWith("/reading")) return "운세 보기";
+    return titleMap[path] ?? "";
+  };
+
+  const title = getTitle(location.pathname);
+
 
   if (location.pathname === "/") {
     {/* 홈화면 nav */ }
@@ -38,7 +50,7 @@ function TopNav() {
           </div>
         </div>
         <div className="grow text-center text-lg font-bold">
-          <p>{title || ""}</p>
+          <p className="">{title || ""}</p>
         </div>
         <div className="flex justify-center items-center w-11 h-11"></div>
       </div>

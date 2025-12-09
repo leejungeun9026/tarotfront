@@ -4,7 +4,7 @@ import type {
 } from "@/apis/response/tarotcard";
 import { memo } from "react";
 import cardBack from "../../assets/back01.jpg";
-import { getCardImg } from "../../utils/tarotImage";
+import { getCardImg } from "../../utils/imageMapper";
 
 type CardItemProps = {
   card: CardType;
@@ -19,29 +19,30 @@ type CardType =
 const CardItem = memo(function CardItem({ card }: CardItemProps) {
   let id: number | null = null;
   let reverse = false;
-  let imgSrc = null;
+  let imgSrc: string | undefined = undefined;
 
   if (card.type === "readingCard") {
     id = card.data.id;
-    imgSrc = getCardImg(id) ?? null;
+    imgSrc = getCardImg(id) ?? undefined;
   }
 
   if (card.type === "readingCardWithImg") {
     id = card.data.id;
-    imgSrc = card.data.imgUrl ?? getCardImg(id) ?? null;
+    imgSrc = card.data.imgUrl ?? getCardImg(id) ?? undefined;
     reverse = card.data.reverse;
   }
 
   if (card.type === "front") {
     id = card.id;
     reverse = card.reverse;
-    imgSrc = getCardImg(id) ?? null;
+    imgSrc = getCardImg(id) ?? undefined;
   }
 
   if (card.type === "back") {
     id = card.id;
-    imgSrc = null;
+    imgSrc = undefined; // OK
   }
+
 
   return (
     <div id={String(id)} className={["card_item", `card_${id}`].join(" ")}>
@@ -49,15 +50,16 @@ const CardItem = memo(function CardItem({ card }: CardItemProps) {
         <div className="card_back">
           <img src={cardBack} alt="카드 뒷면" />
         </div>
-
-        <div className="card_front">
-          <img
-            src={imgSrc}
-            alt="카드 앞면"
-            className={reverse ? "rotate-180" : ""}
-            loading="lazy"
-          />
-        </div>
+        {imgSrc && (
+          <div className="card_front">
+            <img
+              src={imgSrc}
+              alt="카드 앞면"
+              className={reverse ? "rotate-180" : ""}
+              loading="lazy"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

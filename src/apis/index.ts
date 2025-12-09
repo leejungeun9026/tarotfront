@@ -1,4 +1,3 @@
-import type { TarotCardListResponseDTO } from "@/types/tarotcard/tarotcard";
 import axios, { type AxiosResponse } from "axios";
 import {
   type CheckCertificationRequestDTO,
@@ -15,8 +14,10 @@ import {
   type SignInResponseDTO,
   type SignUpResponseDTO,
 } from "./response/auth";
+import type { ReadingCategoryListResponseDTO, ReadingQuestionListResponseDTO } from "./response/reading";
 import type { TermsListResponseDTO } from "./response/terms";
-import type { ReadingCategoryListResponseDTO } from "./response/reading";
+import type { TarotCardListResponseDTO } from "./response/tarotcard";
+import type { ReadingTypeEn } from "@/types/enums";
 
 const responseHandler = <T>(response: AxiosResponse<T>): T => {
   return response.data;
@@ -49,6 +50,9 @@ const TERMS_LIST_URL = () => `${API_DOMAIN}/terms/terms-list`;
 const TAROT_CARD_URL = () => `${API_DOMAIN}/tarotcard`;
 
 const READING_CATEGORY_LIST_URL = () => `${API_DOMAIN}/reading/category-list`;
+const READING_CATEGORY_LIST_TYPE_URL = (typeEn: ReadingTypeEn) => `${API_DOMAIN}/reading/category/${typeEn}`;
+const READING_QUESTION_LIST_URL = () => `${API_DOMAIN}/reading/question-list`;
+const READING_QUESTION_LIST_TYPE_URL = (typeId: number) => `${API_DOMAIN}/reading/question/${typeId}`;
 
 /* ------------------------------------- */
 /* auth                                  */
@@ -126,12 +130,37 @@ export const tarotCardRequest = async (): Promise<TarotCardListResponseDTO> => {
 };
 
 /* ------------------------------------- */
-/* 상황별 운세                           */
+/* 운세                           */
 /* ------------------------------------- */
+// 전체 카테고리 리스트
 export const readingCategoryListRequest =
   async (): Promise<ReadingCategoryListResponseDTO> => {
     const result = await axios
       .get(READING_CATEGORY_LIST_URL())
       .then(responseHandler<ReadingCategoryListResponseDTO>);
+    return result;
+  };
+// 타입별 카테고리 리스트
+export const readingCategoryListByTypeRequest =
+  async (typeEn: ReadingTypeEn): Promise<ReadingCategoryListResponseDTO> => {
+    const result = await axios
+      .get(READING_CATEGORY_LIST_TYPE_URL(typeEn))
+      .then(responseHandler<ReadingCategoryListResponseDTO>);
+    return result;
+  };
+// 전체 질문 리스트
+export const readingQuestionListRequest =
+  async (): Promise<ReadingQuestionListResponseDTO> => {
+    const result = await axios
+      .get(READING_QUESTION_LIST_URL())
+      .then(responseHandler<ReadingQuestionListResponseDTO>);
+    return result;
+  };
+// 카테고리별 질문 리스트
+export const readingQuestionListByCategoryIdRequest =
+  async (typeId: number): Promise<ReadingQuestionListResponseDTO> => {
+    const result = await axios
+      .get(READING_QUESTION_LIST_TYPE_URL(typeId))
+      .then(responseHandler<ReadingQuestionListResponseDTO>);
     return result;
   };

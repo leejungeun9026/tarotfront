@@ -1,5 +1,5 @@
 import type { ReadingCard, ReadingCardWithImg } from "@/apis/response/tarotcard";
-import { getCardImg } from "./tarotImage";
+import { getCardImg } from "./imageMapper";
 
 export const mapCardWithImg = (cards: ReadingCard[]): ReadingCardWithImg[] => {
   return cards.map((card) => ({

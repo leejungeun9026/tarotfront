@@ -1,3 +1,7 @@
+/* 토스페이스 */
+@import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
+
+/* 교보 손글씨 폰트 */
 @font-face {
   font-family: 'KyoboHandwriting2019';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff') format('woff');
@@ -5,10 +9,18 @@
   font-display: swap;
 }
 
+* {
+  letter-spacing: -0.025em;
+}
+
 body {
   font-family: "SUIT Variable", sans-serif;
   background: #e9e9e9;
   overflow: hidden;
+}
+
+.tossface {
+  font-family: Tossface;
 }
 
 .ff_kyobo {
@@ -38,4 +50,44 @@ input:-webkit-autofill:hover {
 input[readonly].likedisabled,
 input[readonly].likedisabled:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px oklab(98.463% -0.00064 -0.00169) inset !important;
+}
+
+
+
+.bg_gradient {
+  background-image: radial-gradient(circle at center,
+      #8a4de899,
+      #c9a8ff73,
+      #f1e7ff),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+  background-blend-mode: lighten;
+  background-size: 150% 150%, 100% 100%;
+  /* 더 크게 */
+  background-position: 50% 50%, 0 0;
+  animation: moveRadialGradient 4.5s ease-in-out infinite;
+  /* 더 빠르게 */
+}
+
+@keyframes moveRadialGradient {
+  0% {
+    background-position: 50% 50%, 0 0;
+  }
+
+  25% {
+    background-position: 60% 40%, 0 0;
+    /* 크게 이동 */
+  }
+
+  50% {
+    background-position: 80% 30%, 0 0;
+    /* 대각선 이동 */
+  }
+
+  75% {
+    background-position: 30% 65%, 0 0;
+  }
+
+  100% {
+    background-position: 50% 50%, 0 0;
+  }
 }
