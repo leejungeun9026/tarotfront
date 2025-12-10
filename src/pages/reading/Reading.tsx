@@ -5,7 +5,7 @@ export default function Reading() {
   const { state } = useLocation();
 
   if (state?.screen === "pick") {
-    return <ReadingPick category={state.category} question={state.question} />;
+    return <ReadingPick categoryId={state.categoryId} category={state.category} question={state.question} spreadType={state.spreadType} spreadCount={state.spreadCount} />;
   }
 
   return (

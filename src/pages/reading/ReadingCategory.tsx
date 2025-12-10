@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ReadingTypeKr, type ReadingTypeEn } from "@/types/enums";
+import ReadingSpreadCount from "@/types/enums/readingSpread-count.enum copy";
+import ReadingSpreadKr from "@/types/enums/readingSpread-kr.enum";
 import { getCategoryImg } from "@/utils/imageMapper";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -24,8 +26,12 @@ import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 function ReadingCategory() {
-  const params = useParams();
   const navigate = useNavigate();
+  const spread = "THREE";
+  const spreadType = ReadingSpreadKr[spread];
+  const spreadCount = ReadingSpreadCount[spread];
+
+  const params = useParams();
   const type = params.type;
   const typeEn = params.type?.toUpperCase() as ReadingTypeEn;
   const typeKr = ReadingTypeKr[typeEn];
@@ -48,12 +54,15 @@ function ReadingCategory() {
     Record<number, boolean>
   >({});
 
-  const requestPick = (category: string, question: string) => {
+  const requestPick = (categoryId: number, category: string, question: string) => {
     navigate("/reading", {
       state: {
         screen: "pick",
+        categoryId,
         category,
         question,
+        spreadType: spreadType,
+        spreadCount: spreadCount
       },
     });
   };
@@ -71,10 +80,12 @@ function ReadingCategory() {
     });
   }, [typeEn]);
 
-  const handleQuestionSelectSubmit = (category: string, question: string) => {
-    requestPick(category, question);
+  // 질문 리스트에 선택
+  const handleQuestionSelectSubmit = (categoryId: number, category: string, question: string) => {
+    requestPick(categoryId, category, question);
   };
 
+  // 다른 질문 버튼 클릭
   const handleOpenQuestion = (e: React.MouseEvent<HTMLButtonElement>) => {
     const num = Number(e.currentTarget.dataset.num);
     if (Number.isNaN(num)) return;
@@ -83,6 +94,7 @@ function ReadingCategory() {
     setQuestionMessage({ [num]: { message: "" } });
   };
 
+  // 다른 질문 input onChange
   const handleOnChangeQuestion = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setQuestionMessage((prev) => ({
@@ -91,20 +103,23 @@ function ReadingCategory() {
     }));
   };
 
+  // 다른 질문 input onKeydown, 엔터키로 전송
   const handleOnKeydown = (
     e: React.KeyboardEvent<HTMLInputElement>,
+    categoryId: number,
     category: string
   ) => {
     if (e.key === "Enter") {
-      handleQuestionInputSubmit(Number(e.currentTarget.id), category);
+      handleQuestionInputSubmit(categoryId, category);
     }
   };
 
-  const handleQuestionInputSubmit = (id: number, category: string) => {
-    const key = String(id);
+  // 다른 질문 버튼으로 전송
+  const handleQuestionInputSubmit = (categoryId: number, category: string) => {
+    const key = String(categoryId);
     const message = questionMessage[key]?.message;
     if (!message) return;
-    requestPick(category, message);
+    requestPick(categoryId, category, message);
   };
 
   return (
@@ -188,6 +203,7 @@ function ReadingCategory() {
                                 className="w-full ff_kyobo"
                                 onClick={() =>
                                   handleQuestionSelectSubmit(
+                                    c.id,
                                     c.category,
                                     q.questionText
                                   )
@@ -223,7 +239,7 @@ function ReadingCategory() {
                                   autoComplete="off"
                                   onChange={handleOnChangeQuestion}
                                   onKeyDown={(e) =>
-                                    handleOnKeydown(e, c.category)
+                                    handleOnKeydown(e, c.id, c.category)
                                   }
                                 />
                                 <Button

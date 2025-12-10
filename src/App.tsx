@@ -13,23 +13,20 @@ import Archive from "./pages/archive/Archive";
 import Join from "./pages/auth/Join";
 import Login from "./pages/auth/Login";
 import OAuth from "./pages/auth/OAuth";
+import Reading from "./pages/reading/Reading";
 import ReadingCategory from "./pages/reading/ReadingCategory";
 import MyPage from "./pages/user/MyPage";
 import { UserRole } from "./types/enums";
-import Reading from "./pages/reading/Reading";
-import ReadingPick from "./pages/reading/ReadingPick";
 
 function App() {
   return (
-    <div className="App m-auto w-full min-w-xs max-w-3xl max-h-lvh h-full flex flex-col justify-start align-stretch overflow-hidden">
-      <div className="wrap w-full min-w-xs max-w-3xl flex flex-col justify-start align-stretch overflow-hidden overflow-x-hidden overflow-y-auto">
+    <div className="App m-auto w-full min-w-xs max-w-3xl h-dvh flex flex-col justify-start align-stretch overflow-hidden">
+
+      <div className="wrap flex-1 w-full min-w-xs max-w-3xl h-auto flex flex-col justify-start align-stretch overflow-hidden" style={{ maxHeight: `calc(100dvh - ${bottomNavHeight}px)` }}>
+
         <TopNav />
         <div
-          className="container w-full min-w-xs max-w-3xl"
-          style={{
-            minHeight: `calc(100vh - ${topNavHeight}px - ${bottomNavHeight}px)`,
-          }}
-        >
+          className="container w-full min-w-xs max-w-3xl flex-1 overflow-y-auto">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/reading" element={<Reading />} />
@@ -63,7 +60,6 @@ function App() {
       <BottomNav />
 
       <GlobalAlertDialog />
-      <Toaster position="bottom-center" />
     </div>
   );
 }

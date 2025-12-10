@@ -1,3 +1,4 @@
+import { Archive, BookMarked, CircleUserRound, House, Sparkles } from "lucide-react";
 import { bottomNavHeight } from "../../constants/appHeight";
 import NavItem from "./NavItem";
 
@@ -8,15 +9,11 @@ function BottomNav() {
         className="flex justify-center sm:justify-around items-center gap-2 border-t py-2 px-3"
         style={{ height: bottomNavHeight }}
       >
-        <NavItem title={"메인"} icon={"home"} link={"/"} />
-        <NavItem title={"타로정보"} icon={"cards_star"} link={"/guide"} />
-        <NavItem title={"운세보기"} icon={"star_shine"} link={"/reading"} />
-        <NavItem title={"보관함"} icon={"history_edu"} link={"/archive"} />
-
-        <NavItem
-          title={"마이페이지"}
-          icon={"account_circle"}
-          link={"/mypage"}
+        <NavItem title={"메인"} icon={<House />} link={"/"} />
+        <NavItem title={"타로정보"} icon={<BookMarked />} link={"/guide"} />
+        <NavItem title={"운세보기"} icon={<Sparkles />} link={"/reading"} />
+        <NavItem title={"보관함"} icon={<Archive />} link={"/archive"} />
+        <NavItem title={"마이페이지"} icon={<CircleUserRound />} link={"/mypage"}
         />
       </ul>
     </div>

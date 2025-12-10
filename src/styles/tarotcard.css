@@ -1,10 +1,11 @@
-.card_section {
+:root {
+  --card-width: 100px;
+}
+
+.card_deck_wrap {
   position: relative;
   margin: 0 auto;
   width: 100%;
-  max-width: 100vw;
-  height: 45vh;
-  min-height: 250px;
 }
 
 .card_deck {
@@ -19,7 +20,6 @@
 }
 
 .card_wrap {
-  --card-width: 100px;
   position: relative;
   display: block;
   width: var(--card-width);
@@ -27,6 +27,15 @@
   user-select: none;
   -webkit-user-select: none;
 }
+
+.card_slot {
+  width: var(--card-width);
+  display: block;
+  height: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 
 .card_deck>.card_wrap {
   position: absolute;
@@ -44,11 +53,7 @@
 }
 
 @media screen and (max-width: 450px) {
-  .card_section {
-    height: 40vh;
-  }
-
-  .card_wrap {
+  :root {
     --card-width: 80px;
   }
 }
@@ -206,7 +211,7 @@
   border-radius: calc(var(--deck-width) / 2);
   overflow: visible;
   transform-origin: center center;
-  transition: transform 1.5s ease-in-out;
+  transition: transform 0.8s ease-in-out;
 }
 
 .card_deck.spread .card_wrap .card_item {
@@ -218,12 +223,18 @@
 }
 
 .card_deck.spread .card_wrap.active .card_item {
-  animation: selected_item 0.3s ease forwards;
+  animation: selected_item_from_deck 0.3s ease forwards;
 }
 
-.card_wrap .card_item.inactive {
+.card_wrap.selected-in .card_item {
+  position: relative;
+  /* 필요하면 유지 */
+  animation: selected_item_from_list 0.3s ease forwards;
+}
+
+.card_wrap .card_item.unselected {
   position: absolute;
-  animation: unselected_item 0.3s ease forwards;
+  animation: unselected_item_from_list 0.3s ease forwards;
 }
 
 @keyframes selected_wrap {
@@ -234,7 +245,7 @@
   }
 }
 
-@keyframes selected_item {
+@keyframes selected_item_from_deck {
   0% {
     opacity: 1;
     transform: translateY(10px);
@@ -246,7 +257,19 @@
   }
 }
 
-@keyframes unselected_item {
+@keyframes selected_item_from_list {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes unselected_item_from_list {
   0% {
     opacity: 1;
     transform: translateY(0);
@@ -257,6 +280,7 @@
     transform: translateY(-50px);
   }
 }
+
 
 @media (hover: hover) {
   .card_deck.spread .card_wrap:hover .card_item {
@@ -269,6 +293,8 @@
 /***************************************/
 /********** selecte animation **********/
 /***************************************/
+
+
 .card_selected.card_wrap .card_item {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
