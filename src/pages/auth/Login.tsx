@@ -246,12 +246,7 @@ function Login() {
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Button
-                size="xl"
-                className="w-full"
-                onClick={handleLogin}
-                onKeyDown={() => handleOnKeyDown}
-              >
+              <Button size="xl" className="w-full" onClick={handleLogin}>
                 로그인
               </Button>
               <Button

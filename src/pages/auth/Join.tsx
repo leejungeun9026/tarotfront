@@ -98,6 +98,31 @@ function Join() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [codeSuccess, setCodeSuccess] = useState(false);
 
+  const initialUserState: SignUpRequestDTO & { passwordChk: string } = {
+    username: "",
+    certificationNum: "",
+    password: "",
+    passwordChk: "",
+    name: "",
+    agreedTermIds: [],
+  };
+
+  const initialValidState = {
+    username: false,
+    certificationNum: false,
+    password: false,
+    passwordChk: false,
+    name: false,
+  };
+
+  const initialValidMessagesState = {
+    username: "",
+    certificationNum: "",
+    password: "",
+    passwordChk: "",
+    name: "",
+  };
+
   // api response
   const emailCertificationResponse = (
     responseBody: ResponseBody<EmailCertificationResponseDTO>
@@ -196,14 +221,33 @@ function Join() {
 
     if (code === ResponseCode.DATABASE_ERROR) {
       alert("DB오류");
+      setUser(initialUserState);
+      setValid(initialValidState);
+      setValidMessages(initialValidMessagesState);
+      setSendSuccess(false);
+      setCodeSuccess(false);
+      stopTimer();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
     if (code === ResponseCode.DUPLICATE_EMAIL) {
       alert("다른 이메일을 이용해주세요");
-      navigate("/join");
+      setUser(initialUserState);
+      setValid(initialValidState);
+      setValidMessages(initialValidMessagesState);
+      setSendSuccess(false);
+      setCodeSuccess(false);
+      stopTimer();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
     if (code === ResponseCode.CERTIFICATE_FAIL) {
       alert("인증 실패. 회원가입을 다시 시도해주세요");
-      navigate("/join");
+      setUser(initialUserState);
+      setValid(initialValidState);
+      setValidMessages(initialValidMessagesState);
+      setSendSuccess(false);
+      setCodeSuccess(false);
+      stopTimer();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
     if (code === ResponseCode.SUCCESS) {
       showDialog({
@@ -227,7 +271,7 @@ function Join() {
         const dbTermsList = data.termsList;
         setTerms(dbTermsList);
         // 필수 약관 아이디 다시 저장
-        const requiredIds = termList
+        const requiredIds = dbTermsList
           .filter((t: TermsBase) => t.required === true)
           .map((t: TermsBase) => t.id);
         setRequiredTermIds(requiredIds);
@@ -718,7 +762,10 @@ function Join() {
           <div className="grid w-full items-center gap-3 mt-12 mb-8">
             <Card className="gap-0 p-0 rounded-md overflow-hidden">
               <CardHeader className="block p-0 [.border-b]:pb-0 bg-muted border-b">
-                <Label htmlFor="AllTermsChk" className="items-start gap-3 p-4">
+                <Label
+                  htmlFor="AllTermsChk"
+                  className="items-start gap-3 p-4 cursor-pointer"
+                >
                   <Checkbox
                     id="AllTermsChk"
                     checked={
@@ -762,7 +809,7 @@ function Join() {
                     return (
                       <li key={item.id} className=" not-last:border-b">
                         <div className="flex items-center">
-                          <Label className="items-center gap-3 p-4 grow">
+                          <Label className="items-center gap-3 p-4 grow cursor-pointer">
                             <Checkbox
                               name="agreedTermIds"
                               id={checkboxId}

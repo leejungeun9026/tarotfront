@@ -54,7 +54,11 @@ function ReadingCategory() {
     Record<number, boolean>
   >({});
 
-  const requestPick = (categoryId: number, category: string, question: string) => {
+  const requestPick = (
+    categoryId: number,
+    category: string,
+    question: string
+  ) => {
     navigate("/reading", {
       state: {
         screen: "pick",
@@ -62,7 +66,7 @@ function ReadingCategory() {
         category,
         question,
         spreadType: spreadType,
-        spreadCount: spreadCount
+        spreadCount: spreadCount,
       },
     });
   };
@@ -81,7 +85,11 @@ function ReadingCategory() {
   }, [typeEn]);
 
   // 질문 리스트에 선택
-  const handleQuestionSelectSubmit = (categoryId: number, category: string, question: string) => {
+  const handleQuestionSelectSubmit = (
+    categoryId: number,
+    category: string,
+    question: string
+  ) => {
     requestPick(categoryId, category, question);
   };
 
@@ -130,15 +138,13 @@ function ReadingCategory() {
         ) : (
           <PageTitle
             title={
-              <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                <div className="flex gap-2 items-center">
-                  <img
-                    src={getCategoryImg(params?.type ? params.type : undefined)}
-                    className="size-7 sm:size-8 animate-bounce"
-                  />
-                  {typeKr}운
-                </div>
-              </h3>
+              <div className="flex gap-2 items-center">
+                <img
+                  src={getCategoryImg(params?.type ? params.type : undefined)}
+                  className="size-7 sm:size-8 animate-bounce"
+                />
+                {typeKr}운
+              </div>
             }
             subtitle={
               <p>궁금한 질문을 선택하거나 입력하면 운세를 볼 수 있어요</p>

@@ -14,7 +14,10 @@ import {
   type SignInResponseDTO,
   type SignUpResponseDTO,
 } from "./response/auth";
-import type { ReadingCategoryListResponseDTO, ReadingQuestionListResponseDTO } from "./response/reading";
+import type {
+  ReadingCategoryListResponseDTO,
+  ReadingQuestionListResponseDTO,
+} from "./response/reading";
 import type { TermsListResponseDTO } from "./response/terms";
 import type { TarotCardListResponseDTO } from "./response/tarotcard";
 import type { ReadingTypeEn } from "@/types/enums";
@@ -48,14 +51,15 @@ const CHECK_CERTIFICATION_URL = () => `${API_DOMAIN}/auth/check-certification`;
 const TERMS_URL = () => `${API_DOMAIN}/terms/`;
 const TERMS_LIST_URL = () => `${API_DOMAIN}/terms/terms-list`;
 
-const TAROT_CARD_URL = () => `${API_DOMAIN}/tarotcard`;
+const TAROT_CARD_LIST_URL = () => `${API_DOMAIN}/tarotcard/tarotcard-list`;
 
 const READING_CATEGORY_LIST_URL = () => `${API_DOMAIN}/reading/category-list`;
-const READING_CATEGORY_LIST_TYPE_URL = (typeEn: ReadingTypeEn) => `${API_DOMAIN}/reading/category/${typeEn}`;
+const READING_CATEGORY_LIST_TYPE_URL = (typeEn: ReadingTypeEn) =>
+  `${API_DOMAIN}/reading/category/${typeEn}`;
 const READING_QUESTION_LIST_URL = () => `${API_DOMAIN}/reading/question-list`;
-const READING_QUESTION_LIST_TYPE_URL = (typeId: number) => `${API_DOMAIN}/reading/question/${typeId}`;
+const READING_QUESTION_LIST_TYPE_URL = (typeId: number) =>
+  `${API_DOMAIN}/reading/question/${typeId}`;
 const READING_RESULT_URL = () => `${API_DOMAIN}/reading/result`;
-
 
 /* ------------------------------------- */
 /* auth                                  */
@@ -110,8 +114,6 @@ export const checkCertificationRequest = async (
   return result;
 };
 
-
-
 /* ------------------------------------- */
 /* 약관                                  */
 /* ------------------------------------- */
@@ -122,19 +124,15 @@ export const termsListRequest = async (): Promise<TermsListResponseDTO> => {
   return result;
 };
 
-
-
 /* ------------------------------------- */
 /* 타로 카드                             */
 /* ------------------------------------- */
 export const tarotCardRequest = async (): Promise<TarotCardListResponseDTO> => {
   const result = await axios
-    .get(TAROT_CARD_URL())
+    .get(TAROT_CARD_LIST_URL())
     .then(responseHandler<TarotCardListResponseDTO>);
   return result;
 };
-
-
 
 /* ------------------------------------- */
 /* 운세 카테고리 & 질문                  */
@@ -150,13 +148,14 @@ export const readingCategoryListRequest =
   };
 
 // 타입별 카테고리 리스트
-export const readingCategoryListByTypeRequest =
-  async (typeEn: ReadingTypeEn): Promise<ReadingCategoryListResponseDTO> => {
-    const result = await axios
-      .get(READING_CATEGORY_LIST_TYPE_URL(typeEn))
-      .then(responseHandler<ReadingCategoryListResponseDTO>);
-    return result;
-  };
+export const readingCategoryListByTypeRequest = async (
+  typeEn: ReadingTypeEn
+): Promise<ReadingCategoryListResponseDTO> => {
+  const result = await axios
+    .get(READING_CATEGORY_LIST_TYPE_URL(typeEn))
+    .then(responseHandler<ReadingCategoryListResponseDTO>);
+  return result;
+};
 
 // 전체 질문 리스트
 export const readingQuestionListRequest =
@@ -168,24 +167,42 @@ export const readingQuestionListRequest =
   };
 
 // 카테고리별 질문 리스트
-export const readingQuestionListByCategoryIdRequest =
-  async (typeId: number): Promise<ReadingQuestionListResponseDTO> => {
-    const result = await axios
-      .get(READING_QUESTION_LIST_TYPE_URL(typeId))
-      .then(responseHandler<ReadingQuestionListResponseDTO>);
-    return result;
-  };
-
-
+export const readingQuestionListByCategoryIdRequest = async (
+  typeId: number
+): Promise<ReadingQuestionListResponseDTO> => {
+  const result = await axios
+    .get(READING_QUESTION_LIST_TYPE_URL(typeId))
+    .then(responseHandler<ReadingQuestionListResponseDTO>);
+  return result;
+};
 
 /* ------------------------------------- */
 /* 리딩 결과                             */
 /* ------------------------------------- */
 
-export const readingResultRequest = async (requestBody: ReadingResultRequestDTO) => {
-  console.log(requestBody)
+export const readingResultRequest = async (
+  requestBody: ReadingResultRequestDTO
+) => {
+  console.log("📤 리딩 결과 요청 바디:", requestBody);
+
+  const start = performance.now(); // 요청 시작 시간
+
   const result = await axios
-    .post(READING_RESULT_URL(), requestBody)
-    .then(res => console.log(res.data));
-  return result;
-}
+    .post(READING_RESULT_URL(), requestBody, { withCredentials: true })
+    .then((res) => {
+      console.log(res);
+      return res.data;
+    });
+
+  const end = performance.now(); // 요청 끝난 시점
+  const frontElapsedMs = end - start;
+
+  console.log("리딩 결과 요청 시간:", frontElapsedMs.toFixed(0), "ms");
+  console.log("리딩 결과 응답:", result);
+
+  // 응답 데이터 + 프론트에서 측정한 시간 둘 다 넘겨줌
+  return {
+    data: result,
+    frontElapsedMs,
+  };
+};

@@ -26,12 +26,11 @@ function Home() {
     typeEn: item.typeEn,
     typeKr: item.typeKr,
   }));
+
   useEffect(() => {
     readingCategoryListRequest().then((responseData) => {
-      console.log(responseData);
       const { readingCategoryList } = responseData;
       setReadingCategory(readingCategoryList);
-      console.log(readingCategory);
     });
   }, []);
 
