@@ -1,3 +1,5 @@
-export const topNavHeight = { height: "52px" }
-export const bottomNavHeight = { height: "65px" }
-export const containerHeight = { height: `calc(100vh - (${topNavHeight.height} + ${bottomNavHeight.height}))` };
+export const topNavHeight = 52;
+export const bottomNavHeight = 65;
+// export const containerHeight = {
+//   height: `calc(100vh - (${topNavHeight.height} + ${bottomNavHeight.height}))`,
+// };

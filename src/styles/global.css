@@ -1,10 +1,11 @@
 /* 토스페이스 */
-@import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
+@import url("https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css");
 
 /* 교보 손글씨 폰트 */
 @font-face {
-  font-family: 'KyoboHandwriting2019';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff') format('woff');
+  font-family: "KyoboHandwriting2019";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff")
+    format("woff");
   font-weight: normal;
   font-display: swap;
 }
@@ -32,6 +33,7 @@ body {
 }
 
 .App {
+  position: relative;
   background: var(--background);
 }
 
@@ -52,13 +54,13 @@ input[readonly].likedisabled:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px oklab(98.463% -0.00064 -0.00169) inset !important;
 }
 
-
-
 .bg_gradient {
-  background-image: radial-gradient(circle at center,
+  background-image: radial-gradient(
+      circle at center,
       #8a4de899,
       #c9a8ff73,
-      #f1e7ff),
+      #f1e7ff
+    ),
     linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
   background-blend-mode: lighten;
   background-size: 150% 150%, 100% 100%;

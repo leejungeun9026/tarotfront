@@ -3,7 +3,7 @@ import type {
   ReadingCardWithImg,
 } from "@/apis/response/tarotcard";
 import { memo } from "react";
-import cardBack from "../../assets/back01.jpg";
+import cardBack from "../../assets/back02.jpg";
 import { getCardImg } from "../../utils/imageMapper";
 
 type CardItemProps = {
@@ -42,7 +42,6 @@ const CardItem = memo(function CardItem({ card }: CardItemProps) {
     id = card.id;
     imgSrc = undefined; // OK
   }
-
 
   return (
     <div id={String(id)} className={["card_item", `card_${id}`].join(" ")}>

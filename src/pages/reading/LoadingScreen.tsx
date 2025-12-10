@@ -1,5 +1,5 @@
+import { bottomNavHeight, topNavHeight } from "@/constants/appHeight";
 import { useEffect, useState } from "react";
-import { containerHeight } from "../../constants/appHeight";
 
 const loadingStep = (type) => {
   return [
@@ -61,7 +61,7 @@ function LoadingScreen({ type, activeList }) {
   return (
     <div
       className="loadingScreen w-3xl fixed left-1/2 -translate-x-1/2 flex justify-center items-center bg-violet-50"
-      style={containerHeight}
+      style={{ height: `calc(100vh - ${topNavHeight} - ${bottomNavHeight})` }}
     >
       <div className="img_wrap">{viewLoadingMessage.img}</div>
       <div className="text_wrap handwriting text-center text-lg">

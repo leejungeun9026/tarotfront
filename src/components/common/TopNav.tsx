@@ -22,39 +22,51 @@ function TopNav() {
   };
 
   const getTitle = (path: string) => {
-    if (path.startsWith("/reading")) return "운세 보기";
+    if (path.startsWith("/reading")) return "상황별 운세 보기";
     return titleMap[path] ?? "";
   };
 
   const title = getTitle(location.pathname);
 
-
   if (location.pathname === "/") {
-    {/* 홈화면 nav */ }
+    {
+      /* 홈화면 nav */
+    }
     return (
-      <div className="TopNav">
-        <div className="flex justify-start items-center px-5 py-1" style={topNavHeight}>
+      <div className="TopNav bg-background">
+        <div
+          className="flex justify-start items-center px-5 py-1"
+          style={{ height: topNavHeight }}
+        >
           <div>
-            <p className="text-start text-lg font-bold">{title || "타로버블팁"}</p>
+            <p className="text-start text-lg font-semibold">
+              {title || "타로버블팁"}
+            </p>
           </div>
         </div>
       </div>
-    )
+    );
   }
   return (
-    <div className="TopNav">
-      <div className="flex justify-start items-center gap-2 px-1 py-1 border-b" style={topNavHeight}>
-        <div className="flex justify-center items-center w-11 h-11" onClick={() => navigate(-1)}>
+    <div className="TopNav bg-background">
+      <div
+        className="flex justify-start items-center gap-2 px-1 py-1 border-b"
+        style={{ height: topNavHeight }}
+      >
+        <div
+          className="flex justify-center items-center w-11 h-11"
+          onClick={() => navigate(-1)}
+        >
           <div className="flex justify-center items-center w-10 h-10 bg-transparent hover:bg-neutral-50 active:bg-neutral-100 rounded-sm cursor-pointer">
             <span className="material-symbols-rounded">arrow_back</span>
           </div>
         </div>
-        <div className="grow text-center text-lg font-bold">
+        <div className="grow text-center text-lg font-semibold">
           <p className="">{title || ""}</p>
         </div>
         <div className="flex justify-center items-center w-11 h-11"></div>
       </div>
-    </div >
+    </div>
   );
 }
 

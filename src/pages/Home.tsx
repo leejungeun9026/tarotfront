@@ -41,7 +41,7 @@ function Home() {
         <SpeechBubble
           fullWidth
           side="top"
-          pointerSize={10}
+          pointerSize={12}
           tailPosition={34}
           bubbleClassName="rounded-xl bg-[#e0d0fe]"
           childClassName="rounded-xl bg_gradient"
@@ -50,7 +50,7 @@ function Home() {
             <CardContent className="py-6 text-center relative">
               <div className="relative z-9">
                 <h2 className="ff_kyobo text-xl font-medium tracking-tight text-balance text-center">
-                  오늘의 운세는 어떨까?
+                  나의 오늘 운세는 어떨까?
                 </h2>
                 <div className="card_container relative w-full h-58">
                   <div className="card_bounce">
@@ -101,7 +101,10 @@ function Home() {
                   <Card className="hover:bg-violet-50 hover:border-violet-200 hover:shadow-md transition-all group">
                     <CardContent className="flex flex-col justify-center items-center gap-1">
                       <div className="imgWrap group-hover:animate-bounce">
-                        <img src={getCategoryImg(textLow)} className="size-7 sm:size-8" />
+                        <img
+                          src={getCategoryImg(textLow)}
+                          className="size-7 sm:size-8"
+                        />
                       </div>
                       <span className="ff_kyobo">{category.typeKr}</span>
                     </CardContent>
