@@ -22,7 +22,7 @@ function TopNav() {
   };
 
   const getTitle = (path: string) => {
-    if (path.startsWith("/reading")) return "상황별 운세 보기";
+    if (path.startsWith("/reading")) return "운세 보기";
     return titleMap[path] ?? "";
   };
 

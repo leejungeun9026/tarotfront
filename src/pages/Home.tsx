@@ -54,7 +54,8 @@ function Home() {
                 <div className="card_container relative w-full h-58">
                   <div className="card_bounce">
                     <div className="card_wrap ">
-                      <CardItem card={{ type: "back", id: null }} />
+                      <img src="" alt="" />
+                      <CardItem card={null} />
                     </div>
                   </div>
                 </div>

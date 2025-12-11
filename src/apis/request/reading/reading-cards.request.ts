@@ -4,6 +4,8 @@ export default interface ReadingCardsRequestDTO {
   cardId: number;
   nameEn: string;
   nameKr: string;
+  arcanaType: string;
+  cardNumber: number;
   reverse: boolean;
   reverseText: string;
   description: string;

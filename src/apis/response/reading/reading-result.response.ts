@@ -6,11 +6,11 @@ export default interface ReadingResultResponseDTO extends ResponseDTO {
   resultTitle: string;
   resultSummary: string;
   overallAdvice: string;
-  positions: ReadingCategoryResponseDTO[];
+  positions: ReadingPositionResponseDTO[];
   cardList: ReadingCardsRequestDTO[];
 }
 
-export interface ReadingCategoryResponseDTO extends ResponseDTO {
+export interface ReadingPositionResponseDTO extends ResponseDTO {
   position: number;
   positionName: string;
   interpretation: string;

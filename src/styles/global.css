@@ -2,18 +2,24 @@
 @import url("https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css");
 
 /* 로마숫자용 */
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Fredericka+the+Great&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Fredericka+the+Great&display=swap");
 
 /* 교보 손글씨 폰트 */
 @font-face {
   font-family: "KyoboHandwriting2019";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff") format("woff");
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff")
+    format("woff");
   font-weight: normal;
   font-display: swap;
 }
 
 * {
   letter-spacing: -0.025em;
+}
+
+::selection {
+  background: var(--color-violet-700);
+  color: white;
 }
 
 body {
@@ -35,7 +41,6 @@ body {
   -webkit-font-smoothing: antialiased;
   font-family: "KyoboHandwriting2019";
 }
-
 
 .App {
   position: relative;
@@ -59,9 +64,8 @@ input[readonly].likedisabled:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px oklab(98.463% -0.00064 -0.00169) inset !important;
 }
 
-
 .bg_gradient:before {
-  content: '';
+  content: "";
   position: absolute;
   z-index: 0;
   width: 100%;
@@ -75,14 +79,18 @@ input[readonly].likedisabled:-webkit-autofill {
   position: relative;
   z-index: 0;
   overflow: hidden;
-  background-image: radial-gradient(circle at center,
+  background-image: radial-gradient(
+      circle at center,
       oklch(58.5% 0.233 277.117 / 0.6),
       oklch(78.5% 0.115 274.713 / 0.4),
-      oklch(93% 0.034 272.788)),
-    radial-gradient(circle at center,
+      oklch(93% 0.034 272.788)
+    ),
+    radial-gradient(
+      circle at center,
       oklch(62.7% 0.265 303.9 / 0.4),
       oklch(82.7% 0.119 306.383 / 0.3),
-      oklch(94.6% 0.033 307.174)),
+      oklch(94.6% 0.033 307.174)
+    ),
     linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
   background-blend-mode: lighten;
   background-size: 150% 150%, 150% 150%, 100% 100%;
@@ -108,7 +116,6 @@ input[readonly].likedisabled:-webkit-autofill {
   75% {
     background-position: 10% 50%, 90% 50%, 0 0;
   }
-
 
   100% {
     background-position: 50% 10%, 50% 90%, 0 0;

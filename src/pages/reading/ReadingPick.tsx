@@ -40,8 +40,6 @@ type ActiveCard = ReadingCardWithImg & {
   position: number;
 };
 
-
-
 function ReadingPick({
   categoryId,
   category,
@@ -82,8 +80,11 @@ function ReadingPick({
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   // 해설 결과 응답 상태 및 로딩 스크린 종료 상태
-  const [resultResponse, setResultResponse] = useState<ReadingResultResponseDTO | null>(null);
-  const [loadingScreenFinished, setLoadingScreenFinished] = useState<boolean>(false);
+  const [resultResponse, setResultResponse] =
+    useState<ReadingResultResponseDTO | null>(null);
+  const [loadingScreenFinished, setLoadingScreenFinished] =
+    useState<boolean>(false);
+  const loadingTimerRef = useRef<number | null>(null);
 
   // UI show/hide
   const isBeforeSpread = !spread; // 펼치기 전 단계인지
@@ -91,7 +92,6 @@ function ReadingPick({
   const isSpreadDisabled = shuffle; // 셔플 중엔 펼치기 비활성
   const canConfirm = activeList.length === MAX_SELECT && !confirmCard;
   const isAllFilled = activeList.length === MAX_SELECT;
-
 
   // 초기 로딩 시 카드 셔플
   useEffect(() => {
@@ -121,26 +121,24 @@ function ReadingPick({
     };
   }, []);
 
-
   // 타로 해석 응답 결과가 있거나 로딩 스크린이 끝나면 응답 처리하기
   useEffect(() => {
     if (resultResponse && loadingScreenFinished) {
       navigate("/reading", {
         state: {
           screen: "result",
-          result: resultResponse,
           questions: {
             categoryId,
             category,
             question,
             spreadType,
             spreadCount,
-          }
+          },
+          result: resultResponse,
         },
       });
     }
   }, [resultResponse, loadingScreenFinished]);
-
 
   // 결과 해석 요청에 담을 질문 객체
   const requestBody = (activeList: ActiveCard[]): ReadingResultRequestDTO => {
@@ -151,7 +149,7 @@ function ReadingPick({
       spreadType,
       spreadCount,
       cardList: toReadingCardsRequest(activeList),
-    }
+    };
   };
 
   // 결과 해석 요청에 담을 카드 객체
@@ -164,6 +162,8 @@ function ReadingPick({
       cardId: card.id,
       nameEn: card.nameEn,
       nameKr: card.nameKr,
+      arcanaType: card.arcanaType,
+      cardNumber: card.cardNumber,
       reverse: card.reverse,
       reverseText: `${card.reverse ? "역방향" : "정방향"}`,
       description: card.description,
@@ -172,14 +172,14 @@ function ReadingPick({
     }));
   };
 
-
   // 서버에서 응답 온 에러코드 처리하는 핸들러
   const handleErrorByCode = (code: ResponseCode) => {
     switch (code) {
       case ResponseCode.AI_ERROR:
         showDialog({
           title: "AI 응답 오류",
-          description: "AI 응답 생성 중 문제가 발생했어요. 잠시 후 다시 시도해주세요.",
+          description:
+            "AI 응답 생성 중 문제가 발생했어요. 잠시 후 다시 시도해주세요.",
           confirmText: "확인",
         });
         break;
@@ -195,7 +195,8 @@ function ReadingPick({
       case ResponseCode.DATABASE_ERROR:
         showDialog({
           title: "DB 오류",
-          description: "서버에서 데이터를 저장하는 중 문제가 발생했어요.  잠시 후 다시 시도해주세요.",
+          description:
+            "서버에서 데이터를 저장하는 중 문제가 발생했어요.  잠시 후 다시 시도해주세요.",
           confirmText: "확인",
         });
         break;
@@ -208,8 +209,6 @@ function ReadingPick({
         });
     }
   };
-
-
 
   // 카드 배열 랜덤 함수
   const fisherYatesShuffle = (cardList: TarotCardBase[] | ReadingCard[]) => {
@@ -253,7 +252,6 @@ function ReadingPick({
     return null;
   };
 
-
   // 리셋 + 셔플
   const hardResetAndShuffle = () => {
     if (spreadTimerRef.current) {
@@ -285,7 +283,6 @@ function ReadingPick({
     // 새 덱 기준으로 셔플 애니메이션 시작
     startShuffleAnimation(cardList);
   };
-
 
   ///// 이벤트 핸들러 모음 /////
   // 카드 섞기
@@ -414,14 +411,19 @@ function ReadingPick({
     if (confirmCard || readingSubmit) return;
     setConfirmCard(true);
 
-    const request = requestBody(activeList)
-    console.log("activeList", activeList)
-    console.log("requestQuestion.cardList", request.cardList)
+    const request = requestBody(activeList);
+    console.log("activeList", activeList);
+    console.log("requestQuestion.cardList", request.cardList);
     console.log(request);
 
-    // 카드 결과 보여주고 로딩스크린 show
-    setTimeout(() => {
-      setViewLoading(true)
+    // 혹시 전에 만들어진 타이머 있으면 정리
+    if (loadingTimerRef.current) {
+      clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = null;
+    }
+    // 1.5초 뒤에 로딩 화면 켜기
+    loadingTimerRef.current = window.setTimeout(() => {
+      setViewLoading(true);
     }, 1500);
 
     // axios요청 -> 응답오면 해설 페이지 이동하기
@@ -430,6 +432,12 @@ function ReadingPick({
         // 서버 응답 코드가 SUCCESS가 아닐 때 실행 로직
         if (res.code !== ResponseCode.SUCCESS) {
           handleErrorByCode(res.code);
+          if (loadingTimerRef.current) {
+            clearTimeout(loadingTimerRef.current);
+            loadingTimerRef.current = null;
+          }
+          setViewLoading(false);
+          setConfirmCard(false);
           return;
         }
 
@@ -438,17 +446,20 @@ function ReadingPick({
         // readingResultResponse(결과 페이지 이동)을 실행
         setResultResponse(res);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
+        if (loadingTimerRef.current) {
+          clearTimeout(loadingTimerRef.current);
+          loadingTimerRef.current = null;
+        }
+        setViewLoading(false);
+        setConfirmCard(false);
         showDialog({
           title: "오류 발생",
           description: "서버 연결에 문제가 있어요. 잠시 후 다시 시도해주세요.",
           confirmText: "확인",
         });
-        setViewLoading(false);
-        setConfirmCard(false);
       });
-
   };
 
   return (
@@ -459,7 +470,12 @@ function ReadingPick({
         ) : (
           <PageTitle
             wrapClassName={"text-center"}
-            title={<><span className="text-violet-700 font-bold">{category}</span> 운세를 볼게요</>}
+            title={
+              <>
+                <span className="text-violet-700 font-bold">{category}</span>{" "}
+                운세를 볼게요
+              </>
+            }
             subtitle={
               <>
                 <p className="relative w-fit h-auto m-auto">
@@ -475,10 +491,11 @@ function ReadingPick({
         )}
       </section>
       <section className="relative w-full h-full z-9">
-        <div
-          className="flex flex-col gap-12 justify-center items-stretch"
-        >
-          <div className="card_deck_wrap" style={{ height: "40dvh", minHeight: "300px" }}>
+        <div className="flex flex-col gap-12 justify-center items-stretch">
+          <div
+            className="card_deck_wrap"
+            style={{ height: "40dvh", minHeight: "300px" }}
+          >
             <CardDeck
               key={deckKey}
               shuffle={shuffle}
@@ -492,7 +509,10 @@ function ReadingPick({
           </div>
           <div className="active_list_wrap w-full">
             {spread && (
-              <ul className="max-w-3xl w-full flex flex-row justify-center items-start gap-3" style={{ height: "40vh", minHeight: "280px" }}>
+              <ul
+                className="max-w-3xl w-full flex flex-row justify-center items-start gap-3"
+                style={{ height: "40vh", minHeight: "280px" }}
+              >
                 <>
                   {Array.from({ length: MAX_SELECT }).map((_, index) => {
                     const slotPosition = index + 1;
@@ -524,12 +544,13 @@ function ReadingPick({
 
                         {/* 카드가 채워진 경우 */}
                         <div
-                          className={`card_slot rounded-sm ${activeCard && isAllFilled
-                            ? "bg-transparent"
-                            : isNext && !activeCard
+                          className={`card_slot rounded-sm ${
+                            activeCard && isAllFilled
+                              ? "bg-transparent"
+                              : isNext && !activeCard
                               ? "bg-violet-300 animate-pulse"
                               : "bg-neutral-100"
-                            }`}
+                          }`}
                         >
                           {activeCard ? (
                             <div
@@ -544,12 +565,7 @@ function ReadingPick({
                               ].join(" ")}
                               onClick={(e) => handleUnSelectCard(e, activeCard)}
                             >
-                              <CardItem
-                                card={{
-                                  type: "readingCardWithImg",
-                                  data: activeCard,
-                                }}
-                              />
+                              <CardItem card={activeCard} />
                               {confirmCard && (
                                 <div className="tooltip absolute w-4/5 left-1/2 bottom-0 -translate-x-1/2 translate-y-full">
                                   <SpeechBubble
@@ -585,7 +601,7 @@ function ReadingPick({
             )}
           </div>
         </div>
-      </section >
+      </section>
       <section className="z-9 fixed left-1/2 bottom-[67px] -translate-x-1/2 max-w-3xl w-full">
         <div className="flex gap-2 p-2 md:px-3 md:py-5 mx-auto max-w-sm w-full">
           {/* 1단계: 카드 섞기/펼치기 */}
@@ -640,18 +656,16 @@ function ReadingPick({
         </div>
       </section>
 
-      {viewLoading &&
+      {viewLoading && (
         <LoadingScreen
           request={requestBody(activeList)}
           activeList={activeList}
           isResultReady={!!resultResponse}
-          onFinish={() =>
-            setLoadingScreenFinished(true)
-          }
+          onFinish={() => setLoadingScreenFinished(true)}
         />
-      }
+      )}
       <Toaster position="top-center" />
-    </div >
+    </div>
   );
 }
 
