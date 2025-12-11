@@ -52,6 +52,15 @@
   overflow: hidden;
 }
 
+.card_inner {
+  width: 100%;
+  height: 100%;
+}
+
+.card_wrap.show_card .card_item .card_inner .card_front {
+  transform: rotateY(0);
+}
+
 @media screen and (max-width: 450px) {
   :root {
     --card-width: 80px;
@@ -294,7 +303,6 @@
 /********** selecte animation **********/
 /***************************************/
 
-
 .card_selected.card_wrap .card_item {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -308,7 +316,7 @@
   transform: rotateY(0);
 }
 
-.card_selected.card_wrap.show_card .card_item .card_inner {
+.ReadingPick .card_selected.card_wrap.show_card .card_item .card_inner {
   transform: rotateY(180deg);
 }
 

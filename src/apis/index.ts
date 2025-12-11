@@ -22,6 +22,7 @@ import type { TermsListResponseDTO } from "./response/terms";
 import type { TarotCardListResponseDTO } from "./response/tarotcard";
 import type { ReadingTypeEn } from "@/types/enums";
 import type { ReadingResultRequestDTO } from "./request/reading";
+import type ReadingResultResponseDTO from "./response/reading/reading-result.response";
 
 const responseHandler = <T>(response: AxiosResponse<T>): T => {
   return response.data;
@@ -183,26 +184,18 @@ export const readingQuestionListByCategoryIdRequest = async (
 export const readingResultRequest = async (
   requestBody: ReadingResultRequestDTO
 ) => {
-  console.log("📤 리딩 결과 요청 바디:", requestBody);
-
   const start = performance.now(); // 요청 시작 시간
 
   const result = await axios
     .post(READING_RESULT_URL(), requestBody, { withCredentials: true })
-    .then((res) => {
-      console.log(res);
-      return res.data;
-    });
+    .then(responseHandler<ReadingResultResponseDTO>);
 
   const end = performance.now(); // 요청 끝난 시점
   const frontElapsedMs = end - start;
 
-  console.log("리딩 결과 요청 시간:", frontElapsedMs.toFixed(0), "ms");
+  console.log("리딩 결과 요청응답 시간:", frontElapsedMs.toFixed(0), "ms");
   console.log("리딩 결과 응답:", result);
 
   // 응답 데이터 + 프론트에서 측정한 시간 둘 다 넘겨줌
-  return {
-    data: result,
-    frontElapsedMs,
-  };
+  return result;
 };

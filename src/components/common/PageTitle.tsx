@@ -21,7 +21,7 @@ export default function PageTitle({
         {title}
       </h3>
       <div
-        className={`ff_kyobo mt-1 text-neutral-500 text-sm ${subtitleClassName}`}
+        className={`ff_kyobo mt-2 text-neutral-600 text-base ${subtitleClassName}`}
       >
         {subtitle}
       </div>

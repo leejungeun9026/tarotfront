@@ -54,7 +54,7 @@ function ReadingCategory() {
     Record<number, boolean>
   >({});
 
-  const requestPick = (
+  const requestToPick = (
     categoryId: number,
     category: string,
     question: string
@@ -90,7 +90,7 @@ function ReadingCategory() {
     category: string,
     question: string
   ) => {
-    requestPick(categoryId, category, question);
+    requestToPick(categoryId, category, question);
   };
 
   // 다른 질문 버튼 클릭
@@ -127,12 +127,12 @@ function ReadingCategory() {
     const key = String(categoryId);
     const message = questionMessage[key]?.message;
     if (!message) return;
-    requestPick(categoryId, category, message);
+    requestToPick(categoryId, category, message);
   };
 
   return (
     <div className="ReadingType">
-      <section className="px-4 py-6">
+      <section className="px-4 py-6 sm:py-8">
         {loading ? (
           <SkeletonPageTitle />
         ) : (
@@ -186,7 +186,7 @@ function ReadingCategory() {
                 return (
                   <SwiperSlide key={c.id}>
                     <Card className="h-auto sm:h-full gap-3 bg-violet-50 border-violet-100 cursor-grab active:cursor-grabbing">
-                      <CardHeader className="sm:flex-1 sm:grid-rows-none">
+                      <CardHeader className="sm:flex-1 sm:grid-rows-none text-lg">
                         <CardTitle>
                           <span className="tossface">
                             {EMOJI_LIST[type as keyof typeof EMOJI_LIST]?.[
@@ -215,7 +215,7 @@ function ReadingCategory() {
                                   )
                                 }
                               >
-                                <div className="w-full inline-flex items-center justify-center gap-2 whitespace-wrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 py-2 min-h-10 rounded-md px-3 md:px-4 has-[>svg]:px-4">
+                                <div className="w-full inline-flex items-center justify-center gap-2 whitespace-wrap text-base font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 py-2 min-h-10 rounded-md px-3 md:px-4 has-[>svg]:px-4">
                                   {q.questionText}
                                 </div>
                               </li>

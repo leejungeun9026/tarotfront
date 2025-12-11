@@ -197,7 +197,7 @@ function Login() {
 
   return (
     <div className="Login">
-      <div className="inner px-4 py-6 md:py-10">
+      <div className="inner px-4 py-6 sm:py-10 md:py-30 transition-all">
         <div className="max-w-80 mx-auto">
           <section>
             <div className="grid w-full items-center gap-3 mb-4">
@@ -214,9 +214,8 @@ function Login() {
                   onKeyDown={handleOnKeyDown}
                 />
                 <p
-                  className={`text-xs mt-1 ${
-                    valid.username ? "text-green-600" : "text-red-500"
-                  }`}
+                  className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
+                    }`}
                 >
                   {validMessages.username}
                 </p>
@@ -237,9 +236,8 @@ function Login() {
                   onKeyDown={handleOnKeyDown}
                 />
                 <p
-                  className={`text-xs mt-1 ${
-                    valid.password ? "text-green-600" : "text-red-500"
-                  }`}
+                  className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
+                    }`}
                 >
                   {validMessages.password}
                 </p>

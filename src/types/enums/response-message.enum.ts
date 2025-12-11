@@ -10,7 +10,9 @@ enum ResponseMessage {
   CERTIFICATE_FAIL = 'Certification failed.',
 
   MAIL_FAIL = 'Mail senc faild.',
-  DATABASE_ERROR = 'Database error.'
+  DATABASE_ERROR = 'Database error.',
+
+  AI_ERROR = "openAi error"
 }
 
 export default ResponseMessage;

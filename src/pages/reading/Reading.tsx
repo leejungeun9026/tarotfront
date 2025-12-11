@@ -1,11 +1,16 @@
 import { useLocation } from "react-router-dom";
 import ReadingPick from "./ReadingPick";
+import ReadingResult from "./ReadingResult";
 
 export default function Reading() {
   const { state } = useLocation();
 
   if (state?.screen === "pick") {
     return <ReadingPick categoryId={state.categoryId} category={state.category} question={state.question} spreadType={state.spreadType} spreadCount={state.spreadCount} />;
+  }
+
+  if (state?.screen === "result") {
+    return <ReadingResult {...state.result} {...state.questions} spreadPosition={state.spreadPosition} />;
   }
 
   return (

@@ -556,307 +556,306 @@ function Join() {
 
   return (
     <div className="Join">
-      <div className="inner px-4 py-6 md:py-10">
-        <section>
-          <div className="grid w-full items-center gap-3 mb-8">
-            <Label htmlFor="username">이메일 주소</Label>
-            <div>
-              <div className="flex gap-1.5">
-                <Input
-                  type="text"
-                  id="username"
-                  name="username"
-                  placeholder="example@xxx.com"
-                  value={user.username}
-                  readOnly={submitMailReadonly}
-                  className="likedisabled"
-                  onChange={handleOnChange}
-                />
-                <div className="w-24">
-                  {submitMail && !isSending && !sendSuccess && (
-                    <Button
-                      id="sumbitMail"
-                      variant="outline"
-                      className="w-24 h-11"
-                      disabled={!user.username || !valid.username}
-                      onClick={handleSendMail}
-                    >
-                      메일 인증
-                    </Button>
-                  )}
-                  {isSending && (
-                    <Button
-                      variant="outline"
-                      className="w-24 h-11 gap-1.5"
-                      disabled
-                    >
-                      <div className="shrink-0">
-                        <Spinner className="w-4 h-4" />
-                      </div>
-                      전송중...
-                    </Button>
-                  )}
-                  {sendSuccess &&
-                    !isSending &&
-                    !(!codeSuccess && remainSec === 0) && (
-                      <Button variant="outline" className="w-24 h-11" disabled>
-                        발송 성공
-                      </Button>
-                    )}
-                  {sendSuccess &&
-                    !isSending &&
-                    !codeSuccess &&
-                    remainSec === 0 && (
+      <div className="inner px-4 py-6 sm:py-10 md:py-16 transition-all">
+        <div className="max-w-md mx-auto">
+
+          <section>
+            <div className="grid w-full items-center gap-3 mb-8">
+              <Label htmlFor="username">이메일 주소</Label>
+              <div>
+                <div className="flex gap-1.5">
+                  <Input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="example@xxx.com"
+                    value={user.username}
+                    readOnly={submitMailReadonly}
+                    className="likedisabled"
+                    onChange={handleOnChange}
+                  />
+                  <div className="w-24">
+                    {submitMail && !isSending && !sendSuccess && (
                       <Button
-                        id="reSubmitMail"
+                        id="sumbitMail"
                         variant="outline"
                         className="w-24 h-11"
+                        disabled={!user.username || !valid.username}
                         onClick={handleSendMail}
                       >
-                        재인증
+                        메일 인증
                       </Button>
                     )}
-                </div>
-              </div>
-              <p
-                className={`text-xs mt-1 ${
-                  valid.username ? "text-green-600" : "text-red-500"
-                }`}
-              >
-                {validMessages.username}
-              </p>
-              {sendSuccess && (
-                <>
-                  <div className="flex gap-1.5 mt-2">
-                    <Input
-                      type="text"
-                      name="certificationNum"
-                      placeholder="인증번호 입력"
-                      maxLength={5}
-                      className="likedisabled"
-                      value={user.certificationNum}
-                      disabled={remainSec === 0}
-                      readOnly={submitCodeReadonly}
-                      onChange={handleOnChange}
-                    />
-                    <div className="w-24">
-                      {submitCode && (
+                    {isSending && (
+                      <Button
+                        variant="outline"
+                        className="w-24 h-11 gap-1.5"
+                        disabled
+                      >
+                        <div className="shrink-0">
+                          <Spinner className="w-4 h-4" />
+                        </div>
+                        전송중...
+                      </Button>
+                    )}
+                    {sendSuccess &&
+                      !isSending &&
+                      !(!codeSuccess && remainSec === 0) && (
+                        <Button variant="outline" className="w-24 h-11" disabled>
+                          발송 성공
+                        </Button>
+                      )}
+                    {sendSuccess &&
+                      !isSending &&
+                      !codeSuccess &&
+                      remainSec === 0 && (
                         <Button
+                          id="reSubmitMail"
                           variant="outline"
                           className="w-24 h-11"
-                          disabled={remainSec === 0 || !user.certificationNum}
-                          onClick={handleVerifyCode}
+                          onClick={handleSendMail}
                         >
-                          인증 확인
+                          재인증
                         </Button>
                       )}
-                      {isVerifying && (
-                        <Button
-                          variant="outline"
-                          className="w-24 h-11 gap-1.5"
-                          disabled
-                        >
-                          <div className="shrink-0">
-                            <Spinner className="w-4 h-4" />
-                          </div>
-                          확인 중...
-                        </Button>
-                      )}
-                      {codeSuccess && (
-                        <Button
-                          variant="outline"
-                          className="w-24 h-11"
-                          disabled
-                        >
-                          인증 완료
-                        </Button>
-                      )}
-                    </div>
                   </div>
-                  <div className="flex gap-1 mt-1">
-                    {remainSec > 0 && (
-                      <p
-                        className={`text-xs ${
-                          valid.certificationNum
+                </div>
+                <p
+                  className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
+                    }`}
+                >
+                  {validMessages.username}
+                </p>
+                {sendSuccess && (
+                  <>
+                    <div className="flex gap-1.5 mt-2">
+                      <Input
+                        type="text"
+                        name="certificationNum"
+                        placeholder="인증번호 입력"
+                        maxLength={5}
+                        className="likedisabled"
+                        value={user.certificationNum}
+                        disabled={remainSec === 0}
+                        readOnly={submitCodeReadonly}
+                        onChange={handleOnChange}
+                      />
+                      <div className="w-24">
+                        {submitCode && (
+                          <Button
+                            variant="outline"
+                            className="w-24 h-11"
+                            disabled={remainSec === 0 || !user.certificationNum}
+                            onClick={handleVerifyCode}
+                          >
+                            인증 확인
+                          </Button>
+                        )}
+                        {isVerifying && (
+                          <Button
+                            variant="outline"
+                            className="w-24 h-11 gap-1.5"
+                            disabled
+                          >
+                            <div className="shrink-0">
+                              <Spinner className="w-4 h-4" />
+                            </div>
+                            확인 중...
+                          </Button>
+                        )}
+                        {codeSuccess && (
+                          <Button
+                            variant="outline"
+                            className="w-24 h-11"
+                            disabled
+                          >
+                            인증 완료
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-1 mt-1">
+                      {remainSec > 0 && (
+                        <p
+                          className={`text-xs ${valid.certificationNum
                             ? "text-green-600"
                             : "text-red-500"
-                        }`}
-                      >
-                        {validMessages.certificationNum}
+                            }`}
+                        >
+                          {validMessages.certificationNum}
+                        </p>
+                      )}
+                      <p className="text-xs text-red-500">
+                        {!codeSuccess && remainSec > 0 && (
+                          <>
+                            {minutes}:{seconds}
+                          </>
+                        )}
+                        {remainSec === 0 && (
+                          <>인증 시간이 만료되었어요. 다시 요청해 주세요.</>
+                        )}
                       </p>
-                    )}
-                    <p className="text-xs text-red-500">
-                      {!codeSuccess && remainSec > 0 && (
-                        <>
-                          {minutes}:{seconds}
-                        </>
-                      )}
-                      {remainSec === 0 && (
-                        <>인증 시간이 만료되었어요. 다시 요청해 주세요.</>
-                      )}
-                    </p>
-                  </div>
-                </>
-              )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="grid w-full items-center gap-3 mb-8">
-            <Label htmlFor="password">비밀번호</Label>
-            <div>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                className="tracking-widest placeholder:tracking-normal"
-                placeholder="영문/숫자/특수문자 조합 8~20자"
-                value={user.password}
-                onChange={handleOnChange}
-              />
-              <p
-                className={`text-xs mt-1 ${
-                  valid.password ? "text-green-600" : "text-red-500"
-                }`}
-              >
-                {validMessages.password}
-              </p>
-              <Input
-                type="password"
-                name="passwordChk"
-                className="tracking-widest placeholder:tracking-normal mt-2"
-                placeholder="비밀번호 확인"
-                value={user.passwordChk}
-                onChange={handleOnChange}
-              />
-              <p
-                className={`text-xs mt-1 ${
-                  valid.passwordChk ? "text-green-600" : "text-red-500"
-                }`}
-              >
-                {validMessages.passwordChk}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid w-full items-center gap-3 mb-8">
-            <Label htmlFor="name">닉네임</Label>
-            <div>
-              <Input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="한글/영문/숫자 조합 2~10자"
-                value={user.name}
-                onChange={handleOnChange}
-              />
-              <p
-                className={`text-xs mt-1 ${
-                  valid.name ? "text-green-600" : "text-red-500"
-                }`}
-              >
-                {validMessages.name}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid w-full items-center gap-3 mt-12 mb-8">
-            <Card className="gap-0 p-0 rounded-md overflow-hidden">
-              <CardHeader className="block p-0 [.border-b]:pb-0 bg-muted border-b">
-                <Label
-                  htmlFor="AllTermsChk"
-                  className="items-start gap-3 p-4 cursor-pointer"
+            <div className="grid w-full items-center gap-3 mb-8">
+              <Label htmlFor="password">비밀번호</Label>
+              <div>
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="tracking-widest placeholder:tracking-normal"
+                  placeholder="영문/숫자/특수문자 조합 8~20자"
+                  value={user.password}
+                  onChange={handleOnChange}
+                />
+                <p
+                  className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
+                    }`}
                 >
-                  <Checkbox
-                    id="AllTermsChk"
-                    checked={
-                      isAllChecked
-                        ? true
-                        : isIndeterminate
-                        ? "indeterminate"
-                        : false
-                    }
-                    className="bg-white"
-                    onCheckedChange={(checked) => {
-                      if (checked === true) {
-                        // 전체 동의 → 모든 약관 id 넣기
-                        setUser((prev) => ({
-                          ...prev,
-                          agreedTermIds: allTermIds,
-                        }));
-                      } else {
-                        // 전체 해제
-                        setUser((prev) => ({
-                          ...prev,
-                          agreedTermIds: [],
-                        }));
+                  {validMessages.password}
+                </p>
+                <Input
+                  type="password"
+                  name="passwordChk"
+                  className="tracking-widest placeholder:tracking-normal mt-2"
+                  placeholder="비밀번호 확인"
+                  value={user.passwordChk}
+                  onChange={handleOnChange}
+                />
+                <p
+                  className={`text-xs mt-1 ${valid.passwordChk ? "text-green-600" : "text-red-500"
+                    }`}
+                >
+                  {validMessages.passwordChk}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid w-full items-center gap-3 mb-8">
+              <Label htmlFor="name">닉네임</Label>
+              <div>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="한글/영문/숫자 조합 2~10자"
+                  value={user.name}
+                  onChange={handleOnChange}
+                />
+                <p
+                  className={`text-xs mt-1 ${valid.name ? "text-green-600" : "text-red-500"
+                    }`}
+                >
+                  {validMessages.name}
+                </p>
+              </div>
+            </div>
+          </section>
+          <section>
+            <div className="grid w-full items-center gap-3 mt-12 mb-8">
+              <Card className="gap-0 p-0 rounded-md overflow-hidden">
+                <CardHeader className="block p-0 [.border-b]:pb-0 bg-muted border-b">
+                  <Label
+                    htmlFor="AllTermsChk"
+                    className="items-start gap-3 p-4 cursor-pointer"
+                  >
+                    <Checkbox
+                      id="AllTermsChk"
+                      checked={
+                        isAllChecked
+                          ? true
+                          : isIndeterminate
+                            ? "indeterminate"
+                            : false
                       }
-                    }}
-                  />
-                  <div className="pt-0.5">
-                    <b>전체 동의</b>
-                    <p className="text-xs mt-2 opacity-50">
-                      전체 동의에는 필수 및 선택 항목이 포함되며, 선택 항목에
-                      동의하지 않아도 서비스 이용이 가능합니다.
-                    </p>
-                  </div>
-                </Label>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ul>
-                  {terms.map((item) => {
-                    const checkboxId = `term-${item.id}`;
-                    const isChecked = user.agreedTermIds.includes(item.id);
-                    return (
-                      <li key={item.id} className=" not-last:border-b">
-                        <div className="flex items-center">
-                          <Label className="items-center gap-3 p-4 grow cursor-pointer">
-                            <Checkbox
-                              name="agreedTermIds"
-                              id={checkboxId}
-                              checked={isChecked}
-                              onCheckedChange={(checked) => {
-                                // shadcn Checkbox는 true | false | "indeterminate" 를 줘서 boolean으로 변환
-                                toggleTermAgree(item.id, checked === true);
-                              }}
-                            />
-                            <p>
-                              {item.title}
-                              {item.required && (
-                                <span className="ms-1 text-red-400">
-                                  (필수)
-                                </span>
-                              )}
-                            </p>
-                          </Label>
-                          {item.content !== null && (
-                            <div className="p-1.5">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                aria-label="Submit"
-                                className="border-0 rounded-sm shadow-none"
-                              >
-                                <ChevronRight />
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-        <Button
-          disabled={!isFormValid}
-          onClick={handleJoin}
-          size="xl"
-          className="w-full"
-        >
-          가입하기
-        </Button>
+                      className="bg-white"
+                      onCheckedChange={(checked) => {
+                        if (checked === true) {
+                          // 전체 동의 → 모든 약관 id 넣기
+                          setUser((prev) => ({
+                            ...prev,
+                            agreedTermIds: allTermIds,
+                          }));
+                        } else {
+                          // 전체 해제
+                          setUser((prev) => ({
+                            ...prev,
+                            agreedTermIds: [],
+                          }));
+                        }
+                      }}
+                    />
+                    <div className="pt-0.5">
+                      <b>전체 동의</b>
+                      <p className="text-xs mt-2 opacity-50">
+                        전체 동의에는 필수 및 선택 항목이 포함되며, 선택 항목에
+                        동의하지 않아도 서비스 이용이 가능합니다.
+                      </p>
+                    </div>
+                  </Label>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <ul>
+                    {terms.map((item) => {
+                      const checkboxId = `term-${item.id}`;
+                      const isChecked = user.agreedTermIds.includes(item.id);
+                      return (
+                        <li key={item.id} className=" not-last:border-b">
+                          <div className="flex items-center">
+                            <Label className="items-center gap-3 p-4 grow cursor-pointer">
+                              <Checkbox
+                                name="agreedTermIds"
+                                id={checkboxId}
+                                checked={isChecked}
+                                onCheckedChange={(checked) => {
+                                  // shadcn Checkbox는 true | false | "indeterminate" 를 줘서 boolean으로 변환
+                                  toggleTermAgree(item.id, checked === true);
+                                }}
+                              />
+                              <p>
+                                {item.title}
+                                {item.required && (
+                                  <span className="ms-1 text-red-400">
+                                    (필수)
+                                  </span>
+                                )}
+                              </p>
+                            </Label>
+                            {item.content !== null && (
+                              <div className="p-1.5">
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  aria-label="Submit"
+                                  className="border-0 rounded-sm shadow-none"
+                                >
+                                  <ChevronRight />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
+          <Button
+            disabled={!isFormValid}
+            onClick={handleJoin}
+            size="xl"
+            className="w-full"
+          >
+            가입하기
+          </Button>
+        </div>
       </div>
     </div>
   );
