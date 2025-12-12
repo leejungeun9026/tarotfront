@@ -1,6 +1,4 @@
-import type ResponseDTO from "../response.dto";
-
-export default interface TarotCardResponseDTO extends ResponseDTO {
+export default interface TarotCardResponseDTO {
   id: number;
   nameEn: string;
   nameKr: string;

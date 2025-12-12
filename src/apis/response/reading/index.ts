@@ -9,13 +9,3 @@ export type {
   ReadingQuestionResponseDTO,
   ReadingQuestionListResponseDTO
 };
-
-export type ReadingCategoryBase = Omit<
-  ReadingCategoryResponseDTO,
-  "code" | "message"
->;
-
-export type ReadingQuestionBase = Omit<
-  ReadingQuestionResponseDTO,
-  "code" | "message"
->;

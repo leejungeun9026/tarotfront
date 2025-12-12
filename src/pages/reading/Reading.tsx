@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import ReadingPick from "./ReadingPick";
 import ReadingResult from "./ReadingResult";
 
+
 export default function Reading() {
   const { state } = useLocation();
 

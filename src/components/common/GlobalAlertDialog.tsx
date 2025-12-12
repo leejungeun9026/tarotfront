@@ -1,15 +1,15 @@
-import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
 import {
   AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
   AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useEffect, type ReactElement } from "react";
+import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
+import { useEffect } from "react";
 
 export default function GlobalAlertDialog() {
   const {

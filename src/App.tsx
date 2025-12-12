@@ -17,8 +17,27 @@ import ReadingCategory from "./pages/reading/ReadingCategory";
 import MyPage from "./pages/user/MyPage";
 import { UserRole } from "./types/enums";
 import ScrollToTop from "./components/common/ScrollToTop";
+import { useEffect } from "react";
+import { useReadingStore } from "./stores/useReadingStore";
+import { useTermsStore } from "./stores/useTermsStore";
+import { useTarotCardStore } from "./stores/useTarotCardStore";
 
 function App() {
+  const { fetchCategories, fetchQuestions } = useReadingStore();
+  const { fetchTerms } = useTermsStore();
+  const { fetchCards } = useTarotCardStore();
+
+  useEffect(() => {
+    // 마스터 데이터 병렬로 로딩
+    void Promise.all([
+      fetchCategories(),
+      fetchQuestions(),
+      fetchTerms(),
+      fetchCards(),
+    ]);
+  }, []);
+
+
   return (
     <div className="App m-auto w-full max-w-3xl h-dvh flex flex-col justify-start align-stretch overflow-hidden">
       <div

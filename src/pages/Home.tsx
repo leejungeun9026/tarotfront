@@ -1,38 +1,41 @@
-import { readingCategoryListRequest } from "@/apis";
-import type { ReadingCategoryBase } from "@/apis/response/reading";
 import SpeechBubble from "@/components/bubble/Bubble";
 import CardItem from "@/components/tarotcard/CardItem";
-import { READING_CATEGORY_CONST } from "@/constants/readingCategory";
 import Lottie from "lottie-react";
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import "../styles/home.css";
 import "../styles/tarotcard.css";
 
+import type { ReadingCategoryResponseDTO } from "@/apis/response/reading";
+import { useReadingStore } from "@/stores/useReadingStore";
 import { getCategoryImg } from "@/utils/imageMapper";
 import starsLottie from "../assets/lottie/stars.json";
 
-function Home() {
-  const navigate = useNavigate();
-  const categoryList = READING_CATEGORY_CONST;
-  const [readingCategory, setReadingCategory] =
-    useState<ReadingCategoryBase[]>(categoryList);
-  const uniqueTypes = [
-    ...new Map(readingCategory.map((item) => [item.typeEn, item])).values(),
-  ].map((item) => ({
-    id: item.id,
-    typeEn: item.typeEn,
-    typeKr: item.typeKr,
-  }));
 
-  useEffect(() => {
-    readingCategoryListRequest().then((responseData) => {
-      const { readingCategoryList } = responseData;
-      setReadingCategory(readingCategoryList);
+type UniqueType = {
+  typeEn: string;
+  typeKr: string;
+};
+
+function Home() {
+  const { categories, loadingCategories } = useReadingStore();
+  const navigate = useNavigate();
+
+  const uniqueTypes: UniqueType[] = (() => {
+    const map = new Map<string, ReadingCategoryResponseDTO>();
+    categories.forEach((c) => {
+      if (!map.has(c.typeEn)) map.set(c.typeEn, c);
     });
-  }, []);
+    return Array.from(map.values()).map((item) => ({
+      typeEn: item.typeEn,
+      typeKr: item.typeKr,
+    }));
+  })();
+
+  if (loadingCategories && categories.length === 0) {
+    return <div>로딩중...</div>;
+  }
 
   return (
     <div className="Home divide-gray-100 divide-y-10">
@@ -40,7 +43,7 @@ function Home() {
         <SpeechBubble
           fullWidth
           side="top"
-          pointerSize={12}
+          pointerSize={10}
           tailPosition={34}
           bubbleClassName="rounded-xl bg-[#e0d0fe]"
           childClassName="rounded-xl bg_gradient"
@@ -54,7 +57,6 @@ function Home() {
                 <div className="card_container relative w-full h-58">
                   <div className="card_bounce">
                     <div className="card_wrap ">
-                      <img src="" alt="" />
                       <CardItem card={null} />
                     </div>
                   </div>
@@ -97,7 +99,7 @@ function Home() {
             {uniqueTypes.map((category) => {
               const textLow = category.typeEn.toLowerCase();
               return (
-                <Link to={`/reading/${textLow}`} key={category.id}>
+                <Link to={`/reading/${textLow}`} key={category.typeEn}>
                   <Card className="hover:bg-violet-50 hover:border-violet-200 hover:shadow-md transition-all group">
                     <CardContent className="flex flex-col justify-center items-center gap-1">
                       <div className="imgWrap group-hover:animate-bounce">

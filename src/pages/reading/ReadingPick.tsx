@@ -1,4 +1,4 @@
-import { readingResultRequest, tarotCardRequest } from "@/apis";
+import { readingResultRequest } from "@/apis";
 import type {
   ReadingCardsRequestDTO,
   ReadingResultRequestDTO,
@@ -7,7 +7,7 @@ import type ReadingResultResponseDTO from "@/apis/response/reading/reading-resul
 import type {
   ReadingCard,
   ReadingCardWithImg,
-  TarotCardBase,
+  TarotCardResponseDTO
 } from "@/apis/response/tarotcard";
 import SpeechBubble from "@/components/bubble/Bubble";
 import PageTitle from "@/components/common/PageTitle";
@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { TAROT_CARDS_CONST } from "@/constants/tarotCards";
 import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
+import { useTarotCardStore } from "@/stores/useTarotCardStore";
 import { ResponseCode } from "@/types/enums";
 import { getCardImg } from "@/utils/imageMapper";
 import { RefreshCcw } from "lucide-react";
@@ -50,14 +51,18 @@ function ReadingPick({
   const navigate = useNavigate();
   const { showDialog } = useGlobalAlertDialog();
 
+
+  // 타로카드 스토어에서 가져오기
+  const { cards, loadingCards, fetchCards } = useTarotCardStore();
+
   // 스프레드 타입 및 카드 갯수 설정
   const spreadPosition = ["과거", "현재", "미래"];
   const MAX_SELECT = spreadCount;
 
+
   // 리딩 타로 카드 설정
-  const tarotCards = TAROT_CARDS_CONST;
-  const [cardLoading, setCardLoading] = useState<boolean>(true);
-  const [cardList, setCardList] = useState<TarotCardBase[]>(tarotCards);
+  const tarotCards = TAROT_CARDS_CONST["tarotCardList"]
+  const [cardList, setCardList] = useState<TarotCardResponseDTO[]>(tarotCards);
   const total = cardList.length;
   const [shuffledCard, setShuffledCard] = useState<ReadingCard[]>([]);
   const [activeList, setActiveList] = useState<ActiveCard[]>([]);
@@ -93,33 +98,30 @@ function ReadingPick({
   const canConfirm = activeList.length === MAX_SELECT && !confirmCard;
   const isAllFilled = activeList.length === MAX_SELECT;
 
-  // 초기 로딩 시 카드 셔플
-  useEffect(() => {
-    const firstTimer = startShuffleAnimation(TAROT_CARDS_CONST);
-    let secondTimer: number | null = null;
+  // 카드 로딩 상태 (스토어 기반 + 로컬)
+  const cardLoading = loadingCards || cardList.length === 0;
 
-    tarotCardRequest()
-      .then((data) => {
-        const dbCardsList = data.tarotCardList;
-        setCardList(dbCardsList);
-        secondTimer = startShuffleAnimation(dbCardsList);
-      })
-      .catch((err) => {
-        console.log(err);
-        setCardList(TAROT_CARDS_CONST);
-      })
-      .finally(() => {
-        setCardLoading(false);
-      });
+  useEffect(() => {
+    if (!cards.length) {
+      void fetchCards();
+    }
+  }, [cards.length, fetchCards]);
+
+  // 초기 로딩 시 덱 세팅 + 첫 셔플 애니메이션
+  useEffect(() => {
+    if (!cards.length) return;
+
+    setCardList(cards);
+    const timer = startShuffleAnimation(cards);
 
     return () => {
-      clearTimeout(firstTimer);
-      if (secondTimer) clearTimeout(secondTimer);
+      clearTimeout(timer);
       if (spreadTimerRef.current) {
         clearInterval(spreadTimerRef.current);
       }
     };
-  }, []);
+  }, [cards]);
+
 
   // 타로 해석 응답 결과가 있거나 로딩 스크린이 끝나면 응답 처리하기
   useEffect(() => {
@@ -211,7 +213,7 @@ function ReadingPick({
   };
 
   // 카드 배열 랜덤 함수
-  const fisherYatesShuffle = (cardList: TarotCardBase[] | ReadingCard[]) => {
+  const fisherYatesShuffle = (cardList: TarotCardResponseDTO[] | ReadingCard[]) => {
     const newCard = [...cardList];
     //Fisher-Yates shuffle
     for (let i = 0; i < newCard.length; i++) {
@@ -230,7 +232,7 @@ function ReadingPick({
   };
 
   // 카드 셔플 함수
-  const startShuffleAnimation = (list: TarotCardBase[] | ReadingCard[]) => {
+  const startShuffleAnimation = (list: TarotCardResponseDTO[] | ReadingCard[]) => {
     // 카드 실제 순서 섞기
     fisherYatesShuffle(list);
     // 셔플 애니메이션 ON
@@ -412,25 +414,19 @@ function ReadingPick({
     setConfirmCard(true);
 
     const request = requestBody(activeList);
-    console.log("activeList", activeList);
-    console.log("requestQuestion.cardList", request.cardList);
-    console.log(request);
 
-    // 혹시 전에 만들어진 타이머 있으면 정리
     if (loadingTimerRef.current) {
       clearTimeout(loadingTimerRef.current);
       loadingTimerRef.current = null;
     }
-    // 1.5초 뒤에 로딩 화면 켜기
+
     loadingTimerRef.current = window.setTimeout(() => {
       setViewLoading(true);
     }, 1500);
 
-    // axios요청 -> 응답오면 해설 페이지 이동하기
     readingResultRequest(request)
       .then((res) => {
-        // 서버 응답 코드가 SUCCESS가 아닐 때 실행 로직
-        if (res.code !== ResponseCode.SUCCESS) {
+        if (res.code !== ResponseCode.SUCCESS || !res.data) {
           handleErrorByCode(res.code);
           if (loadingTimerRef.current) {
             clearTimeout(loadingTimerRef.current);
@@ -441,10 +437,10 @@ function ReadingPick({
           return;
         }
 
-        // 결과 상태에 응답 객체 담기
-        // 응답객체 상태가 변경되면 useEffect가 감지하여
-        // readingResultResponse(결과 페이지 이동)을 실행
-        setResultResponse(res);
+        const resultData = res.data;
+
+        setReadingSubmit(true);
+        setResultResponse(resultData);
       })
       .catch((err) => {
         console.log(err);
@@ -461,6 +457,7 @@ function ReadingPick({
         });
       });
   };
+
 
   return (
     <div className="ReadingPick relative h-full overflow-x-hidden bg_gradient">
@@ -544,13 +541,12 @@ function ReadingPick({
 
                         {/* 카드가 채워진 경우 */}
                         <div
-                          className={`card_slot rounded-sm ${
-                            activeCard && isAllFilled
-                              ? "bg-transparent"
-                              : isNext && !activeCard
+                          className={`card_slot rounded-sm ${activeCard && isAllFilled
+                            ? "bg-transparent"
+                            : isNext && !activeCard
                               ? "bg-violet-300 animate-pulse"
                               : "bg-neutral-100"
-                          }`}
+                            }`}
                         >
                           {activeCard ? (
                             <div

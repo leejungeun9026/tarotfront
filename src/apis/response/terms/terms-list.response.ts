@@ -1,6 +1,5 @@
-import type ResponseDTO from "../response.dto";
 import type TermsResponseDTO from "./terms.response";
 
-export default interface TermsListResponseDTO extends ResponseDTO {
-  termsList: Omit<TermsResponseDTO, "code" | "message">[];
+export default interface TermsListResponseDTO {
+  termsList: TermsResponseDTO[]
 }

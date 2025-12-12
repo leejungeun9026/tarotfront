@@ -1,5 +1,8 @@
 import { signInRequest, SNS_SIGN_IN_URL } from "@/apis";
+import { handleApiError } from "@/apis/error-handler";
+import type { BaseResponseDTO } from "@/apis/response";
 import type { SignInResponseDTO } from "@/apis/response/auth";
+import type ResponseDTO from "@/apis/response/response.dto";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,8 +10,8 @@ import { Separator } from "@/components/ui/separator";
 import useAuthStore from "@/stores/useAuthStore";
 import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
 import { ResponseCode } from "@/types/enums";
-import type { ResponseBody } from "@/types";
 import { getLoginIcon } from "@/utils/loginIcon";
+import type { AxiosError } from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,7 +28,7 @@ function Login() {
   const currentUser = useAuthStore((state) => state.user);
   const setCurrentUser = useAuthStore((state) => state.setCurrentUser);
   const [, setCookie] = useCookies();
-  const { open, showDialog } = useGlobalAlertDialog();
+  const dialogOpen = useGlobalAlertDialog((state) => state.open);
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -50,64 +53,15 @@ function Login() {
   }, []);
 
   useEffect(() => {
-    if (!open) {
+    if (!dialogOpen) {
       if (currentInput === "username") {
         usernameRef.current?.focus();
-        console.log("focus");
       }
       if (currentInput === "password") {
         passwordRef.current?.focus();
-        console.log("focus");
       }
     }
-  }, [open]);
-
-  const signInResponse = (responseBody: ResponseBody<SignInResponseDTO>) => {
-    if (!responseBody) return;
-
-    const { code } = responseBody;
-
-    if (code === ResponseCode.VALIDATION_FAIL) {
-      showDialog({
-        title: "로그인 실패",
-        description: "아이디와 비밀번호를 입력해주세요.",
-        confirmText: "확인",
-      });
-    }
-    if (code === ResponseCode.SIGN_IN_FAIL) {
-      showDialog({
-        title: "로그인 실패",
-        description: "아이디와 비밀번호를 확인해주세요.",
-        confirmText: "확인",
-      });
-    }
-    if (code === ResponseCode.DATABASE_ERROR) {
-      showDialog({
-        title: "로그인 실패",
-        description: "DB에러, 잠시 후 다시 시도해주세요.",
-        confirmText: "확인",
-      });
-    }
-    if (code !== ResponseCode.SUCCESS) return;
-
-    const { id, username, name, role, token, expirationTime } =
-      responseBody as SignInResponseDTO;
-
-    // store에 유저 정보 담기
-    setCurrentUser({
-      id,
-      username,
-      name,
-      role,
-    });
-
-    // 쿠키에 토큰 담기
-    const now = new Date().getTime();
-    const expires = new Date(now + expirationTime * 1000);
-    setCookie("accessToken", token, { expires, path: "/" });
-
-    navigate("/");
-  };
+  }, [dialogOpen]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 공백제거
@@ -156,17 +110,17 @@ function Login() {
   };
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    setCurrentInput(e.currentTarget.name);
-    console.log(currentInput);
+    const inputName = e.currentTarget.name;
+    setCurrentInput(inputName);
 
     if (e.key === "Enter" || e.key === "NumpadEnter") {
-      if (currentInput === "username") {
+      if (inputName === "username") {
         if (!user.username) return;
         passwordRef.current?.focus();
         setValid((prev) => ({ ...prev, password: true }));
         setValidMessages((prev) => ({ ...prev, password: "" }));
       }
-      if (currentInput === "password") {
+      if (inputName === "password") {
         if (!user.password) return;
         handleLogin();
         e.currentTarget.blur();
@@ -174,7 +128,7 @@ function Login() {
     }
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!user.username || !user.password) {
       setValid((prev) => ({ ...prev, password: false }));
       setValidMessages((prev) => ({
@@ -183,12 +137,54 @@ function Login() {
       }));
       return;
     }
-    const requestBody = {
+
+    // 요청 객체 생성
+    const req = {
       username: user.username,
       password: user.password,
     };
 
-    signInRequest(requestBody).then(signInResponse);
+    try {
+      // 서버 요청
+      const responseBody: ResponseDTO<SignInResponseDTO> =
+        await signInRequest(req);
+      console.log("[Login] handleLogin 호출됨, 요청 body:", responseBody);
+
+      const { code, data } = responseBody;
+      // 실패시 서버 응답코드 실행
+      if (!data || code !== ResponseCode.SUCCESS) {
+        handleApiError(responseBody);
+        return;
+      }
+
+      const { id, username, name, role, token, expirationTime } =
+        data;
+
+      // store에 유저 정보 담기
+      setCurrentUser({
+        id,
+        username,
+        name,
+        role,
+      });
+
+      // 쿠키에 토큰 담기
+      const now = new Date().getTime();
+      const expires = new Date(now + expirationTime * 1000);
+      setCookie("accessToken", token, { expires, path: "/" });
+
+      navigate("/");
+
+    } catch (error) {
+      const err = error as AxiosError<BaseResponseDTO>;
+      const apiError = err.response?.data;
+
+      if (apiError) {
+        handleApiError(apiError); // 서버 ResponseDTO
+      } else {
+        handleApiError(null);     // 네트워크 단절 등
+      }
+    }
   };
 
   const handleSnsLogin = (provider: "kakao" | "naver") => {

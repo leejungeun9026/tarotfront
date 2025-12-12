@@ -1,7 +1,6 @@
 import type { ReadingCardsRequestDTO } from "@/apis/request/reading";
-import type ResponseDTO from "../response.dto";
 
-export default interface ReadingResultResponseDTO extends ResponseDTO {
+export default interface ReadingResultResponseDTO {
   readingId: number;
   resultTitle: string;
   resultSummary: string;
@@ -10,7 +9,7 @@ export default interface ReadingResultResponseDTO extends ResponseDTO {
   cardList: ReadingCardsRequestDTO[];
 }
 
-export interface ReadingPositionResponseDTO extends ResponseDTO {
+export interface ReadingPositionResponseDTO {
   position: number;
   positionName: string;
   interpretation: string;

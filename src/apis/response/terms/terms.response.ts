@@ -1,6 +1,4 @@
-import type ResponseDTO from "../response.dto";
-
-export default interface TermsResponseDTO extends ResponseDTO {
+export default interface TermsResponseDTO {
   id: number;
   termsType: string;
   title: string;

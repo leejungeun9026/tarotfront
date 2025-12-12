@@ -1,30 +1,40 @@
-import type { ReadingResultRequestDTO } from "@/apis/request/reading";
 import type ReadingResultResponseDTO from "@/apis/response/reading/reading-result.response";
 import ChatBubble from "@/components/common/ChatBubble";
 import PageTitle from "@/components/common/PageTitle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { todayDate } from "@/constants/today";
 import { getCardImg } from "@/utils/imageMapper";
-import { Bookmark, Heart, ImageDown, Share } from "lucide-react";
+import { Heart, ImageDown } from "lucide-react";
+
+type ReadingQuestionsContext = {
+  categoryId: number;
+  category: string;
+  question: string;
+  spreadType: string;
+  spreadCount: number;
+};
 
 type Props = {
   result: ReadingResultResponseDTO;
-  questions: ReadingResultRequestDTO;
+  questions: ReadingQuestionsContext;
 };
 
 function ReadingResult({ result, questions }: Props) {
+
   const {
     readingId,
     resultTitle,
-    resultSummary,
-    overallAdvice,
-    positions,
-    cardList,
+    resultSummary = "",
+    overallAdvice = "",
+    positions = [],
+    cardList = [],
   } = result;
+
   const { categoryId, category, question, spreadType, spreadCount } = questions;
 
-  function replaceDotWithBr(text: string): string {
+  const replaceDotWithBr = (text: string): string => {
     return text.replace(/\. /g, ".\n");
   }
 
@@ -47,9 +57,9 @@ function ReadingResult({ result, questions }: Props) {
       </section>
       <section className="resultCard_wrap px-4 py-6 sm:py-8">
         <ul className="flex gap-3 xs:gap-8 justify-center">
-          {cardList.map((c) => {
+          {cardList.map((c, index) => {
             return (
-              <li key={c.cardId}>
+              <li key={index}>
                 <div className="flex flex-col items-center gap-3">
                   <Badge variant="outline">{c.positionName}</Badge>
                   <div className="w-auto max-w-40 rounded-md shadow-md border overflow-hidden">
@@ -178,30 +188,48 @@ function ReadingResult({ result, questions }: Props) {
               <span className="absolute z-0 bg-violet-200 w-full h-2 left-0 bottom-0.5 opacity-50"></span>
               <span className="relative z-1">마지막 버블 팁!</span>
             </h6>
-            <div className="text-center">
+            <div className="w-full">
               <ChatBubble
                 colorClass="text-violet-800"
                 tail="left-top"
-                className=""
-                contentClassName="whitespace-pre-wrap text-white ff_kyobo text-lg leading-relaxed"
+                className="max-w-4/5 "
+                contentClassName="whitespace-pre-wrap text-start text-white ff_kyobo text-lg leading-relaxed"
               >
-                {overallAdvice}
+                {replaceDotWithBr(overallAdvice)}
               </ChatBubble>
-              <p className="mt-8 text-xs text-neutral-500">
+              <div>
                 {(category === "금전" ||
                   category === "투자" ||
                   category === "계약" ||
                   category === "재물" ||
                   category === "쇼핑&지출") && (
-                  <>
-                    투자와 관련된 선택은 사용자 본인의 판단과 책임이 요구돼요.
-                    <br />
-                    제공되는 카드는 예측이나 보장을 의미하지 않으며, 참고
-                    수준으로만 이용해 주세요.
-                  </>
-                )}
-              </p>
+                    <p className="mt-8 text-xs text-neutral-500">
+                      투자와 관련된 선택은 사용자 본인의 판단과 책임이 요구돼요.
+                      <br />
+                      제공되는 카드는 예측이나 보장을 의미하지 않으며, 참고
+                      수준으로만 이용해 주세요.
+                    </p>
+                  )}
+              </div>
+              <div className="w-full text-right mt-6">
+                <ChatBubble
+                  colorClass="text-violet-300"
+                  tail="right-bottom"
+                  className="w-full max-w-4/5 px-0 py-0"
+                  contentClassName="whitespace-pre-wrap text-foreground ff_kyobo text-lg leading-relaxed w-full"
+                >
+
+                  <Textarea className="border-0"></Textarea>
+                </ChatBubble>
+              </div>
+              <h6 className="ff_kyobo text-xl text-end relative w-fit h-auto mt-4 ms-auto">
+                <span className="absolute z-0 bg-violet-200 w-full h-2 left-0 bottom-0.5 opacity-50"></span>
+                <span className="relative z-1">내 감정을 기록해 놓을까요?</span>
+              </h6>
             </div>
+          </div>
+          <div className="px-2">
+
           </div>
         </div>
       </section>

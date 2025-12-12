@@ -1,21 +1,18 @@
+import { handleApiError } from "@/apis/error-handler";
 import type {
   CheckCertificationRequestDTO,
   EmailCertificationRequestDTO,
   SignUpRequestDTO,
 } from "@/apis/request/auth";
-import type {
-  CheckCertificationResponseDTO,
-  EmailCertificationResponseDTO,
-  SignUpResponseDTO,
-} from "@/apis/response/auth";
-import type { TermsBase } from "@/apis/response/terms";
+import type { BaseResponseDTO } from "@/apis/response";
+import type ResponseDTO from "@/apis/response/response.dto";
+import type TermsListResponseDTO from "@/apis/response/terms/terms-list.response";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TERMS_CONST } from "@/constants/terms";
 import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
-import type { ResponseBody } from "@/types";
+import type { AxiosError } from "axios";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +25,7 @@ import {
 import { Card, CardContent, CardHeader } from "../../components/ui/card";
 import { Spinner } from "../../components/ui/spinner";
 import { ResponseCode } from "../../types/enums";
+import { TERMS_LIST_CONST } from "@/constants/terms";
 
 // 정규식
 const validateEmail = (email: string) => {
@@ -78,10 +76,15 @@ function Join() {
     name: "",
   });
 
-  const termList = TERMS_CONST;
-  const [terms, setTerms] = useState<TermsBase[]>(termList);
-  const requiredIds = terms.filter((t) => t.required === true).map((t) => t.id); // 필수약관
-  const [requiredTermIds, setRequiredTermIds] = useState(requiredIds);
+  type Terms = TermsListResponseDTO["termsList"];
+  const termList = TERMS_LIST_CONST.termsList;
+
+  const [terms, setTerms] = useState<Terms>(termList);
+  const [requiredTermIds, setRequiredTermIds] = useState<number[]>(
+    TERMS_LIST_CONST.termsList
+      .filter((t) => t.required)
+      .map((t) => t.id)
+  );
 
   // 이메일
   const [submitMail, setSubmitMail] = useState(true);
@@ -123,168 +126,32 @@ function Join() {
     name: "",
   };
 
-  // api response
-  const emailCertificationResponse = (
-    responseBody: ResponseBody<EmailCertificationResponseDTO>
-  ) => {
-    if (!responseBody) return;
-
-    const { code } = responseBody;
-
-    if (code === ResponseCode.DUPLICATE_EMAIL) {
-      setSubmitMailReadonly(false); // username input readonly
-      setIsSending(false); // 전송중 버튼 숨김
-      setSubmitMail(true); //메일인증 버튼 보임
-      setValid((prev) => ({ ...prev, username: false }));
-      setValidMessages((prev) => ({
-        ...prev,
-        username: "다른 이메일을 이용해주세요.",
-      }));
-    }
-    if (code === ResponseCode.MAIL_FAIL) {
-      setIsSending(false); // 전송중 버튼 숨김
-      setSubmitMail(true); //메일인증 버튼 보임
-      setValid((prev) => ({ ...prev, username: false }));
-      setValidMessages((prev) => ({
-        ...prev,
-        username: "인증번호 메일 발송을 실패했어요.",
-      }));
-    }
-    if (code === ResponseCode.DATABASE_ERROR) {
-      setIsSending(false); // 전송중 버튼 숨김
-      setSubmitMail(true); //메일인증 버튼 보임
-      setValid((prev) => ({ ...prev, username: false }));
-      setValidMessages((prev) => ({ ...prev, username: "데이터베이스 오류" }));
-    }
-    if (code === ResponseCode.SUCCESS) {
-      setSubmitMailReadonly(true); // username input readonly
-      setCodeSuccess(false);
-      setIsSending(false); // 전송중 버튼 숨김
-      setSendSuccess(true); // 발송성공 버튼 보임
-      setValid((prev) => ({ ...prev, username: true }));
-      setValidMessages((prev) => ({
-        ...prev,
-        username: "인증번호 발송 성공",
-      }));
-      startTimer(300);
-    }
-  };
-
-  const checkCertificationResponse = (
-    responseBody: ResponseBody<CheckCertificationResponseDTO>
-  ) => {
-    if (!responseBody) return;
-
-    const { code } = responseBody;
-
-    if (code === ResponseCode.CERTIFICATE_FAIL) {
-      setIsVerifying(false); // 확인중 버튼 숨김
-      setSubmitCode(true); // 인증확인 버튼 보임
-      setSubmitCodeReadonly(false);
-      setValid((prev) => ({ ...prev, certificationNum: false }));
-      setValidMessages((prev) => ({
-        ...prev,
-        certificationNum: "인증번호가 일치하지 않아요",
-      }));
-    }
-
-    if (code === ResponseCode.DATABASE_ERROR) {
-      setIsVerifying(false); // 확인중 버튼 숨김
-      setSubmitCode(true); // 인증확인 버튼 보임
-      setSubmitCodeReadonly(false);
-      setValid((prev) => ({ ...prev, certificationNum: false }));
-      setValidMessages((prev) => ({
-        ...prev,
-        certificationNum: "데이터베이스 오류",
-      }));
-    }
-    if (code === ResponseCode.SUCCESS) {
-      setSubmitMailReadonly(true);
-      setIsVerifying(false); // 확인중 버튼 숨김
-      setCodeSuccess(true); // 확인완료 버튼 보임
-      setValid((prev) => ({
-        ...prev,
-        certificationNum: true,
-      }));
-      setValidMessages((prev) => ({
-        ...prev,
-        certificationNum: "이메일 인증 완료!",
-      }));
-      stopTimer();
-    }
-  };
-
-  const signUpResponse = (responseBody: ResponseBody<SignUpResponseDTO>) => {
-    if (!responseBody) return;
-
-    const { code } = responseBody;
-
-    if (code === ResponseCode.DATABASE_ERROR) {
-      alert("DB오류");
-      setUser(initialUserState);
-      setValid(initialValidState);
-      setValidMessages(initialValidMessagesState);
-      setSendSuccess(false);
-      setCodeSuccess(false);
-      stopTimer();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-    if (code === ResponseCode.DUPLICATE_EMAIL) {
-      alert("다른 이메일을 이용해주세요");
-      setUser(initialUserState);
-      setValid(initialValidState);
-      setValidMessages(initialValidMessagesState);
-      setSendSuccess(false);
-      setCodeSuccess(false);
-      stopTimer();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-    if (code === ResponseCode.CERTIFICATE_FAIL) {
-      alert("인증 실패. 회원가입을 다시 시도해주세요");
-      setUser(initialUserState);
-      setValid(initialValidState);
-      setValidMessages(initialValidMessagesState);
-      setSendSuccess(false);
-      setCodeSuccess(false);
-      stopTimer();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-    if (code === ResponseCode.SUCCESS) {
-      showDialog({
-        title: "회원가입 성공",
-        description: "로그인 페이지로 이동합니다.",
-        confirmText: "확인",
-        cancelText: "",
-        onConfirm: () => {
-          navigate("/login");
-        },
-      });
-    }
-  };
-
   // DB에서 약관 가져오기
   useEffect(() => {
-    termsListRequest()
-      .then((data) => {
-        console.log("dbterms :", data);
-        // 성공시 terms state 업데이트
-        const dbTermsList = data.termsList;
-        setTerms(dbTermsList);
-        // 필수 약관 아이디 다시 저장
+    const fetchTerms = async () => {
+      try {
+        const response: ResponseDTO<TermsListResponseDTO> =
+          await termsListRequest();
+
+        console.log("dbterms:", response);
+        const dbTermsList = response.data?.termsList ?? [];
+
         const requiredIds = dbTermsList
-          .filter((t: TermsBase) => t.required === true)
-          .map((t: TermsBase) => t.id);
+          .filter((t) => t.required)
+          .map((t) => t.id);
+
+        setTerms(dbTermsList);
         setRequiredTermIds(requiredIds);
-      })
-      .catch((err) => {
+
+      } catch (err) {
         console.log(err);
-        // 실패시 상수값 그대로 사용
-        setTerms(TERMS_CONST);
-        setRequiredTermIds(
-          TERMS_CONST.filter((t) => t.required).map((t) => t.id)
-        );
-      });
+      }
+    };
+
+    fetchTerms();
   }, []);
+
+
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 공백제거
@@ -466,7 +333,7 @@ function Join() {
   const seconds = String(remainSec % 60).padStart(2, "0");
 
   // 메일 인증 버튼
-  const handleSendMail = () => {
+  const handleSendMail = async () => {
     if (!user.username) return;
 
     // 재인증시 코드 초기화하기
@@ -483,14 +350,86 @@ function Join() {
     setSubmitMailReadonly(true); // username input readonly
 
     // 요청 객체 생성 및 api 요청
-    const requestBody: EmailCertificationRequestDTO = {
+    const req: EmailCertificationRequestDTO = {
       username: user.username,
     };
-    emailCertificationRequest(requestBody).then(emailCertificationResponse);
+
+    console.log("[Join] email certification 요청 req :", req)
+
+    try {
+      const responseBody: ResponseDTO<null> =
+        await emailCertificationRequest(req);
+
+      const { code } = responseBody;
+
+      if (code === ResponseCode.DUPLICATE_EMAIL) {
+        setSubmitMailReadonly(false);
+        setIsSending(false);
+        setSubmitMail(true);
+        setValid((prev) => ({ ...prev, username: false }));
+        setValidMessages((prev) => ({
+          ...prev,
+          username: "다른 이메일을 이용해주세요.",
+        }));
+        return;
+      }
+
+      if (code === ResponseCode.MAIL_FAIL) {
+        setIsSending(false);
+        setSubmitMail(true);
+        setValid((prev) => ({ ...prev, username: false }));
+        setValidMessages((prev) => ({
+          ...prev,
+          username: "인증번호 메일 발송을 실패했어요.",
+        }));
+        return;
+      }
+
+      if (code === ResponseCode.DATABASE_ERROR) {
+        setIsSending(false);
+        setSubmitMail(true);
+        setValid((prev) => ({ ...prev, username: false }));
+        setValidMessages((prev) => ({
+          ...prev,
+          username: "데이터베이스 오류",
+        }));
+        return;
+      }
+
+      if (code === ResponseCode.SUCCESS) {
+        setSubmitMailReadonly(true);
+        setCodeSuccess(false);
+        setIsSending(false);
+        setSendSuccess(true);
+        setValid((prev) => ({ ...prev, username: true }));
+        setValidMessages((prev) => ({
+          ...prev,
+          username: "인증번호 발송 성공",
+        }));
+        startTimer(300);
+        return;
+      }
+
+      // 예상하지 못한 코드면 글로벌 에러 핸들러
+      handleApiError(responseBody);
+      setIsSending(false);
+      setSubmitMail(true);
+      setSubmitMailReadonly(false);
+    } catch (error) {
+      console.error("[Join] 이메일 인증 요청 중 에러:", error);
+      const err = error as AxiosError<BaseResponseDTO>;
+      const apiError = err.response?.data;
+      if (apiError) handleApiError(apiError);
+      else handleApiError(null);
+
+      setIsSending(false);
+      setSubmitMail(true);
+      setSubmitMailReadonly(false);
+    }
   };
 
   // 코드 확인 버튼
-  const handleVerifyCode = () => {
+  const handleVerifyCode = async () => {
     if (!user.username && !user.certificationNum) return;
 
     setSubmitCode(false); // 인증확인 버튼 숨김
@@ -498,12 +437,79 @@ function Join() {
     setSubmitCodeReadonly(true); // input code readonly
 
     // 요청 객체 생성 및 api 요청
-    const requestBody: CheckCertificationRequestDTO = {
+    const req: CheckCertificationRequestDTO = {
       username: user.username,
       certificationNum: user.certificationNum,
     };
 
-    checkCertificationRequest(requestBody).then(checkCertificationResponse);
+    console.log("[Join] email check 요청 req :", req)
+
+    try {
+      const responseBody: ResponseDTO<null> =
+        await checkCertificationRequest(req);
+
+      const { code } = responseBody;
+
+      if (code === ResponseCode.CERTIFICATE_FAIL) {
+        setIsVerifying(false);
+        setSubmitCode(true);
+        setSubmitCodeReadonly(false);
+        setValid((prev) => ({ ...prev, certificationNum: false }));
+        setValidMessages((prev) => ({
+          ...prev,
+          certificationNum: "인증번호가 일치하지 않아요",
+        }));
+        return;
+      }
+
+      if (code === ResponseCode.DATABASE_ERROR) {
+        setIsVerifying(false);
+        setSubmitCode(true);
+        setSubmitCodeReadonly(false);
+        setValid((prev) => ({ ...prev, certificationNum: false }));
+        setValidMessages((prev) => ({
+          ...prev,
+          certificationNum: "데이터베이스 오류",
+        }));
+        return;
+      }
+
+      if (code === ResponseCode.SUCCESS) {
+        setSubmitMailReadonly(true);
+        setIsVerifying(false);
+        setCodeSuccess(true);
+        setValid((prev) => ({
+          ...prev,
+          certificationNum: true,
+        }));
+        setValidMessages((prev) => ({
+          ...prev,
+          certificationNum: "이메일 인증 완료!",
+        }));
+        stopTimer();
+        return;
+      }
+
+      // 예외 코드 → 글로벌 에러 핸들링
+      handleApiError(responseBody);
+      setIsVerifying(false);
+      setSubmitCode(true);
+      setSubmitCodeReadonly(false);
+
+    } catch (error) {
+      console.error("[Join] 인증번호 확인 중 에러:", error);
+      const err = error as AxiosError<BaseResponseDTO>;
+      console.log("[check-cert] 에러 응답:", err.response?.data);
+
+      const apiError = err.response?.data;
+      if (apiError) handleApiError(apiError);
+      else handleApiError(null);
+
+      setIsVerifying(false);
+      setSubmitCode(true);
+      setSubmitCodeReadonly(false);
+    }
+
   };
 
   // 동의한 약관의 아이디를 유저 정보에 넣기
@@ -542,16 +548,69 @@ function Join() {
     requiredTermIds.length > 0 &&
     requiredTermIds.every((id) => user.agreedTermIds.includes(id));
 
-  const handleJoin = () => {
-    const responseBody: SignUpRequestDTO = {
+  // 폼/타이머 초기화 공통 함수
+  const resetJoinForm = () => {
+    setUser(initialUserState);
+    setValid(initialValidState);
+    setValidMessages(initialValidMessagesState);
+    setSendSuccess(false);
+    setCodeSuccess(false);
+    stopTimer();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleJoin = async () => {
+    const req: SignUpRequestDTO = {
       username: user.username,
       certificationNum: user.certificationNum,
       password: user.password,
       name: user.name,
       agreedTermIds: user.agreedTermIds,
     };
+    try {
+      const responseBody: ResponseDTO<null> = await signUpRequest(req);
+      console.log("[Join] email check 요청 req :", req)
+      const { code } = responseBody;
 
-    signUpRequest(responseBody).then(signUpResponse);
+      // 서버 응답 코드에 따라 에러핸들러 실행
+      if (code !== ResponseCode.SUCCESS) {
+        handleApiError(responseBody);
+        resetJoinForm();
+        return;
+      }
+
+      // 성공시 로그인 페이지 이동
+      showDialog({
+        title: "회원가입 성공",
+        description: "로그인 페이지로 이동합니다.",
+        confirmText: "확인",
+        cancelText: "",
+        onConfirm: () => {
+          navigate("/login");
+        },
+      });
+
+    } catch (error) {
+      console.error("[Join] 회원가입 중 에러:", error);
+
+      const err = error as AxiosError<BaseResponseDTO>;
+      if (err.response) {
+        console.log("status:", err.response.status);
+        console.log("body:", err.response.data);
+      }
+      const apiError = err.response?.data;
+
+      if (apiError) {
+        // 서버가 ResponseDTO<...> 형태로 에러를 내려준 경우
+        handleApiError(apiError);
+      } else {
+        // 네트워크 단절 등, 아예 응답이 없는 경우
+        handleApiError(null);
+      }
+
+      setSubmitMailReadonly(false)
+    }
+
   };
 
   return (

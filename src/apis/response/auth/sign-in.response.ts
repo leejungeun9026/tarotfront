@@ -1,6 +1,5 @@
-import type ResponseDTO from "../response.dto";
 
-export default interface SignInResponseDTO extends ResponseDTO {
+export default interface SignInResponseDTO {
   id: string;
   username: string;
   name: string;
