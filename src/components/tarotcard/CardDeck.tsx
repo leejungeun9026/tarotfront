@@ -1,11 +1,12 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import CardItem from "./CardItem";
-import type { ReadingCard } from "@/types/tarotcard/tarotcard";
+import type { ReadingCard } from "@/apis/response/tarotcard";
 
 interface CardDeckProps {
   cardList: ReadingCard[];
   shuffle: boolean;
   spread: boolean;
+  hoverEnabled?: boolean;
   progress: number;
   angle: number;
   setAngle: React.Dispatch<React.SetStateAction<number>>;
@@ -16,12 +17,12 @@ function CardDeck({
   cardList,
   shuffle,
   spread,
+  hoverEnabled = false,
   progress,
   angle,
   setAngle,
   onCardClick,
 }: CardDeckProps) {
-
   const total = cardList.length;
 
   const deckRef = useRef<HTMLDivElement | null>(null);
@@ -51,7 +52,6 @@ function CardDeck({
   const [cursor, setCursor] = useState<string>("default");
   const baseAngle = spread ? 45 : 0;
   const totalAngle = baseAngle + angle;
-
 
   // window resize 감지
   useLayoutEffect(() => {
@@ -103,7 +103,6 @@ function CardDeck({
 
     return dist >= minR && dist <= maxR;
   };
-
 
   // 드래그 이벤트
   const onMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
@@ -209,13 +208,15 @@ function CardDeck({
         return (
           <div
             ref={cardRef}
-            className={["card_wrap", `${card.isSelected ? "active" : ""}`].join(
-              " "
-            )}
+            className={[
+              "card_wrap cursor-pointer",
+              `${card.isSelected ? "active" : ""}`,
+              `${hoverEnabled ? "hoverable" : "nohover"}`,
+            ].join(" ")}
             key={card.id}
             style={{
               transform: `
-                translate3d(${moveX}px, ${moveY}px, 0) 
+                translate3d(${moveX}px, ${moveY}px, 0)
                 rotate(${rotate}deg)`,
               transition: "transform 0.05s ease-in-out",
             }}

@@ -21,7 +21,7 @@ interface TarotCardStoreState {
 }
 
 export const useTarotCardStore = create<TarotCardStoreState>((set, get) => ({
-  cards: [],
+  cards: TAROT_CARDS_CONST["tarotCardList"],
   loadingCards: false,
 
   fetchCards: async () => {
@@ -39,12 +39,18 @@ export const useTarotCardStore = create<TarotCardStoreState>((set, get) => ({
         const list = res.data.tarotCardList ?? [];
         applyData(list);
       } else {
-        console.warn("[TarotCardStore] 응답 코드:", res.code, "→ TAROT_CARDS_CONST 사용");
-        applyData(TAROT_CARDS_CONST["tarotCardList"]);
+        console.warn(
+          "[TarotCardStore] 응답 코드:",
+          res.code,
+          "→ TAROT_CARDS_CONST 사용"
+        );
       }
     } catch (err) {
-      console.error("[TarotCardStore] 요청 에러:", err, "→ TAROT_CARDS_CONST 사용");
-      applyData(TAROT_CARDS_CONST["tarotCardList"]);
+      console.error(
+        "[TarotCardStore] 요청 에러:",
+        err,
+        "→ TAROT_CARDS_CONST 사용"
+      );
     } finally {
       set({ loadingCards: false });
     }

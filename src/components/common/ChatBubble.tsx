@@ -52,7 +52,7 @@ export default function ChatBubble({
   return (
     <div
       className={[
-        "relative inline-block rounded-3xl px-4 py-3 bg-current",
+        "relative inline-block rounded-3xl bg-current",
         effectiveColorClass,
         className,
       ]

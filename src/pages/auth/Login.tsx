@@ -11,10 +11,11 @@ import useAuthStore from "@/stores/useAuthStore";
 import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
 import { ResponseCode } from "@/types/enums";
 import { getLoginIcon } from "@/utils/loginIcon";
+import { OAUTH_ERROR_MESSAGE } from "@/utils/oauth2ErrorMessage";
 import type { AxiosError } from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // 정규식
 const validateEmail = (email: string) => {
@@ -25,9 +26,12 @@ const validateEmail = (email: string) => {
 
 function Login() {
   const navigate = useNavigate();
-  const currentUser = useAuthStore((state) => state.user);
+  const location = useLocation();
+  const shownRef = useRef(false);
+  // const currentUser = useAuthStore((state) => state.user);
   const setCurrentUser = useAuthStore((state) => state.setCurrentUser);
   const [, setCookie] = useCookies();
+  const { showDialog } = useGlobalAlertDialog.getState();
   const dialogOpen = useGlobalAlertDialog((state) => state.open);
   const [user, setUser] = useState({
     username: "",
@@ -45,12 +49,26 @@ function Login() {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+  // sns로그인 실패 시 메세지
   useEffect(() => {
-    if (currentUser?.id) {
-      navigate("/profile");
-    }
-    usernameRef.current?.focus();
-  }, []);
+    if (shownRef.current) return;
+
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
+    if (!code) return;
+
+    shownRef.current = true;
+
+    const mapped = OAUTH_ERROR_MESSAGE[code] ?? "로그인에 실패했어요.";
+    showDialog({
+      title: "로그인 실패",
+      description: mapped,
+      confirmText: "확인",
+    });
+
+    // query 제거
+    navigate("/login", { replace: true });
+  }, [location.search, navigate]);
 
   useEffect(() => {
     if (!dialogOpen) {
@@ -146,8 +164,9 @@ function Login() {
 
     try {
       // 서버 요청
-      const responseBody: ResponseDTO<SignInResponseDTO> =
-        await signInRequest(req);
+      const responseBody: ResponseDTO<SignInResponseDTO> = await signInRequest(
+        req
+      );
       console.log("[Login] handleLogin 호출됨, 요청 body:", responseBody);
 
       const { code, data } = responseBody;
@@ -157,8 +176,7 @@ function Login() {
         return;
       }
 
-      const { id, username, name, role, token, expirationTime } =
-        data;
+      const { id, username, name, role, token, expirationTime } = data;
 
       // store에 유저 정보 담기
       setCurrentUser({
@@ -173,8 +191,7 @@ function Login() {
       const expires = new Date(now + expirationTime * 1000);
       setCookie("accessToken", token, { expires, path: "/" });
 
-      navigate("/");
-
+      navigate("/", { replace: true });
     } catch (error) {
       const err = error as AxiosError<BaseResponseDTO>;
       const apiError = err.response?.data;
@@ -182,7 +199,7 @@ function Login() {
       if (apiError) {
         handleApiError(apiError); // 서버 ResponseDTO
       } else {
-        handleApiError(null);     // 네트워크 단절 등
+        handleApiError(null); // 네트워크 단절 등
       }
     }
   };
@@ -210,8 +227,9 @@ function Login() {
                   onKeyDown={handleOnKeyDown}
                 />
                 <p
-                  className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
-                    }`}
+                  className={`text-xs mt-1 ${
+                    valid.username ? "text-green-600" : "text-red-500"
+                  }`}
                 >
                   {validMessages.username}
                 </p>
@@ -232,22 +250,23 @@ function Login() {
                   onKeyDown={handleOnKeyDown}
                 />
                 <p
-                  className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
-                    }`}
+                  className={`text-xs mt-1 ${
+                    valid.password ? "text-green-600" : "text-red-500"
+                  }`}
                 >
                   {validMessages.password}
                 </p>
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Button size="xl" className="w-full" onClick={handleLogin}>
+              <Button size="lg" className="w-full h-12" onClick={handleLogin}>
                 로그인
               </Button>
               <Button
                 onClick={() => navigate("/join")}
                 variant="outline"
-                size="xl"
-                className="w-full"
+                size="lg"
+                className="w-full h-12"
               >
                 회원가입
               </Button>

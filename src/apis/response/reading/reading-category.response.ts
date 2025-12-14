@@ -1,11 +1,8 @@
-import { ReadingTypeEn, ReadingTypeKr } from "@/types/enums";
-
 export default interface ReadingCategoryResponseDTO {
   id: number;
-  typeEn: ReadingTypeEn | string;
-  typeKr: ReadingTypeKr | string;
+  typeEn: string;
+  typeKr: string;
   category: string;
   description: string;
   sortOrder: number;
 }
-

@@ -6,26 +6,24 @@ import type {
 } from "@/apis/request/auth";
 import type { BaseResponseDTO } from "@/apis/response";
 import type ResponseDTO from "@/apis/response/response.dto";
-import type TermsListResponseDTO from "@/apis/response/terms/terms-list.response";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useGlobalAlertDialog } from "@/stores/useGlobalAlertDialog";
+import { useTermsStore } from "@/stores/useTermsStore";
 import type { AxiosError } from "axios";
 import { ChevronRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   checkCertificationRequest,
   emailCertificationRequest,
   signUpRequest,
-  termsListRequest,
 } from "../../apis";
 import { Card, CardContent, CardHeader } from "../../components/ui/card";
 import { Spinner } from "../../components/ui/spinner";
 import { ResponseCode } from "../../types/enums";
-import { TERMS_LIST_CONST } from "@/constants/terms";
 
 // 정규식
 const validateEmail = (email: string) => {
@@ -50,6 +48,7 @@ const validateNickname = (name: string) => {
 function Join() {
   const navigate = useNavigate();
   const { showDialog } = useGlobalAlertDialog();
+  const { terms, requiredTermIds } = useTermsStore();
 
   const [user, setUser] = useState<SignUpRequestDTO & { passwordChk: string }>({
     username: "",
@@ -75,16 +74,6 @@ function Join() {
     passwordChk: "",
     name: "",
   });
-
-  type Terms = TermsListResponseDTO["termsList"];
-  const termList = TERMS_LIST_CONST.termsList;
-
-  const [terms, setTerms] = useState<Terms>(termList);
-  const [requiredTermIds, setRequiredTermIds] = useState<number[]>(
-    TERMS_LIST_CONST.termsList
-      .filter((t) => t.required)
-      .map((t) => t.id)
-  );
 
   // 이메일
   const [submitMail, setSubmitMail] = useState(true);
@@ -125,33 +114,6 @@ function Join() {
     passwordChk: "",
     name: "",
   };
-
-  // DB에서 약관 가져오기
-  useEffect(() => {
-    const fetchTerms = async () => {
-      try {
-        const response: ResponseDTO<TermsListResponseDTO> =
-          await termsListRequest();
-
-        console.log("dbterms:", response);
-        const dbTermsList = response.data?.termsList ?? [];
-
-        const requiredIds = dbTermsList
-          .filter((t) => t.required)
-          .map((t) => t.id);
-
-        setTerms(dbTermsList);
-        setRequiredTermIds(requiredIds);
-
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchTerms();
-  }, []);
-
-
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 공백제거
@@ -354,11 +316,12 @@ function Join() {
       username: user.username,
     };
 
-    console.log("[Join] email certification 요청 req :", req)
+    console.log("[Join] email certification 요청 req :", req);
 
     try {
-      const responseBody: ResponseDTO<null> =
-        await emailCertificationRequest(req);
+      const responseBody: ResponseDTO<null> = await emailCertificationRequest(
+        req
+      );
 
       const { code } = responseBody;
 
@@ -442,11 +405,12 @@ function Join() {
       certificationNum: user.certificationNum,
     };
 
-    console.log("[Join] email check 요청 req :", req)
+    console.log("[Join] email check 요청 req :", req);
 
     try {
-      const responseBody: ResponseDTO<null> =
-        await checkCertificationRequest(req);
+      const responseBody: ResponseDTO<null> = await checkCertificationRequest(
+        req
+      );
 
       const { code } = responseBody;
 
@@ -495,7 +459,6 @@ function Join() {
       setIsVerifying(false);
       setSubmitCode(true);
       setSubmitCodeReadonly(false);
-
     } catch (error) {
       console.error("[Join] 인증번호 확인 중 에러:", error);
       const err = error as AxiosError<BaseResponseDTO>;
@@ -509,7 +472,6 @@ function Join() {
       setSubmitCode(true);
       setSubmitCodeReadonly(false);
     }
-
   };
 
   // 동의한 약관의 아이디를 유저 정보에 넣기
@@ -569,7 +531,7 @@ function Join() {
     };
     try {
       const responseBody: ResponseDTO<null> = await signUpRequest(req);
-      console.log("[Join] email check 요청 req :", req)
+      console.log("[Join] email check 요청 req :", req);
       const { code } = responseBody;
 
       // 서버 응답 코드에 따라 에러핸들러 실행
@@ -589,7 +551,6 @@ function Join() {
           navigate("/login");
         },
       });
-
     } catch (error) {
       console.error("[Join] 회원가입 중 에러:", error);
 
@@ -608,16 +569,14 @@ function Join() {
         handleApiError(null);
       }
 
-      setSubmitMailReadonly(false)
+      setSubmitMailReadonly(false);
     }
-
   };
 
   return (
     <div className="Join">
       <div className="inner px-4 py-6 sm:py-10 md:py-16 transition-all">
         <div className="max-w-md mx-auto">
-
           <section>
             <div className="grid w-full items-center gap-3 mb-8">
               <Label htmlFor="username">이메일 주소</Label>
@@ -660,7 +619,11 @@ function Join() {
                     {sendSuccess &&
                       !isSending &&
                       !(!codeSuccess && remainSec === 0) && (
-                        <Button variant="outline" className="w-24 h-11" disabled>
+                        <Button
+                          variant="outline"
+                          className="w-24 h-11"
+                          disabled
+                        >
                           발송 성공
                         </Button>
                       )}
@@ -680,8 +643,9 @@ function Join() {
                   </div>
                 </div>
                 <p
-                  className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
-                    }`}
+                  className={`text-xs mt-1 ${
+                    valid.username ? "text-green-600" : "text-red-500"
+                  }`}
                 >
                   {validMessages.username}
                 </p>
@@ -736,10 +700,11 @@ function Join() {
                     <div className="flex gap-1 mt-1">
                       {remainSec > 0 && (
                         <p
-                          className={`text-xs ${valid.certificationNum
-                            ? "text-green-600"
-                            : "text-red-500"
-                            }`}
+                          className={`text-xs ${
+                            valid.certificationNum
+                              ? "text-green-600"
+                              : "text-red-500"
+                          }`}
                         >
                           {validMessages.certificationNum}
                         </p>
@@ -773,8 +738,9 @@ function Join() {
                   onChange={handleOnChange}
                 />
                 <p
-                  className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
-                    }`}
+                  className={`text-xs mt-1 ${
+                    valid.password ? "text-green-600" : "text-red-500"
+                  }`}
                 >
                   {validMessages.password}
                 </p>
@@ -787,8 +753,9 @@ function Join() {
                   onChange={handleOnChange}
                 />
                 <p
-                  className={`text-xs mt-1 ${valid.passwordChk ? "text-green-600" : "text-red-500"
-                    }`}
+                  className={`text-xs mt-1 ${
+                    valid.passwordChk ? "text-green-600" : "text-red-500"
+                  }`}
                 >
                   {validMessages.passwordChk}
                 </p>
@@ -807,8 +774,9 @@ function Join() {
                   onChange={handleOnChange}
                 />
                 <p
-                  className={`text-xs mt-1 ${valid.name ? "text-green-600" : "text-red-500"
-                    }`}
+                  className={`text-xs mt-1 ${
+                    valid.name ? "text-green-600" : "text-red-500"
+                  }`}
                 >
                   {validMessages.name}
                 </p>
@@ -829,8 +797,8 @@ function Join() {
                         isAllChecked
                           ? true
                           : isIndeterminate
-                            ? "indeterminate"
-                            : false
+                          ? "indeterminate"
+                          : false
                       }
                       className="bg-white"
                       onCheckedChange={(checked) => {
@@ -909,8 +877,8 @@ function Join() {
           <Button
             disabled={!isFormValid}
             onClick={handleJoin}
-            size="xl"
-            className="w-full"
+            size="lg"
+            className="w-full h-12"
           >
             가입하기
           </Button>

@@ -3,8 +3,8 @@ import type ReadingCardsRequestDTO from "./reading-cards.request";
 export default interface ReadingResultRequestDTO {
   categoryId: number;
   category: string;
-  question: string;
+  questionText: string;
   spreadType: string;
   spreadCount: number;
-  cardList: ReadingCardsRequestDTO[]
+  cardList: ReadingCardsRequestDTO[];
 }

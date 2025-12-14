@@ -13,53 +13,52 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useReadingStore } from "@/stores/useReadingStore";
-import { ReadingTypeKr, type ReadingTypeEn } from "@/types/enums";
 import ReadingSpreadCount from "@/types/enums/readingSpread-count.enum copy";
 import ReadingSpreadKr from "@/types/enums/readingSpread-kr.enum";
 import { getCategoryImg } from "@/utils/imageMapper";
+import { READING_POSITION } from "@/utils/readingPosition";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Navigation, Pagination } from "swiper/modules";
+import { Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 function ReadingCategory() {
   const navigate = useNavigate();
-  const spread = "THREE";
+  const params = useParams();
+  const type = params.type;
+  const typeEn = params.type?.toUpperCase();
+
+  const spread = "THREE" as const;
   const spreadType = ReadingSpreadKr[spread];
   const spreadCount = ReadingSpreadCount[spread];
 
-  const params = useParams();
-  const type = params.type;
-  const typeEn = params.type?.toUpperCase() as ReadingTypeEn;
-  const typeKr = ReadingTypeKr[typeEn];
-
-  const {
-    categories,
-    questions,
-    loadingCategories,
-    loadingQuestions,
-    fetchAllMasterData,
-    getQuestionsByCategoryId,
-  } = useReadingStore();
-
-  // 카테고리/질문 로딩 상태 합치기
-  const isLoading = loadingCategories || loadingQuestions;
-
-  useEffect(() => {
-    // 이미 데이터가 있으면 다시 안 불러와도 됨
-    if (categories.length === 0 || questions.length === 0) {
-      void fetchAllMasterData();
-    }
-  }, [categories.length, questions.length, fetchAllMasterData]);
-
-  // 현재 타입(연애/금전...)에 해당하는 카테고리 리스트
-  const categoryList: ReadingCategoryResponseDTO[] = useMemo(() => {
-    if (!typeEn) return [];
-    return categories.filter((c) => c.typeEn === typeEn);
-  }, [categories, typeEn]);
+  type questionObj = {
+    categoryId: number;
+    category: string;
+    questionText: string;
+    spreadPosition: string[];
+    spreadType: string;
+    spreadCount: number;
+  };
+  const [questionInfo, setQuestionInfo] = useState<questionObj>({
+    categoryId: 0,
+    category: "",
+    questionText: "",
+    spreadPosition: [],
+    spreadType: spreadType,
+    spreadCount: spreadCount,
+  });
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const EMOJI_LIST = {
     love: ["💗", "💞", "💓", "💘", "💔", "🙏", "💍"],
@@ -68,7 +67,35 @@ function ReadingCategory() {
     study: ["📚", "📝", "🎯", "🤹‍♀️", "💡", "📉"],
     life: ["🌿", "💪", "🎭", "🏝"],
     human: ["🏡", "🦋", "🗣", "⚡️"],
-  };
+  } as const;
+
+  // 카테고리, 질문리스트 스토어에서 가져오기
+  const {
+    categories,
+    questions,
+    loadingCategories,
+    loadingQuestions,
+    getQuestionsByCategoryId,
+  } = useReadingStore();
+
+  const isLoading =
+    loadingCategories ||
+    loadingQuestions ||
+    categories.length === 0 ||
+    questions.length === 0;
+
+  // params랑 일치하는 카테고리 제목 찾기
+  const currentTypeKr = useMemo(() => {
+    if (!typeEn) return "";
+    const found = categories.find((c) => c.typeEn === typeEn);
+    return found ? String(found.typeKr) : "";
+  }, [categories, typeEn]);
+
+  // 현재 타입의 카테고리 리스트 (질문 포함)
+  const categoryList: ReadingCategoryResponseDTO[] = useMemo(() => {
+    if (!typeEn) return [];
+    return categories.filter((c) => c.typeEn === typeEn);
+  }, [categories, typeEn]);
 
   type QuestionRequest = Record<string, { message: string }>;
   const [questionMessage, setQuestionMessage] = useState<QuestionRequest>({});
@@ -76,19 +103,24 @@ function ReadingCategory() {
     Record<number, boolean>
   >({});
 
-  const requestToPick = (
-    categoryId: number,
-    category: string,
-    question: string
-  ) => {
-    navigate("/reading", {
+  const requestToPick = (questionInfo: questionObj) => {
+    console.log(questionInfo);
+    const {
+      categoryId,
+      category,
+      questionText,
+      spreadPosition,
+      spreadType,
+      spreadCount,
+    } = questionInfo;
+    navigate("/reading/pick", {
       state: {
-        screen: "pick",
         categoryId,
         category,
-        question,
-        spreadType: spreadType,
-        spreadCount: spreadCount,
+        questionText,
+        spreadPosition,
+        spreadType,
+        spreadCount,
       },
     });
   };
@@ -97,9 +129,15 @@ function ReadingCategory() {
   const handleQuestionSelectSubmit = (
     categoryId: number,
     category: string,
-    question: string
+    questionText: string
   ) => {
-    requestToPick(categoryId, category, question);
+    setQuestionInfo((prev) => ({
+      ...prev,
+      categoryId,
+      category,
+      questionText,
+    }));
+    setDialogOpen(true);
   };
 
   // 다른 질문 버튼 클릭
@@ -136,10 +174,16 @@ function ReadingCategory() {
     const key = String(categoryId);
     const message = questionMessage[key]?.message;
     if (!message) return;
-    requestToPick(categoryId, category, message);
+    setQuestionInfo((prev) => ({
+      ...prev,
+      categoryId,
+      category,
+      questionText: message,
+    }));
+    setDialogOpen(true);
   };
 
-  // 설명의 ". " → 줄바꿈 처리
+  // 설명 줄바꿈 처리
   function replaceDotWithEnter(text: string) {
     return text.replace(/\. /g, ".\n");
   }
@@ -157,7 +201,7 @@ function ReadingCategory() {
                   src={getCategoryImg(params?.type ? params.type : undefined)}
                   className="size-7 sm:size-8 animate-bounce"
                 />
-                {typeKr}운
+                {currentTypeKr}운
               </div>
             }
             subtitle={
@@ -169,6 +213,7 @@ function ReadingCategory() {
 
       <section>
         <Swiper
+          key={params.type}
           pagination={{
             el: ".askSwiper-pagination",
             clickable: true,
@@ -179,7 +224,8 @@ function ReadingCategory() {
           }}
           autoHeight={true}
           loop={true}
-          modules={[Pagination, Navigation]}
+          mousewheel={true}
+          modules={[Pagination, Navigation, Mousewheel]}
           slidesPerView={"auto"}
           className="askSwiper group"
         >
@@ -194,7 +240,6 @@ function ReadingCategory() {
           ) : (
             <>
               {categoryList.map((c) => {
-                // ✅ 카테고리별 질문은 store의 helper 사용
                 const categoryQuestions: ReadingQuestionResponseDTO[] =
                   getQuestionsByCategoryId(c.id);
 
@@ -237,7 +282,7 @@ function ReadingCategory() {
                             {!openQuestionMap[c.id] && (
                               <Button
                                 size="lg"
-                                className="w-full bg-violet-700"
+                                className="w-full  bg-violet-700"
                                 data-num={c.id}
                                 onClick={handleOpenQuestion}
                               >
@@ -291,6 +336,49 @@ function ReadingCategory() {
           <div className="askSwiper-pagination flex justify-center items-center" />
         </div>
       </section>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader className="pb-5">
+            <DialogTitle className="text-lg leading-none font-semibold">
+              어떤 상황으로 운세를 볼까요?
+            </DialogTitle>
+          </DialogHeader>
+          <div>
+            <ul>
+              {Object.entries(READING_POSITION).map(([key, value]) => (
+                <li key={key} className="not-last:mb-2">
+                  <Button
+                    onClick={() => {
+                      const nextQuestionInfo = {
+                        ...questionInfo,
+                        spreadPosition: [...value],
+                      };
+                      setQuestionInfo(nextQuestionInfo);
+                      requestToPick(nextQuestionInfo);
+                    }}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    {value.join(" - ")}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setDialogOpen(false);
+              }}
+              variant="secondary"
+              className="w-full"
+            >
+              취소
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

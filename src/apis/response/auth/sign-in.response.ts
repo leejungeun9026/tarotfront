@@ -1,6 +1,5 @@
-
 export default interface SignInResponseDTO {
-  id: string;
+  id: number;
   username: string;
   name: string;
   role: string;

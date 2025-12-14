@@ -1,806 +1,966 @@
 import type { ReadingQuestionListResponseDTO } from "@/apis/response/reading";
 
 export const READING_QUESTION_CONST: ReadingQuestionListResponseDTO = {
-  "readingQuestionList": [
+  readingQuestionList: [
     {
-      "readingCategoryId": 1,
-      "questionText": "이번 달 제 연애운은 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 1,
+      questionType: "flow",
+      questionText: "이번 달 전반적인 연애운이 궁금해요!",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 1,
-      "questionText": "가까운 시일 안에 새로운 만남이 있을까요?",
-      "sortOrder": 2
+      readingCategoryId: 1,
+      questionType: "mind",
+      questionText: "저는 연애를 하고싶은 걸까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 1,
-      "questionText": "요즘 제 사랑 흐름이 좋은 방향인가요?",
-      "sortOrder": 3
+      readingCategoryId: 1,
+      questionType: "action",
+      questionText: "지금 연애에서 제가 신경 써야 할 행동이 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 1,
-      "questionText": "제가 마음을 열면 인연이 다가올까요?",
-      "sortOrder": 4
+      readingCategoryId: 1,
+      questionType: "choice",
+      questionText: "지금처럼 가는 게 좋을지, 뭔가 바꾸는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 1,
-      "questionText": "앞으로 한 달 안에 관계 변화가 있을까요?",
-      "sortOrder": 5
+      readingCategoryId: 1,
+      questionType: "advice",
+      questionText: "지금 제 연애에 꼭 필요한 조언이 있다면요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 2,
-      "questionText": "우리 관계, 이번 달 분위기는 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 2,
+      questionType: "flow",
+      questionText: "우리 관계의 흐름을 알고싶어요",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 2,
-      "questionText": "최근 연인의 마음은 어떤 쪽을 향하고 있나요?",
-      "sortOrder": 2
+      readingCategoryId: 2,
+      questionType: "mind",
+      questionText: "이 연애 계속 해도 괜찮을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 2,
-      "questionText": "지금 우리에게 필요한 건 무엇인가요?",
-      "sortOrder": 3
+      readingCategoryId: 2,
+      questionType: "action",
+      questionText: "애정을 표현하는 데서 제가 더 해볼 수 있는 게 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 2,
-      "questionText": "가까운 미래에 다툼 없이 지낼 수 있을까요?",
-      "sortOrder": 4
+      readingCategoryId: 2,
+      questionType: "choice",
+      questionText: "마음을 더 드러내도 괜찮을까요, 조금 숨기는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 2,
-      "questionText": "요즘 서로의 감정 온도는 잘 맞고 있나요?",
-      "sortOrder": 5
+      readingCategoryId: 2,
+      questionType: "advice",
+      questionText: "애정 문제에서 제가 놓치고 있는 게 있을까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 3,
-      "questionText": "그 사람과의 관계, 곧 진전될 수 있을까요?",
-      "sortOrder": 1
+      readingCategoryId: 3,
+      questionType: "flow",
+      questionText: "이 썸이 발전할 가능성이 있나요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 3,
-      "questionText": "요즘 그 사람은 저에게 어떤 마음인가요?",
-      "sortOrder": 2
+      readingCategoryId: 3,
+      questionType: "mind",
+      questionText: "상대방은 저를 어떻게 생각할까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 3,
-      "questionText": "이번 달 안에 더 가까워질 기회가 생길까요?",
-      "sortOrder": 3
+      readingCategoryId: 3,
+      questionType: "action",
+      questionText: "제가 적극적으로 다가가도 될까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 3,
-      "questionText": "제가 다가가도 괜찮을까요?",
-      "sortOrder": 4
+      readingCategoryId: 3,
+      questionType: "choice",
+      questionText: "기다릴까요, 표현할까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 3,
-      "questionText": "그 사람이 저를 어떻게 보고 있는지 궁금해요.",
-      "sortOrder": 5
+      readingCategoryId: 3,
+      questionType: "advice",
+      questionText: "제가 조심해야 될 부분이 있을까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 4,
-      "questionText": "그 사람은 저를 어떻게 생각하고 있나요?",
-      "sortOrder": 1
+      readingCategoryId: 4,
+      questionType: "flow",
+      questionText: "이 마음이 앞으로 어떻게 흘러갈지 궁금해요",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 4,
-      "questionText": "제가 고백하면 흐름이 좋아질까요?",
-      "sortOrder": 2
+      readingCategoryId: 4,
+      questionType: "mind",
+      questionText: "상대방은 저를 어느 정도로 인식하고 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 4,
-      "questionText": "조만간 가까워질 계기가 생길까요?",
-      "sortOrder": 3
+      readingCategoryId: 4,
+      questionType: "action",
+      questionText: "지금 제 마음을 어떻게 다루는 게 좋을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 4,
-      "questionText": "제 마음, 계속 이어가도 괜찮을까요?",
-      "sortOrder": 4
+      readingCategoryId: 4,
+      questionType: "choice",
+      questionText: "계속 좋아해도 될지, 마음을 정리해야 할지 고민돼요",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 4,
-      "questionText": "그 사람에게 저는 어떤 존재인가요?",
-      "sortOrder": 5
+      readingCategoryId: 4,
+      questionType: "advice",
+      questionText: "짝사랑 중인 저에게 필요한 조언이 있을까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 5,
-      "questionText": "이별 후 지금 제 흐름은 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 5,
+      questionType: "flow",
+      questionText: "왜 이렇게 됐을까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 5,
-      "questionText": "이 관계를 놓아도 괜찮을까요?",
-      "sortOrder": 2
+      readingCategoryId: 5,
+      questionType: "mind",
+      questionText: "상대방은 지금 어떤 마음일까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 5,
-      "questionText": "시간이 지나면 제 마음은 괜찮아질까요?",
-      "sortOrder": 3
+      readingCategoryId: 5,
+      questionType: "action",
+      questionText: "힘든 저를 위해 어떤걸 해야할까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 5,
-      "questionText": "앞으로 저는 어떻게 마음을 정리하면 좋을까요?",
-      "sortOrder": 4
+      readingCategoryId: 5,
+      questionType: "choice",
+      questionText: "완전히 놓을까요, 시간을 더 가져볼까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 5,
-      "questionText": "이별이 저에게 어떤 변화를 가져올까요?",
-      "sortOrder": 5
+      readingCategoryId: 5,
+      questionType: "advice",
+      questionText: "이별을 잘 지나가기 위한 조언이 필요해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 6,
-      "questionText": "재회 가능성이 가까운 시일에 있나요?",
-      "sortOrder": 1
+      readingCategoryId: 6,
+      questionType: "flow",
+      questionText: "재회 가능성이 현실적으로 있을까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 6,
-      "questionText": "지금 제가 연락해도 괜찮을까요?",
-      "sortOrder": 2
+      readingCategoryId: 6,
+      questionType: "mind",
+      questionText: "그 사람 마음에 아직 제 자리가 남아 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 6,
-      "questionText": "그 사람 마음이 다시 움직일 여지가 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 6,
+      questionType: "action",
+      questionText: "지금 제가 해도 되는 행동이 있다면요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 6,
-      "questionText": "재회 후 관계가 잘 이어질 수 있을까요?",
-      "sortOrder": 4
+      readingCategoryId: 6,
+      questionType: "choice",
+      questionText: "연락을 시도하는 게 맞을지 고민돼요",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 6,
-      "questionText": "재회를 위해 제가 해야 할 게 있을까요?",
-      "sortOrder": 5
+      readingCategoryId: 6,
+      questionType: "advice",
+      questionText: "지금 저에게 필요한 조언이 궁금해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 7,
-      "questionText": "우리 관계와 결혼의 거리는 어느 정도인가요?",
-      "sortOrder": 1
+      readingCategoryId: 7,
+      questionType: "flow",
+      questionText: "결혼을 생각해도 될 시기일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 7,
-      "questionText": "가까운 미래에 결혼 이야기가 나올 흐름인가요?",
-      "sortOrder": 2
+      readingCategoryId: 7,
+      questionType: "mind",
+      questionText: "결혼에 대한 제 마음을 모르겠어요.",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 7,
-      "questionText": "지금의 관계는 안정적인가요?",
-      "sortOrder": 3
+      readingCategoryId: 7,
+      questionType: "action",
+      questionText: "결혼을 위해 제가 어떤 준비를 해야될까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 7,
-      "questionText": "제가 결혼을 위해 어떤 자세를 가지면 좋을까요?",
-      "sortOrder": 4
+      readingCategoryId: 7,
+      questionType: "choice",
+      questionText: "이 결혼 해도 괜찮을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 7,
-      "questionText": "상대는 저와의 미래를 어떻게 그리고 있을까요?",
-      "sortOrder": 5
+      readingCategoryId: 7,
+      questionType: "advice",
+      questionText: "결혼 준비 전 조언이 필요해요!",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 8,
-      "questionText": "이번 달 제 금전운은 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 8,
+      questionType: "flow",
+      questionText: "이번달 제 금전운이 궁금해요!",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 8,
-      "questionText": "지출 흐름이 안정될까요?",
-      "sortOrder": 2
+      readingCategoryId: 8,
+      questionType: "mind",
+      questionText: "돈 개념이 너무 없는걸까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 8,
-      "questionText": "예상치 못한 지출이 생길까요?",
-      "sortOrder": 3
+      readingCategoryId: 8,
+      questionType: "action",
+      questionText: "재정적으로 가장 먼저 해야 할 게 뭘까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 8,
-      "questionText": "지금 돈 흐름이 좋은 방향인가요?",
-      "sortOrder": 4
+      readingCategoryId: 8,
+      questionType: "choice",
+      questionText: "지금 지출을 줄이는 게 맞을까요, 써도 될까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 8,
-      "questionText": "가벼운 소비는 괜찮을까요?",
-      "sortOrder": 5
+      readingCategoryId: 8,
+      questionType: "advice",
+      questionText: "돈 문제에서 꼭 새겨야 할 조언이 있을까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 9,
-      "questionText": "지금 고민 중인 투자, 진행해도 될까요?",
-      "sortOrder": 1
+      readingCategoryId: 9,
+      questionType: "flow",
+      questionText: "지금 투자 흐름, 무리 없는 타이밍일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 9,
-      "questionText": "이번 달 투자 흐름은 좋은 편인가요?",
-      "sortOrder": 2
+      readingCategoryId: 9,
+      questionType: "mind",
+      questionText: "제가 투자를 너무 감정적으로 판단하고 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 9,
-      "questionText": "위험 요소가 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 9,
+      questionType: "action",
+      questionText: "지금은 어떤 자세로 접근하는 게 좋을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 9,
-      "questionText": "작은 금액으로 시작해도 괜찮을까요?",
-      "sortOrder": 4
+      readingCategoryId: 9,
+      questionType: "choice",
+      questionText: "시작해도 될지, 조금 더 기다릴지 고민돼요",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 9,
-      "questionText": "제 판단이 실수가 되지는 않을까요?",
-      "sortOrder": 5
+      readingCategoryId: 9,
+      questionType: "advice",
+      questionText: "투자와 관련해 조심해야 할 점이 있다면요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 10,
-      "questionText": "이번 계약, 상대 의도는 괜찮은가요?",
-      "sortOrder": 1
+      readingCategoryId: 10,
+      questionType: "flow",
+      questionText: "이번 계약의 전반적인 분위기는 어떤가요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 10,
-      "questionText": "지금 계약해도 괜찮을까요?",
-      "sortOrder": 2
+      readingCategoryId: 10,
+      questionType: "mind",
+      questionText: "상대방을 믿어도 될까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 10,
-      "questionText": "조심해야 할 조건이 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 10,
+      questionType: "action",
+      questionText: "계약 전에 꼭 확인해야 할 게 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 10,
-      "questionText": "계약이 순조롭게 진행될까요?",
-      "sortOrder": 4
+      readingCategoryId: 10,
+      questionType: "choice",
+      questionText: "지금 진행하는 게 나을지 미루는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 10,
-      "questionText": "조금 더 기다리는 게 나을까요?",
-      "sortOrder": 5
+      readingCategoryId: 10,
+      questionType: "advice",
+      questionText: "제가 놓치기 쉬운 조언이 궁금해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 11,
-      "questionText": "이번 달 재물운은 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 11,
+      questionType: "flow",
+      questionText: "저의 재물운 흐름은 어떤가요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 11,
-      "questionText": "작은 행운이 찾아올까요?",
-      "sortOrder": 2
+      readingCategoryId: 11,
+      questionType: "mind",
+      questionText: "돈에 대해 너무 불안해하고 있는 건 아닐까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 11,
-      "questionText": "돈이 들어오는 흐름이 곧 생길까요?",
-      "sortOrder": 3
+      readingCategoryId: 11,
+      questionType: "action",
+      questionText: "재물운을 살리기 위해 해볼 수 있는 게 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 11,
-      "questionText": "재물 흐름이 상승 중인가요?",
-      "sortOrder": 4
+      readingCategoryId: 11,
+      questionType: "choice",
+      questionText: "작은 기회를 잡아도 괜찮을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 11,
-      "questionText": "금전적으로 좋아지는 시점이 있을까요?",
-      "sortOrder": 5
+      readingCategoryId: 11,
+      questionType: "advice",
+      questionText: "기억하면 좋은 메시지가 있을까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 12,
-      "questionText": "지금 고민하는 지출, 괜찮을까요?",
-      "sortOrder": 1
+      readingCategoryId: 12,
+      questionType: "flow",
+      questionText: "요즘 소비 흐름, 과한걸까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 12,
-      "questionText": "충동 구매하면 후회할까요?",
-      "sortOrder": 2
+      readingCategoryId: 12,
+      questionType: "mind",
+      questionText: "제가 스트레스를 소비로 풀고 있는 걸까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 12,
-      "questionText": "이번 달 소비 패턴은 어떨까요?",
-      "sortOrder": 3
+      readingCategoryId: 12,
+      questionType: "action",
+      questionText: "지금 소비 습관에서 고치면 좋은 부분이 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 12,
-      "questionText": "꼭 필요한 지출인지 다시 생각해야 할까요?",
-      "sortOrder": 4
+      readingCategoryId: 12,
+      questionType: "choice",
+      questionText: "살까? 말까? 너무 고민돼요!",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 12,
-      "questionText": "소비 흐름이 곧 안정될까요?",
-      "sortOrder": 5
+      readingCategoryId: 12,
+      questionType: "advice",
+      questionText: "후회 없는 소비를 위한 조언이 있을까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 13,
-      "questionText": "이번 달 직장 분위기는 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 13,
+      questionType: "flow",
+      questionText: "제 커리어는 잘 쌓이고 있는걸까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 13,
-      "questionText": "제 자리가 안정적인 흐름인가요?",
-      "sortOrder": 2
+      readingCategoryId: 13,
+      questionType: "mind",
+      questionText: "물경력이 될까 걱정돼요.",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 13,
-      "questionText": "요즘 힘든 이유가 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 13,
+      questionType: "action",
+      questionText: "직장에서 제가 어떤 태도로 임해야 할까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 13,
-      "questionText": "직장 내 관계는 어떻게 흘러갈까요?",
-      "sortOrder": 4
+      readingCategoryId: 13,
+      questionType: "choice",
+      questionText: "계속 다니는 게 맞을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 13,
-      "questionText": "제가 곧 기회를 잡을 수 있을까요?",
-      "sortOrder": 5
+      readingCategoryId: 13,
+      questionType: "advice",
+      questionText: "커리어를 위한 조언이 필요해요!",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 14,
-      "questionText": "지원한 곳과 제가 잘 맞을까요?",
-      "sortOrder": 1
+      readingCategoryId: 14,
+      questionType: "flow",
+      questionText: "취업 성공 가능할까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 14,
-      "questionText": "이번 달 면접 흐름은 괜찮을까요?",
-      "sortOrder": 2
+      readingCategoryId: 14,
+      questionType: "mind",
+      questionText: "면접관은 저를 어떻게 생각했을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 14,
-      "questionText": "합격 가능성이 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 14,
+      questionType: "action",
+      questionText: "지금 준비 방향이 잘 가고 있는걸까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 14,
-      "questionText": "준비 방향이 맞는지 궁금해요.",
-      "sortOrder": 4
+      readingCategoryId: 14,
+      questionType: "choice",
+      questionText: "지원 폭을 넓히는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 14,
-      "questionText": "선택한 분야가 저와 어울릴까요?",
-      "sortOrder": 5
+      readingCategoryId: 14,
+      questionType: "advice",
+      questionText: "취업을 위해 어떤 노력을 더 해야할까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 15,
-      "questionText": "지금 이직하면 좋은 흐름일까요?",
-      "sortOrder": 1
+      readingCategoryId: 15,
+      questionType: "flow",
+      questionText: "지금 이직을 고민해도 되는 시기일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 15,
-      "questionText": "조금 더 기다리는 게 좋을까요?",
-      "sortOrder": 2
+      readingCategoryId: 15,
+      questionType: "mind",
+      questionText: "이직하고싶은 마음이 드는데 어떡하죠?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 15,
-      "questionText": "새로운 직장에서 잘 적응할 수 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 15,
+      questionType: "action",
+      questionText: "이직을 준비한다면 뭘 준비해야 할까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 15,
-      "questionText": "이직 준비 방향은 잘 맞고 있나요?",
-      "sortOrder": 4
+      readingCategoryId: 15,
+      questionType: "choice",
+      questionText: "지금 회사를 떠나는 게 맞을지 고민돼요.",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 15,
-      "questionText": "이직으로 운이 바뀔까요?",
-      "sortOrder": 5
+      readingCategoryId: 15,
+      questionType: "advice",
+      questionText: "이직과 관련해 꼭 참고할 조언이 있을까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 16,
-      "questionText": "지금 퇴사해도 괜찮을까요?",
-      "sortOrder": 1
+      readingCategoryId: 16,
+      questionType: "flow",
+      questionText: "퇴사를 생각해도 될까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 16,
-      "questionText": "버티면 분위기가 바뀔까요?",
-      "sortOrder": 2
+      readingCategoryId: 16,
+      questionType: "mind",
+      questionText: "제가 너무 지쳐서 판단이 흐려진 건 아닐까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 16,
-      "questionText": "제가 지치는 이유가 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 16,
+      questionType: "action",
+      questionText: "지금 제 상태에서 해볼 수 있는 선택은 뭘까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 16,
-      "questionText": "퇴사 후 바로 기회가 생길까요?",
-      "sortOrder": 4
+      readingCategoryId: 16,
+      questionType: "choice",
+      questionText: "조금 더 버티는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 16,
-      "questionText": "어떤 방향이 마음이 편할까요?",
-      "sortOrder": 5
+      readingCategoryId: 16,
+      questionType: "advice",
+      questionText: "후회 없는 결정을 위한 조언이 필요해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 17,
-      "questionText": "이번 평가에서 좋은 결과가 있을까요?",
-      "sortOrder": 1
+      readingCategoryId: 17,
+      questionType: "flow",
+      questionText: "이번 평가, 전체적인 분위기는 어떨까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 17,
-      "questionText": "승진 운이 지금 가까운가요?",
-      "sortOrder": 2
+      readingCategoryId: 17,
+      questionType: "mind",
+      questionText: "제 노력이 제대로 전달되고 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 17,
-      "questionText": "제 노력이 보일까요?",
-      "sortOrder": 3
+      readingCategoryId: 17,
+      questionType: "action",
+      questionText: "지금 더 신경 쓰면 좋은 부분이 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 17,
-      "questionText": "주변 평가 분위기는 어떤가요?",
-      "sortOrder": 4
+      readingCategoryId: 17,
+      questionType: "choice",
+      questionText: "적극적으로 어필해도 괜찮을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 17,
-      "questionText": "조심해야 할 점이 있을까요?",
-      "sortOrder": 5
+      readingCategoryId: 17,
+      questionType: "advice",
+      questionText: "평가 시기에 기억하면 좋을 조언이 있을까요?",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 18,
-      "questionText": "지금 창업하면 괜찮을까요?",
-      "sortOrder": 1
+      readingCategoryId: 18,
+      questionType: "flow",
+      questionText: "지금 새로운 시도를 해도 괜찮은 흐름일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 18,
-      "questionText": "작은 부업 시작해도 될까요?",
-      "sortOrder": 2
+      readingCategoryId: 18,
+      questionType: "mind",
+      questionText: "제가 너무 이상적으로만 보고 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 18,
-      "questionText": "생각한 아이템이 저와 맞을까요?",
-      "sortOrder": 3
+      readingCategoryId: 18,
+      questionType: "action",
+      questionText: "시작 전 꼭 점검해야 할 게 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 18,
-      "questionText": "금전적으로 무리는 없을까요?",
-      "sortOrder": 4
+      readingCategoryId: 18,
+      questionType: "choice",
+      questionText: "지금 시작할지, 준비를 더 할지 고민돼요",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 18,
-      "questionText": "지금 시도하면 기회가 생길까요?",
-      "sortOrder": 5
+      readingCategoryId: 18,
+      questionType: "advice",
+      questionText: "현실적으로 도움이 될 조언이 궁금해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 19,
-      "questionText": "이번 달 공부 흐름은 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 19,
+      questionType: "flow",
+      questionText: "요즘 공부 흐름이 궁금해요",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 19,
-      "questionText": "집중이 잘 되는 시기인가요?",
-      "sortOrder": 2
+      readingCategoryId: 19,
+      questionType: "mind",
+      questionText: "요즘 집중이 안되는 이유가 뭘까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 19,
-      "questionText": "제가 막히는 이유가 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 19,
+      questionType: "action",
+      questionText: "지금 가장 집중해야 할 부분은 뭘까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 19,
-      "questionText": "지금 공부 방향이 맞나요?",
-      "sortOrder": 4
+      readingCategoryId: 19,
+      questionType: "choice",
+      questionText: "공부 방법을 바꾸는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 19,
-      "questionText": "성적이 조금 오를까요?",
-      "sortOrder": 5
+      readingCategoryId: 19,
+      questionType: "advice",
+      questionText: "따끔한 충고가 필요해요!",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 20,
-      "questionText": "이번 시험 흐름은 괜찮을까요?",
-      "sortOrder": 1
+      readingCategoryId: 20,
+      questionType: "flow",
+      questionText: "이번 시험, 어떻게 될지 궁금해요!",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 20,
-      "questionText": "준비한 만큼 결과가 나올까요?",
-      "sortOrder": 2
+      readingCategoryId: 20,
+      questionType: "mind",
+      questionText: "제가 괜히 불안해하고 있는 건 아닐까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 20,
-      "questionText": "부족한 부분이 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 20,
+      questionType: "action",
+      questionText: "시험 전까지 집중하면 좋은 포인트가 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 20,
-      "questionText": "시험 전날 컨디션 괜찮을까요?",
-      "sortOrder": 4
+      readingCategoryId: 20,
+      questionType: "choice",
+      questionText: "지금 페이스 유지해도 될까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 20,
-      "questionText": "지금 리듬을 유지해도 좋을까요?",
-      "sortOrder": 5
+      readingCategoryId: 20,
+      questionType: "advice",
+      questionText: "시험 앞둔 저에게 필요한 조언이 궁금해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 21,
-      "questionText": "지금 고민하는 방향이 맞을까요?",
-      "sortOrder": 1
+      readingCategoryId: 21,
+      questionType: "flow",
+      questionText: "고민하는 진로 방향, 맞게 가고 있을까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 21,
-      "questionText": "진학 준비 흐름은 어떤가요?",
-      "sortOrder": 2
+      readingCategoryId: 21,
+      questionType: "mind",
+      questionText: "제 마음이 진짜 원하는 방향은 뭘까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 21,
-      "questionText": "가고 싶은 분야가 저와 어울릴까요?",
-      "sortOrder": 3
+      readingCategoryId: 21,
+      questionType: "action",
+      questionText: "진로를 위해 지금 할 수 있는 게 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 21,
-      "questionText": "선택에 힌트를 얻을 수 있을까요?",
-      "sortOrder": 4
+      readingCategoryId: 21,
+      questionType: "choice",
+      questionText: "선택지를 줄이는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 21,
-      "questionText": "가까운 미래에 변화가 있을까요?",
-      "sortOrder": 5
+      readingCategoryId: 21,
+      questionType: "advice",
+      questionText: "진로 고민 중인 저에게 필요한 조언이 있어요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 22,
-      "questionText": "제가 잘 맞는 분야는 어떤 걸까요?",
-      "sortOrder": 1
+      readingCategoryId: 22,
+      questionType: "flow",
+      questionText: "제 적성이 조금씩 드러나는 시기일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 22,
-      "questionText": "지금 고민하는 걸 계속해도 될까요?",
-      "sortOrder": 2
+      readingCategoryId: 22,
+      questionType: "mind",
+      questionText: "제가 스스로를 과소평가하고 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 22,
-      "questionText": "제 성향과 맞는 길이 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 22,
+      questionType: "action",
+      questionText: "적성을 확인해볼 수 있는 행동이 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 22,
-      "questionText": "하고 싶은 마음이 맞는 신호일까요?",
-      "sortOrder": 4
+      readingCategoryId: 22,
+      questionType: "choice",
+      questionText: "이 길이 맞는지 모르겠어요.",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 22,
-      "questionText": "곧 방향이 보일까요?",
-      "sortOrder": 5
+      readingCategoryId: 22,
+      questionType: "advice",
+      questionText: "제 강점을 살리는 조언이 궁금해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 23,
-      "questionText": "지금 루틴이 저와 맞나요?",
-      "sortOrder": 1
+      readingCategoryId: 23,
+      questionType: "flow",
+      questionText: "지금 루틴이 유지될 흐름일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 23,
-      "questionText": "루틴을 바꾸면 좋아질까요?",
-      "sortOrder": 2
+      readingCategoryId: 23,
+      questionType: "mind",
+      questionText: "제가 너무 완벽하게 하려는 건 아닐까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 23,
-      "questionText": "리듬이 유지될까요?",
-      "sortOrder": 3
+      readingCategoryId: 23,
+      questionType: "action",
+      questionText: "루틴을 다듬기 위해 해볼 수 있는 게 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 23,
-      "questionText": "공부 분위기가 나아질까요?",
-      "sortOrder": 4
+      readingCategoryId: 23,
+      questionType: "choice",
+      questionText: "루틴을 바꾸는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 23,
-      "questionText": "지치지 않으려면 어떻게 할까요?",
-      "sortOrder": 5
+      readingCategoryId: 23,
+      questionType: "advice",
+      questionText: "꾸준함을 위한 조언이 필요해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 24,
-      "questionText": "집중이 안 되는 이유가 있을까요?",
-      "sortOrder": 1
+      readingCategoryId: 24,
+      questionType: "flow",
+      questionText: "이 슬럼프, 곧 지나갈 수 있을까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 24,
-      "questionText": "곧 흐름이 좋아질까요?",
-      "sortOrder": 2
+      readingCategoryId: 24,
+      questionType: "mind",
+      questionText: "제가 너무 스스로를 몰아붙이고 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 24,
-      "questionText": "잠시 쉬어도 괜찮을까요?",
-      "sortOrder": 3
+      readingCategoryId: 24,
+      questionType: "action",
+      questionText: "지금 제 상태에서 해주면 좋은 행동은 뭘까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 24,
-      "questionText": "지금 할 수 있는 게 있을까요?",
-      "sortOrder": 4
+      readingCategoryId: 24,
+      questionType: "choice",
+      questionText: "잠시 쉬는 게 맞을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 24,
-      "questionText": "다시 집중할 타이밍이 올까요?",
-      "sortOrder": 5
+      readingCategoryId: 24,
+      questionType: "advice",
+      questionText: "다시 집중하기 위한 조언이 필요해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 25,
-      "questionText": "이번 달 제 일상 흐름은 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 25,
+      questionType: "flow",
+      questionText: "요즘 제 일상 흐름, 안정적인 편일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 25,
-      "questionText": "작은 변화가 생길까요?",
-      "sortOrder": 2
+      readingCategoryId: 25,
+      questionType: "mind",
+      questionText: "일상에 대한 만족도가 낮아진 이유가 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 25,
-      "questionText": "요즘 답답한 이유가 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 25,
+      questionType: "action",
+      questionText: "소소하게 바꿔보면 좋은 게 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 25,
-      "questionText": "곧 기분이 나아질까요?",
-      "sortOrder": 4
+      readingCategoryId: 25,
+      questionType: "choice",
+      questionText: "새로운 변화를 줘도 괜찮을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 25,
-      "questionText": "새로운 움직임이 생길까요?",
-      "sortOrder": 5
+      readingCategoryId: 25,
+      questionType: "advice",
+      questionText: "일상을 가볍게 만드는 조언이 궁금해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 26,
-      "questionText": "이번 달 건강 흐름은 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 26,
+      questionType: "flow",
+      questionText: "지금은 쉬어야 하는 흐름일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 26,
-      "questionText": "컨디션이 곧 회복될까요?",
-      "sortOrder": 2
+      readingCategoryId: 26,
+      questionType: "mind",
+      questionText: "제가 생각보다 많이 지쳐 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 26,
-      "questionText": "피로의 원인이 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 26,
+      questionType: "action",
+      questionText: "회복을 위해 해주면 좋은 행동이 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 26,
-      "questionText": "지금 조심해야 할 점이 있을까요?",
-      "sortOrder": 4
+      readingCategoryId: 26,
+      questionType: "choice",
+      questionText: "멈추는 선택, 괜찮을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 26,
-      "questionText": "흐름이 나아질까요?",
-      "sortOrder": 5
+      readingCategoryId: 26,
+      questionType: "advice",
+      questionText: "번아웃을 넘기기 위한 조언이 필요해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 27,
-      "questionText": "지금 쉬어야 하는 시기일까요?",
-      "sortOrder": 1
+      readingCategoryId: 27,
+      questionType: "flow",
+      questionText: "지금은 쉬어야 하는 흐름일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 27,
-      "questionText": "번아웃이 곧 풀릴까요?",
-      "sortOrder": 2
+      readingCategoryId: 27,
+      questionType: "mind",
+      questionText: "제가 생각보다 많이 지쳐 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 27,
-      "questionText": "무기력한 이유가 있을까요?",
-      "sortOrder": 3
+      readingCategoryId: 27,
+      questionType: "action",
+      questionText: "회복을 위해 해주면 좋은 행동이 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 27,
-      "questionText": "조금 더 버티면 나아질까요?",
-      "sortOrder": 4
+      readingCategoryId: 27,
+      questionType: "choice",
+      questionText: "멈추는 선택, 괜찮을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 27,
-      "questionText": "회복의 계기가 생길까요?",
-      "sortOrder": 5
+      readingCategoryId: 27,
+      questionType: "advice",
+      questionText: "번아웃을 넘기기 위한 조언이 필요해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 28,
-      "questionText": "이번 여행, 좋은 흐름일까요?",
-      "sortOrder": 1
+      readingCategoryId: 28,
+      questionType: "flow",
+      questionText: "지금은 쉬어야 하는 흐름일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 28,
-      "questionText": "어딘가로 떠나면 기분 전환이 될까요?",
-      "sortOrder": 2
+      readingCategoryId: 28,
+      questionType: "mind",
+      questionText: "제가 생각보다 많이 지쳐 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 28,
-      "questionText": "가까운 시일에 여행 운이 있나요?",
-      "sortOrder": 3
+      readingCategoryId: 28,
+      questionType: "action",
+      questionText: "회복을 위해 해주면 좋은 행동이 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 28,
-      "questionText": "지금 떠나도 괜찮을까요?",
-      "sortOrder": 4
+      readingCategoryId: 28,
+      questionType: "choice",
+      questionText: "멈추는 선택, 괜찮을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 28,
-      "questionText": "여행지 선택에 힌트가 있을까요?",
-      "sortOrder": 5
+      readingCategoryId: 28,
+      questionType: "advice",
+      questionText: "번아웃을 넘기기 위한 조언이 필요해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 29,
-      "questionText": "요즘 가족 분위기는 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 29,
+      questionType: "flow",
+      questionText: "요즘 가족 분위기, 나아질 흐름일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 29,
-      "questionText": "서운함이 풀릴까요?",
-      "sortOrder": 2
+      readingCategoryId: 29,
+      questionType: "mind",
+      questionText: "제 마음에 쌓인 감정이 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 29,
-      "questionText": "소통이 나아질 흐름인가요?",
-      "sortOrder": 3
+      readingCategoryId: 29,
+      questionType: "action",
+      questionText: "제가 먼저 해볼 수 있는 행동이 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 29,
-      "questionText": "제가 먼저 다가가도 될까요?",
-      "sortOrder": 4
+      readingCategoryId: 29,
+      questionType: "choice",
+      questionText: "거리를 두는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 29,
-      "questionText": "관계가 좋아질 기운이 있나요?",
-      "sortOrder": 5
+      readingCategoryId: 29,
+      questionType: "advice",
+      questionText: "가족 관계에서 필요한 조언이 궁금해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 30,
-      "questionText": "멀어진 친구와 가까워질까요?",
-      "sortOrder": 1
+      readingCategoryId: 30,
+      questionType: "flow",
+      questionText: "요즘 친구 관계 흐름은 어떤 편일까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 30,
-      "questionText": "연락해도 괜찮을까요?",
-      "sortOrder": 2
+      readingCategoryId: 30,
+      questionType: "mind",
+      questionText: "제가 서운함을 혼자 쌓아두고 있을까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 30,
-      "questionText": "오해가 풀릴 흐름인가요?",
-      "sortOrder": 3
+      readingCategoryId: 30,
+      questionType: "action",
+      questionText: "먼저 다가가도 괜찮을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 30,
-      "questionText": "친구는 저를 어떻게 생각할까요?",
-      "sortOrder": 4
+      readingCategoryId: 30,
+      questionType: "choice",
+      questionText: "이 관계를 계속 유지해도 될까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 30,
-      "questionText": "우정운이 이번 달 좋은가요?",
-      "sortOrder": 5
+      readingCategoryId: 30,
+      questionType: "advice",
+      questionText: "친구 관계에서 기억하면 좋을 조언이 있어요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 31,
-      "questionText": "이번 달 인간관계 흐름은 어떤가요?",
-      "sortOrder": 1
+      readingCategoryId: 31,
+      questionType: "flow",
+      questionText: "전반적인 인간관계 흐름이 편해질까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 31,
-      "questionText": "사람이 부담스러운 이유가 있을까요?",
-      "sortOrder": 2
+      readingCategoryId: 31,
+      questionType: "mind",
+      questionText: "사람을 대하는 데 지쳐 있는 걸까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 31,
-      "questionText": "새로운 인연이 생길까요?",
-      "sortOrder": 3
+      readingCategoryId: 31,
+      questionType: "action",
+      questionText: "관계에서 제 태도를 조절할 필요가 있을까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 31,
-      "questionText": "관계 속 긴장이 완화될까요?",
-      "sortOrder": 4
+      readingCategoryId: 31,
+      questionType: "choice",
+      questionText: "거리를 조절하는 게 나을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 31,
-      "questionText": "더 편안해지려면 어떻게 해야 할까요?",
-      "sortOrder": 5
+      readingCategoryId: 31,
+      questionType: "advice",
+      questionText: "인간관계를 위한 조언이 필요해요",
+      sortOrder: 5,
     },
     {
-      "readingCategoryId": 32,
-      "questionText": "지금 갈등, 풀릴 기운이 있나요?",
-      "sortOrder": 1
+      readingCategoryId: 32,
+      questionType: "flow",
+      questionText: "지금 이 갈등, 자연스럽게 풀릴 수 있을까요?",
+      sortOrder: 1,
     },
     {
-      "readingCategoryId": 32,
-      "questionText": "제가 먼저 다가가도 될까요?",
-      "sortOrder": 2
+      readingCategoryId: 32,
+      questionType: "mind",
+      questionText: "상대와 제 감정 차이가 큰 편일까요?",
+      sortOrder: 2,
     },
     {
-      "readingCategoryId": 32,
-      "questionText": "상대의 마음은 어떤가요?",
-      "sortOrder": 3
+      readingCategoryId: 32,
+      questionType: "action",
+      questionText: "갈등을 줄이기 위해 제가 할 수 있는 건 뭘까요?",
+      sortOrder: 3,
     },
     {
-      "readingCategoryId": 32,
-      "questionText": "상황이 곧 안정될까요?",
-      "sortOrder": 4
+      readingCategoryId: 32,
+      questionType: "choice",
+      questionText: "먼저 손 내미는 게 맞을까요?",
+      sortOrder: 4,
     },
     {
-      "readingCategoryId": 32,
-      "questionText": "조심해야 할 점이 있을까요?",
-      "sortOrder": 5
-    }
-  ]
-}
+      readingCategoryId: 32,
+      questionType: "advice",
+      questionText: "갈등 상황에서 꼭 기억할 조언이 궁금해요",
+      sortOrder: 5,
+    },
+  ],
+};

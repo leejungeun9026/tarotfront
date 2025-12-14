@@ -17,9 +17,11 @@ interface TermsStoreState {
 }
 
 export const useTermsStore = create<TermsStoreState>((set) => ({
-  terms: [],
+  terms: TERMS_LIST_CONST.termsList,
   loadingTerms: false,
-  requiredTermIds: [],
+  requiredTermIds: TERMS_LIST_CONST.termsList
+    .filter((t) => t.required)
+    .map((t) => t.id),
 
   fetchTerms: async () => {
     set({ loadingTerms: true });
@@ -41,11 +43,9 @@ export const useTermsStore = create<TermsStoreState>((set) => ({
         applyData(list);
       } else {
         console.warn("[TermsStore] 응답 코드:", res.code, "→ TERMS_CONST 사용");
-        applyData(TERMS_LIST_CONST["termsList"]);
       }
     } catch (err) {
       console.error("[TermsStore] 요청 에러:", err, "→ TERMS_CONST 사용");
-      applyData(TERMS_LIST_CONST["termsList"]);
     } finally {
       set({ loadingTerms: false });
     }

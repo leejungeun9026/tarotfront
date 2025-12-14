@@ -1,17 +1,30 @@
-import type { ReadingCardsRequestDTO } from "@/apis/request/reading";
-
 export default interface ReadingResultResponseDTO {
+  uuid: string;
+  isOwner: boolean;
   readingId: number;
+  categoryType: string;
+  categoryName: string;
+  questionText: string;
+  spreadCount: number;
+  spreadType: string;
   resultTitle: string;
   resultSummary: string;
   overallAdvice: string;
+  createdAt: Date;
   positions: ReadingPositionResponseDTO[];
-  cardList: ReadingCardsRequestDTO[];
+  comment: string;
+  isBookmarked: boolean;
 }
 
 export interface ReadingPositionResponseDTO {
+  tarotCardId: number;
+  arcanaType: string;
+  cardNumber: number;
+  nameEn: string;
+  nameKr: string;
+  isReversed: boolean;
   position: number;
+  positionAdvice: string;
   positionName: string;
-  interpretation: string;
-  advice: string;
+  positionResult: string;
 }

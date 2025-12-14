@@ -1,4 +1,10 @@
-import { Archive, BookMarked, CircleUserRound, House, Sparkles } from "lucide-react";
+import {
+  Archive,
+  BookMarked,
+  CircleUserRound,
+  House,
+  Sparkles,
+} from "lucide-react";
 import { bottomNavHeight } from "../../constants/appHeight";
 import NavItem from "./NavItem";
 
@@ -13,7 +19,10 @@ function BottomNav() {
         <NavItem title={"타로정보"} icon={<BookMarked />} link={"/guide"} />
         <NavItem title={"운세보기"} icon={<Sparkles />} link={"/reading"} />
         <NavItem title={"보관함"} icon={<Archive />} link={"/archive"} />
-        <NavItem title={"마이페이지"} icon={<CircleUserRound />} link={"/mypage"}
+        <NavItem
+          title={"마이페이지"}
+          icon={<CircleUserRound />}
+          link={"/mypage"}
         />
       </ul>
     </div>

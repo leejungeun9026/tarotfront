@@ -291,8 +291,14 @@
 }
 
 @media (hover: hover) {
-  .card_deck.spread .card_wrap:hover .card_item {
+  .card_deck.spread .card_wrap .card_item {
+    cursor: pointer;
+  }
+  .card_deck.spread .card_wrap.hoverable:hover .card_item {
     transform: translateY(30px);
+  }
+  .card_deck.spread .card_wrap.nohover:hover .card_item {
+    transform: none;
   }
 }
 

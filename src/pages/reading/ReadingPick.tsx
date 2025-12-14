@@ -1,13 +1,14 @@
-import { readingResultRequest } from "@/apis";
+import { readingResultRequest, readingTodayRequest } from "@/apis";
 import type {
   ReadingCardsRequestDTO,
   ReadingResultRequestDTO,
+  ReadingTodayRequestDTO,
 } from "@/apis/request/reading";
-import type ReadingResultResponseDTO from "@/apis/response/reading/reading-result.response";
+import type { ReadingResultResponseDTO } from "@/apis/response/reading";
 import type {
   ReadingCard,
   ReadingCardWithImg,
-  TarotCardResponseDTO
+  TarotCardResponseDTO,
 } from "@/apis/response/tarotcard";
 import SpeechBubble from "@/components/bubble/Bubble";
 import PageTitle from "@/components/common/PageTitle";
@@ -23,16 +24,16 @@ import { ResponseCode } from "@/types/enums";
 import { getCardImg } from "@/utils/imageMapper";
 import { RefreshCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 import { Button } from "../../components/ui/button";
-import "../../styles/tarotcard.css";
 import LoadingScreen from "./LoadingScreen";
 
-type Props = {
+type PickState = {
   categoryId: number;
   category: string;
-  question: string;
+  spreadPosition: string[];
+  questionText: string;
   spreadType: string;
   spreadCount: number;
 };
@@ -41,29 +42,30 @@ type ActiveCard = ReadingCardWithImg & {
   position: number;
 };
 
-function ReadingPick({
-  categoryId,
-  category,
-  question,
-  spreadType,
-  spreadCount,
-}: Props) {
+function ReadingPick() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as PickState;
+
   const { showDialog } = useGlobalAlertDialog();
-
-
-  // 타로카드 스토어에서 가져오기
   const { cards, loadingCards, fetchCards } = useTarotCardStore();
 
-  // 스프레드 타입 및 카드 갯수 설정
-  const spreadPosition = ["과거", "현재", "미래"];
+  const {
+    categoryId,
+    category,
+    spreadPosition,
+    questionText,
+    spreadType,
+    spreadCount,
+  } = state;
+
   const MAX_SELECT = spreadCount;
 
-
   // 리딩 타로 카드 설정
-  const tarotCards = TAROT_CARDS_CONST["tarotCardList"]
+  const tarotCards = TAROT_CARDS_CONST["tarotCardList"];
   const [cardList, setCardList] = useState<TarotCardResponseDTO[]>(tarotCards);
   const total = cardList.length;
+
   const [shuffledCard, setShuffledCard] = useState<ReadingCard[]>([]);
   const [activeList, setActiveList] = useState<ActiveCard[]>([]);
   const [nextPosition, setNextPosition] = useState<number | null>(1);
@@ -71,6 +73,7 @@ function ReadingPick({
   // 덱/애니메이션 관련
   const [shuffle, setShuffle] = useState<boolean>(false);
   const [spread, setSpread] = useState<boolean>(false);
+  const [hoverEnabled, setHoverEnabled] = useState<boolean>(false);
   const spreadTimerRef = useRef<number | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const [angle, setAngle] = useState<number>(0);
@@ -122,43 +125,76 @@ function ReadingPick({
     };
   }, [cards]);
 
-
-  // 타로 해석 응답 결과가 있거나 로딩 스크린이 끝나면 응답 처리하기
+  // resultResponse + loadingScreenFinished이면 result로 이동
   useEffect(() => {
-    if (resultResponse && loadingScreenFinished) {
-      navigate("/reading", {
-        state: {
-          screen: "result",
-          questions: {
-            categoryId,
-            category,
-            question,
-            spreadType,
-            spreadCount,
-          },
-          result: resultResponse,
-        },
-      });
-    }
-  }, [resultResponse, loadingScreenFinished]);
+    if (!resultResponse || !loadingScreenFinished) return;
 
-  // 결과 해석 요청에 담을 질문 객체
-  const requestBody = (activeList: ActiveCard[]): ReadingResultRequestDTO => {
-    return {
-      categoryId,
-      category,
-      question,
-      spreadType,
-      spreadCount,
-      cardList: toReadingCardsRequest(activeList),
-    };
+    navigate(`/reading/result/${resultResponse.uuid}`, {
+      state: resultResponse,
+      replace: true,
+    });
+  }, [
+    resultResponse,
+    loadingScreenFinished,
+    navigate,
+    categoryId,
+    category,
+    questionText,
+    spreadType,
+    spreadCount,
+  ]);
+
+  if (!state) return <Navigate to="/401" replace />;
+
+  // 카드 배열 랜덤 함수
+  const fisherYatesShuffle = (list: TarotCardResponseDTO[] | ReadingCard[]) => {
+    const newCard = [...list];
+
+    for (let i = 0; i < newCard.length; i++) {
+      const rnd = Math.floor(Math.random() * (i + 1));
+      const tmp = newCard[i];
+      newCard[i] = newCard[rnd];
+      newCard[rnd] = tmp;
+    }
+
+    const result: ReadingCard[] = newCard.map((card) => ({
+      ...(card as ReadingCard),
+      reverse: Math.random() < 0.5,
+      isSelected: false,
+    }));
+
+    console.log("", result);
+    setShuffledCard(result);
+  };
+
+  // 카드 셔플 함수
+  const startShuffleAnimation = (
+    list: TarotCardResponseDTO[] | ReadingCard[]
+  ) => {
+    fisherYatesShuffle(list);
+    setShuffle(true);
+
+    const timer = window.setTimeout(() => {
+      setShuffle(false);
+    }, 2000);
+
+    return timer;
+  };
+
+  // 빈 position 찾기
+  const getNextPosition = (list: ActiveCard[], max: number): number | null => {
+    const used = list.map((c) => c.position);
+    for (let i = 1; i <= max; i++) {
+      if (!used.includes(i)) return i;
+    }
+    return null;
   };
 
   // 결과 해석 요청에 담을 카드 객체
   const toReadingCardsRequest = (
-    activeList: ActiveCard[]
+    list: ActiveCard[]
   ): ReadingCardsRequestDTO[] => {
-    return activeList.map((card, index) => ({
+    return list.map((card, index) => ({
       position: index + 1,
       positionName: spreadPosition[index],
       cardId: card.id,
@@ -174,7 +210,19 @@ function ReadingPick({
     }));
   };
 
-  // 서버에서 응답 온 에러코드 처리하는 핸들러
+  // 결과 해석 요청 바디
+  const requestBody = (list: ActiveCard[]): ReadingResultRequestDTO => {
+    return {
+      categoryId,
+      category,
+      questionText,
+      spreadType,
+      spreadCount,
+      cardList: toReadingCardsRequest(list),
+    };
+  };
+
+  // 서버 에러 코드 처리
   const handleErrorByCode = (code: ResponseCode) => {
     switch (code) {
       case ResponseCode.AI_ERROR:
@@ -185,7 +233,6 @@ function ReadingPick({
           confirmText: "확인",
         });
         break;
-
       case ResponseCode.VALIDATION_FAIL:
         showDialog({
           title: "잘못된 요청",
@@ -193,7 +240,6 @@ function ReadingPick({
           confirmText: "확인",
         });
         break;
-
       case ResponseCode.DATABASE_ERROR:
         showDialog({
           title: "DB 오류",
@@ -202,7 +248,6 @@ function ReadingPick({
           confirmText: "확인",
         });
         break;
-
       default:
         showDialog({
           title: "알 수 없는 오류",
@@ -212,48 +257,6 @@ function ReadingPick({
     }
   };
 
-  // 카드 배열 랜덤 함수
-  const fisherYatesShuffle = (cardList: TarotCardResponseDTO[] | ReadingCard[]) => {
-    const newCard = [...cardList];
-    //Fisher-Yates shuffle
-    for (let i = 0; i < newCard.length; i++) {
-      const rnd = Math.floor(Math.random() * (i + 1));
-      const tmp = newCard[i];
-      newCard[i] = newCard[rnd];
-      newCard[rnd] = tmp;
-    }
-    // 정방향, 역방향 설정
-    const result: ReadingCard[] = newCard.map((card) => ({
-      ...card,
-      reverse: Math.random() < 0.5, // true 또는 false
-      isSelected: false,
-    }));
-    setShuffledCard(result);
-  };
-
-  // 카드 셔플 함수
-  const startShuffleAnimation = (list: TarotCardResponseDTO[] | ReadingCard[]) => {
-    // 카드 실제 순서 섞기
-    fisherYatesShuffle(list);
-    // 셔플 애니메이션 ON
-    setShuffle(true);
-
-    const timer = window.setTimeout(() => {
-      setShuffle(false);
-    }, 2000);
-
-    return timer;
-  };
-
-  // 빈 position 찾기 (1 ~ MAX_SELECT 중 비어있는 가장 작은 숫자)
-  const getNextPosition = (list: ActiveCard[], max: number): number | null => {
-    const used = list.map((c) => c.position);
-    for (let i = 1; i <= max; i++) {
-      if (!used.includes(i)) return i;
-    }
-    return null;
-  };
-
   // 리셋 + 셔플
   const hardResetAndShuffle = () => {
     if (spreadTimerRef.current) {
@@ -261,7 +264,6 @@ function ReadingPick({
       spreadTimerRef.current = null;
     }
 
-    // 1단계 상태로 초기화
     setSpread(false);
     setProgress(0);
     setAngle(0);
@@ -271,7 +273,6 @@ function ReadingPick({
     setReadingSubmit(false);
     setNextPosition(1);
 
-    // 선택 플래그도 초기화 (필요하면)
     setShuffledCard((prev) =>
       prev.map((card) => ({
         ...card,
@@ -279,30 +280,24 @@ function ReadingPick({
       }))
     );
 
-    // CardDeck 강제 리마운트
     setDeckKey((prev) => prev + 1);
-
-    // 새 덱 기준으로 셔플 애니메이션 시작
     startShuffleAnimation(cardList);
   };
 
-  ///// 이벤트 핸들러 모음 /////
   // 카드 섞기
   const handleShuffle = () => {
-    // 이미 한 번 섞인 덱이 있다면 그걸 기준으로 다시 섞고,
-    // 아니면 cardList(현재 보유한 카드 전체)를 기준으로 섞기
     const baseList = shuffledCard.length ? shuffledCard : cardList;
     startShuffleAnimation(baseList);
   };
 
   // 카드 펼치기
   const handleSpread = () => {
-    // 이전 타이머 있으면 삭제
     if (spreadTimerRef.current) {
       clearInterval(spreadTimerRef.current);
     }
 
     setSpread(true);
+    setHoverEnabled(false);
     setProgress(0);
     setAngle(0);
 
@@ -315,10 +310,20 @@ function ReadingPick({
       if (i >= total) {
         clearInterval(intervalId);
         spreadTimerRef.current = null;
+        setHoverEnabled(true);
       }
     }, 16);
 
     spreadTimerRef.current = intervalId;
+  };
+
+  // 덱 카드 클릭
+  const handleDeckCardClick = (clickedCard: ReadingCard) => {
+    if (!spread) {
+      handleSpread();
+      return;
+    }
+    handleSelectCard(clickedCard);
   };
 
   // 카드 선택
@@ -326,50 +331,44 @@ function ReadingPick({
     if (!spread) return;
     if (confirmCard) return;
 
-    const wasSelected = clickedCard.isSelected;
-
-    // 선택 토글
-    setShuffledCard((prev) =>
-      prev.map((card) =>
-        card.id === clickedCard.id
-          ? { ...card, isSelected: !card.isSelected }
-          : card
-      )
-    );
-
-    // 카드 기본 정보 + img
-    const cardWithImgBase: ReadingCardWithImg = {
-      ...(clickedCard as ReadingCardWithImg),
-      imgUrl: getCardImg(clickedCard.id) ?? "",
-    };
+    let action: "select" | "unselect" | "noop" = "noop";
 
     setActiveList((prev) => {
-      // 이미 선택된 카드였다면 → 해제
-      if (wasSelected) {
+      const alreadySelected = prev.some((c) => c.id === clickedCard.id);
+
+      // 이미 선택된 카드면 -> 해제
+      if (alreadySelected) {
+        action = "unselect";
         const updated = prev.filter((c) => c.id !== clickedCard.id);
-        setNextPosition(getNextPosition(updated, MAX_SELECT)); // 다음 포지션 재계산
+        setNextPosition(getNextPosition(updated, MAX_SELECT));
         return updated;
       }
 
-      // 새로 선택
+      // 선택 슬롯 꽉 찼으면 -> 아무것도 하지 않음(덱도 건드리지 말기)
       if (prev.length >= MAX_SELECT) {
         toast.warning("모든 카드를 선택했어요!");
+        action = "noop";
         setNextPosition(null);
         return prev;
       }
 
+      // 선택 가능 -> 추가
+      action = "select";
       const pos = getNextPosition(prev, MAX_SELECT);
       if (!pos) {
+        action = "noop";
         setNextPosition(null);
         return prev;
       }
+
+      const cardWithImgBase: ReadingCardWithImg = {
+        ...(clickedCard as ReadingCardWithImg),
+        imgUrl: getCardImg(clickedCard.id) ?? "",
+      };
 
       const next: ActiveCard[] = [
         ...prev,
-        {
-          ...cardWithImgBase,
-          position: pos,
-        },
+        { ...cardWithImgBase, position: pos },
       ];
 
       setNextPosition(getNextPosition(next, MAX_SELECT));
@@ -377,6 +376,16 @@ function ReadingPick({
 
       return next;
     });
+
+    if (action === "noop") return;
+
+    setShuffledCard((prev) =>
+      prev.map((card) =>
+        card.id === clickedCard.id
+          ? { ...card, isSelected: action === "select" }
+          : card
+      )
+    );
   };
 
   // 카드 선택 해제
@@ -394,16 +403,14 @@ function ReadingPick({
 
       setActiveList((prev) => {
         const updated = prev.filter((card) => card.id !== activeCard.id);
-        setNextPosition(getNextPosition(updated, MAX_SELECT)); // 해제 후 nextPosition 재계산
+        setNextPosition(getNextPosition(updated, MAX_SELECT));
         return updated;
       });
     }, 300);
 
     setShuffledCard((prev) =>
       prev.map((card) =>
-        card.id === activeCard.id
-          ? { ...card, isSelected: !card.isSelected }
-          : card
+        card.id === activeCard.id ? { ...card, isSelected: false } : card
       )
     );
   };
@@ -413,8 +420,57 @@ function ReadingPick({
     if (confirmCard || readingSubmit) return;
     setConfirmCard(true);
 
-    const request = requestBody(activeList);
+    // 오늘의 운세 결과 요청
+    if (category === "today") {
+      const oneCard = activeList[0];
+      const todayRequestBody: ReadingTodayRequestDTO = {
+        cardId: oneCard.id,
+        reverse: oneCard.reverse,
+      };
 
+      console.log("[ReadingPick] today요청:", todayRequestBody);
+      readingTodayRequest(todayRequestBody)
+        .then((res) => {
+          if (res.code !== ResponseCode.SUCCESS || !res.data) {
+            handleErrorByCode(res.code);
+            if (loadingTimerRef.current) {
+              clearTimeout(loadingTimerRef.current);
+              loadingTimerRef.current = null;
+            }
+            setViewLoading(false);
+            setConfirmCard(false);
+            return;
+          }
+
+          const responseBody: ReadingResultResponseDTO = res.data;
+          setTimeout(() => {
+            navigate(`/reading/result/${responseBody.uuid}`, {
+              state: responseBody,
+            });
+          }, 2000);
+        })
+        .catch((err) => {
+          console.log(err);
+          if (loadingTimerRef.current) {
+            clearTimeout(loadingTimerRef.current);
+            loadingTimerRef.current = null;
+          }
+          setViewLoading(false);
+          setConfirmCard(false);
+          showDialog({
+            title: "오류 발생",
+            description:
+              "서버 연결에 문제가 있어요. 잠시 후 다시 시도해주세요.",
+            confirmText: "확인",
+          });
+        });
+
+      return;
+    }
+
+    // open ai 해석 요청
+    const request = requestBody(activeList);
+    console.log(request);
     if (loadingTimerRef.current) {
       clearTimeout(loadingTimerRef.current);
       loadingTimerRef.current = null;
@@ -422,7 +478,7 @@ function ReadingPick({
 
     loadingTimerRef.current = window.setTimeout(() => {
       setViewLoading(true);
-    }, 1500);
+    }, 3000);
 
     readingResultRequest(request)
       .then((res) => {
@@ -437,10 +493,9 @@ function ReadingPick({
           return;
         }
 
-        const resultData = res.data;
-
+        const responseBody: ReadingResultResponseDTO = res.data;
         setReadingSubmit(true);
-        setResultResponse(resultData);
+        setResultResponse(responseBody);
       })
       .catch((err) => {
         console.log(err);
@@ -458,9 +513,8 @@ function ReadingPick({
       });
   };
 
-
   return (
-    <div className="ReadingPick relative h-full overflow-x-hidden bg_gradient">
+    <div className="ReadingPick relative h-full overflow-x-hidden bg-violet-100">
       <section className="absolute z-9 top- left-1/2 -translate-x-1/2 px-4 py-6 w-full">
         {cardLoading ? (
           <SkeletonPageTitle />
@@ -469,19 +523,39 @@ function ReadingPick({
             wrapClassName={"text-center"}
             title={
               <>
-                <span className="text-violet-700 font-bold">{category}</span>{" "}
-                운세를 볼게요
+                {category === "today" ? (
+                  <>
+                    <span className="text-violet-700 font-bold">
+                      오늘의 운세
+                    </span>
+                    를 볼게요!
+                  </>
+                ) : (
+                  <>
+                    <span className="text-violet-700 font-bold">
+                      {category}
+                    </span>{" "}
+                    운세를 볼게요
+                  </>
+                )}
               </>
             }
             subtitle={
               <>
-                <p className="relative w-fit h-auto m-auto">
-                  <span className="absolute z-0 bg-violet-400 w-full h-2 left-0 bottom-0.5 animate-pulse opacity-50"></span>
-                  <span className="relative z-1">"{question}"</span>
-                </p>
-                <p>
-                  질문을 마음속으로 생각하며 카드를 {MAX_SELECT}장 골라주세요
-                </p>
+                {category === "today" ? (
+                  <p>카드를 펼친 뒤 가장 끌리는 {MAX_SELECT}장을 골라주세요</p>
+                ) : (
+                  <>
+                    <p className="relative w-fit h-auto m-auto">
+                      <span className="absolute z-0 bg-violet-400 w-full h-2 left-0 bottom-0.5 animate-pulse opacity-50"></span>
+                      <span className="relative z-1">"{questionText}"</span>
+                    </p>
+                    <p>
+                      질문을 마음속으로 생각하며 카드를 {MAX_SELECT}장
+                      골라주세요
+                    </p>
+                  </>
+                )}
               </>
             }
           />
@@ -500,7 +574,8 @@ function ReadingPick({
               progress={progress}
               angle={angle}
               setAngle={setAngle}
-              onCardClick={handleSelectCard}
+              hoverEnabled={hoverEnabled}
+              onCardClick={handleDeckCardClick}
               cardList={shuffledCard}
             />
           </div>
@@ -541,12 +616,13 @@ function ReadingPick({
 
                         {/* 카드가 채워진 경우 */}
                         <div
-                          className={`card_slot rounded-sm ${activeCard && isAllFilled
-                            ? "bg-transparent"
-                            : isNext && !activeCard
+                          className={`card_slot rounded-sm ${
+                            activeCard && isAllFilled
+                              ? "bg-transparent"
+                              : isNext && !activeCard
                               ? "bg-violet-300 animate-pulse"
                               : "bg-neutral-100"
-                            }`}
+                          }`}
                         >
                           {activeCard ? (
                             <div
@@ -605,16 +681,16 @@ function ReadingPick({
             <>
               <Button
                 variant="outline"
-                size="xl"
-                className="w-24"
+                size="lg"
+                className="w-24 h-12"
                 onClick={handleShuffle}
                 disabled={shuffle}
               >
                 {shuffle ? "셔플 중..." : "카드 섞기"}
               </Button>
               <Button
-                size="xl"
-                className="grow"
+                size="lg"
+                className="grow h-12"
                 disabled={isSpreadDisabled}
                 onClick={handleSpread}
               >
@@ -636,8 +712,8 @@ function ReadingPick({
                 <RefreshCcw />
               </Button>
               <Button
-                size="xl"
-                className="grow"
+                size="lg"
+                className="grow h-12"
                 disabled={!canConfirm}
                 onClick={handleOnConfirm}
               >

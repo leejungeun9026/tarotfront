@@ -1,20 +1,27 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { topNavHeight } from "../../constants/appHeight";
+import appIcon from "../../assets/app-icon.png";
+import { useEffect, useState } from "react";
 
 function TopNav() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [glass, setGlass] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setGlass(window.scrollY >= topNavHeight);
+    };
+
+    window.addEventListener("scroll", onScroll);
+    onScroll(); // 새로고침 대비
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const titleMap: Record<string, string> = {
     "/": "타로버블팁",
     "/guide": "타로 정보",
     "/reading": "운세 보기",
-    // "/reading/love": "애정",
-    // "/reading/money": "금전",
-    // "/reading/job": "직업·커리어",
-    // "/reading/study": "학업·진로운",
-    // "/reading/life": "일상·건강",
-    // "/reading/human": "대인관계",
     "/archive": "보관함",
     "/login": "로그인",
     "/join": "회원가입",
@@ -22,7 +29,9 @@ function TopNav() {
   };
 
   const getTitle = (path: string) => {
+    if (path.startsWith("/guide")) return "타로 정보";
     if (path.startsWith("/reading")) return "운세 보기";
+    if (path.startsWith("/archive/result/")) return "보관함";
     return titleMap[path] ?? "";
   };
 
@@ -33,13 +42,25 @@ function TopNav() {
       /* 홈화면 nav */
     }
     return (
-      <div className="TopNav bg-background">
+      <div
+        className={`TopNav
+        transition-all duration-300
+        ${
+          glass
+            ? "bg-white/60 backdrop-blur-md border-b border-white/20 shadow-sm"
+            : "bg-transparent"
+        }
+      `}
+      >
         <div
           className="flex justify-start items-center px-5 py-1"
           style={{ height: topNavHeight }}
         >
-          <div>
-            <p className="text-start text-lg font-semibold">
+          <div className="flex justify-start items-center gap-1">
+            <div className="size-8">
+              <img src={appIcon} alt="로고" className="w-full" />
+            </div>
+            <p className="text-start text-xl font-semibold">
               {title || "타로버블팁"}
             </p>
           </div>
@@ -47,6 +68,7 @@ function TopNav() {
       </div>
     );
   }
+
   return (
     <div className="TopNav bg-background">
       <div

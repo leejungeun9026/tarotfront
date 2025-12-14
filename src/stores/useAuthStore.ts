@@ -1,42 +1,59 @@
 import { create } from "zustand";
-import { devtools, persist, } from "zustand/middleware";
-
-export const SET_CURRENT_USER = "SET_CURRENT_USER";
-export const CLEAR_CURRENT_USER = "CLEAR_CURRENT_USER";
+import { devtools, persist } from "zustand/middleware";
+import { Cookies } from "react-cookie";
 
 export interface UserStore {
-  id: string;
+  id: number;
   username: string;
   name: string;
   role: string;
 }
 
-interface UserStoreState {
+interface AuthState {
   user: UserStore | null;
-  lastAction: string | null;
+  bootstrapping: boolean;
+
   setCurrentUser: (user: UserStore) => void;
   clearCurrentUser: () => void;
+
+  setBootstrapping: (v: boolean) => void;
+
+  forceLogout: (message?: string) => void;
 }
 
-const useAuthStore = create<UserStoreState>()(
+const cookies = new Cookies();
+
+const useAuthStore = create<AuthState>()(
   devtools(
-    persist<UserStoreState>(
-      (set) => ({
+    persist(
+      (set, get) => ({
         user: null,
-        lastAction: null,
-        setCurrentUser: (user: UserStore) => set({
-          user,
-          lastAction: SET_CURRENT_USER,
-        }),
-        clearCurrentUser: () => set({
-          user: null,
-          lastAction: CLEAR_CURRENT_USER,
-        })
+        bootstrapping: true,
+
+        setBootstrapping: (v) => set({ bootstrapping: v }),
+
+        setCurrentUser: (user) => set({ user }),
+
+        clearCurrentUser: () => set({ user: null }),
+
+        forceLogout: (message) => {
+          // 이미 로그아웃 상태면 중복 처리 방지
+          if (!get().user) return;
+
+          set({ user: null });
+          cookies.remove("accessToken", { path: "/" });
+
+          // 메시지는 선택
+          if (message) console.log("[forceLogout]", message);
+        },
       }),
-      { name: "currentUser" }
+      {
+        name: "currentUser",
+        partialize: (state) => ({ user: state.user }), // bootstrapping은 저장 X
+      }
     ),
-    { name: "currentUser" }
+    { name: "authStore" }
   )
 );
 
-export default useAuthStore
+export default useAuthStore;

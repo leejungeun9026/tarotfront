@@ -1,3 +1,5 @@
+import back01 from "../assets/back01.jpg";
+import back02 from "../assets/back02.jpg";
 type ImageMapNumber = Record<number, string>;
 
 // 타로카드
@@ -24,7 +26,14 @@ export const getCardImg = (id: number | string): string | null => {
 
 export const TAROT_IMAGE_MAP = TAROT_IMAGES;
 
-
+export const getCardBack = (backType: string | null) => {
+  switch (backType) {
+    case "back01":
+      return back01;
+    default:
+      return back02;
+  }
+};
 
 // 카테고리
 import human from "../assets/icon/category_human.svg";
@@ -52,4 +61,4 @@ export const getCategoryImg = (type: string | undefined) => {
     default:
       return undefined;
   }
-}
+};

@@ -43,7 +43,7 @@ function LoadingScreen({
   useEffect(() => {
     const intervalCard = setInterval(() => {
       setCardIdx((prev) => (prev + 1) % spreadCount);
-    }, 1500);
+    }, 1000);
 
     return () => clearInterval(intervalCard);
   }, [spreadCount]);
