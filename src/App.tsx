@@ -77,7 +77,11 @@ function App() {
                 <Route path="today" element={<ReadingToday />} />
                 <Route path=":type" element={<ReadingCategory />} />
               </Route>
-              <Route path="/reading/pick" element={<ReadingPick />} />
+              <Route path="/reading/pick" element={
+                <AuthGuard roles={[UserRole.ADMIN, UserRole.USER]}>
+                  <ReadingPick />
+                </AuthGuard>
+              } />
               <Route path="/reading/result/:uuid" element={<ReadingResult />} />
               <Route
                 path="/archive"

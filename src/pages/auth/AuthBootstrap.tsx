@@ -3,8 +3,11 @@ import useAuthStore from "@/stores/useAuthStore";
 import { ResponseCode } from "@/types/enums";
 import { userMeRequest } from "@/apis";
 
+
 export default function AuthBootstrap() {
+
   const setCurrentUser = useAuthStore((s) => s.setCurrentUser);
+  const clearCurrentUser = useAuthStore((s) => s.clearCurrentUser);
   const forceLogout = useAuthStore((s) => s.forceLogout);
   const setBootstrapping = useAuthStore((s) => s.setBootstrapping);
 
@@ -16,15 +19,15 @@ export default function AuthBootstrap() {
         if (res.data.code === ResponseCode.SUCCESS && res.data.data) {
           setCurrentUser(res.data.data);
         } else {
-          forceLogout();
+          clearCurrentUser();
         }
       } catch {
-        forceLogout();
+        clearCurrentUser();
       } finally {
         setBootstrapping(false);
       }
     })();
-  }, [setCurrentUser, forceLogout, setBootstrapping]);
+  }, [setCurrentUser, clearCurrentUser, setBootstrapping]);
 
   return null;
 }

@@ -203,7 +203,8 @@ function Archive() {
               <li
                 key={it.uuid}
                 className="border rounded-3xl p-6 cursor-pointer hover:bg-muted/40 transition"
-                onClick={() => navigate(`/reading/result/${it.uuid}`)}
+                onClick={() =>
+                  navigate(`/reading/result/${it.uuid}?from=archive`)}
               >
                 <div className="flex items-center gap-5">
                   <div className="w-11/12 content_wrap flex flex-col gap-3">

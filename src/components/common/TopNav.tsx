@@ -1,22 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { topNavHeight } from "../../constants/appHeight";
 import appIcon from "../../assets/app-icon.png";
-import { useEffect, useState } from "react";
+import { topNavHeight } from "../../constants/appHeight";
 
 function TopNav() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [glass, setGlass] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => {
-      setGlass(window.scrollY >= topNavHeight);
-    };
-
-    window.addEventListener("scroll", onScroll);
-    onScroll(); // 새로고침 대비
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const params = new URLSearchParams(location.search);
+  const from = params.get("from"); // "reading" | "archive" | null
+  const isResultPage = location.pathname.startsWith("/reading/result/");
 
   const titleMap: Record<string, string> = {
     "/": "타로버블팁",
@@ -29,29 +21,36 @@ function TopNav() {
   };
 
   const getTitle = (path: string) => {
+    const params = new URLSearchParams(location.search);
+    const from = params.get("from");
+
     if (path.startsWith("/guide")) return "타로 정보";
+    if (path.startsWith("/reading/result/")) return from === "archive" ? "보관함" : "운세 보기";
     if (path.startsWith("/reading")) return "운세 보기";
-    if (path.startsWith("/archive/result/")) return "보관함";
+    if (path.startsWith("/archive")) return "보관함";
     return titleMap[path] ?? "";
   };
 
+
   const title = getTitle(location.pathname);
+
+  const handleBack = () => {
+    if (isResultPage) {
+      if (from === "archive") return navigate("/archive");
+      if (from === "reading") return navigate("/reading");
+      // from이 없거나 애매하면 안전하게 fallback
+      return navigate("/reading");
+    }
+    navigate(-1);
+  };
+
 
   if (location.pathname === "/") {
     {
       /* 홈화면 nav */
     }
     return (
-      <div
-        className={`TopNav
-        transition-all duration-300
-        ${
-          glass
-            ? "bg-white/60 backdrop-blur-md border-b border-white/20 shadow-sm"
-            : "bg-transparent"
-        }
-      `}
-      >
+      <div className="TopNav">
         <div
           className="flex justify-start items-center px-5 py-1"
           style={{ height: topNavHeight }}
@@ -77,7 +76,7 @@ function TopNav() {
       >
         <div
           className="flex justify-center items-center w-11 h-11"
-          onClick={() => navigate(-1)}
+          onClick={handleBack}
         >
           <div className="flex justify-center items-center w-10 h-10 bg-transparent hover:bg-neutral-50 active:bg-neutral-100 rounded-sm cursor-pointer">
             <span className="material-symbols-rounded">arrow_back</span>

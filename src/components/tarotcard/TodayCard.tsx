@@ -51,7 +51,7 @@ export default function TodayCard({
           오늘의 운세 보러가기
         </Button>
       </div>
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 z-2 w-full sm:w-1/2 object-cover opacity-50">
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 z-3 w-full sm:w-1/2 object-cover opacity-50">
         <Lottie
           width={"100%"}
           height={"100%"}

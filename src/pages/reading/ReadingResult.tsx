@@ -200,11 +200,10 @@ function ReadingResult() {
   };
 
   // 공유버튼
-  // 공유버튼
   const handleShare = async (): Promise<void> => {
     if (!uuid) return;
 
-    const shareUrl = `${window.location.origin}/reading/${uuid}`;
+    const shareUrl = `${window.location.origin}/reading/result/${uuid}?from=archive`;
 
     // navigator.clipboard 미지원/권한 문제 대비
     const canUseClipboard =
@@ -249,9 +248,8 @@ function ReadingResult() {
     <div className="ReadingResult relative">
       <div
         ref={captureRef}
-        className={`ReadingResult relative ${
-          captureMode ? "capture-mode" : ""
-        }`}
+        className={`ReadingResult relative ${captureMode ? "capture-mode" : ""
+          }`}
       >
         <section className="title_wrap px-4 py-6 sm:py-8">
           <div className="flex flex-col sm:flex-row gap-4">
@@ -489,20 +487,20 @@ function ReadingResult() {
             categoryName === "계약" ||
             categoryName === "재물" ||
             categoryName === "쇼핑&지출") && (
-            <div className="inline-flex items-start gap-1">
-              <div>
-                <CircleAlert
-                  size="16"
-                  className="mt-0.5 w-4 h-4 text-red-700"
-                />
+              <div className="inline-flex items-start gap-1">
+                <div>
+                  <CircleAlert
+                    size="16"
+                    className="mt-0.5 w-4 h-4 text-red-700"
+                  />
+                </div>
+                <p>
+                  투자와 관련된 선택은 사용자 본인의 판단과 책임이 요구돼요.{" "}
+                  제공되는 카드는 예측이나 보장을 의미하지 않으며, 참고 수준으로만
+                  이용해 주세요.
+                </p>
               </div>
-              <p>
-                투자와 관련된 선택은 사용자 본인의 판단과 책임이 요구돼요.{" "}
-                제공되는 카드는 예측이나 보장을 의미하지 않으며, 참고 수준으로만
-                이용해 주세요.
-              </p>
-            </div>
-          )}
+            )}
         </div>
       </section>
       <Toaster position="top-center" />
