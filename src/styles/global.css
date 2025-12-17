@@ -16,6 +16,12 @@
   letter-spacing: -0.025em;
 }
 
+body {
+  font-family: "SUIT Variable", sans-serif;
+  background: #eeeeee;
+  overflow: hidden;
+}
+
 .capture-mode * {
   outline: none !important;
   /* 디버그 border를 전역으로 걸어둔 경우에만 */
@@ -31,11 +37,6 @@
   color: white;
 }
 
-body {
-  font-family: "SUIT Variable", sans-serif;
-  background: var(--color-muted);
-  overflow: hidden;
-}
 
 .tossface {
   font-family: Tossface;

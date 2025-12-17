@@ -3,19 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import "../styles/home.css";
 
+import SkeletonHome from "@/components/skeletons/SkeletonHome";
 import TodayCard from "@/components/tarotcard/TodayCard";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useReadingStore } from "@/stores/useReadingStore";
-import { getCategoryImg } from "@/utils/imageMapper";
-import { useMemo } from "react";
-import starsLottie from "../assets/lottie/stars.json";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useReadingStore } from "@/stores/useReadingStore";
+import { getCategoryImg } from "@/utils/imageMapper";
+import { useMemo } from "react";
+import starsLottie from "../assets/lottie/stars.json";
 
 function Home() {
   const { categories, loadingCategories } = useReadingStore();
@@ -32,7 +33,9 @@ function Home() {
   }, [categories]);
 
   if (loadingCategories && categories.length === 0) {
-    return <div>로딩중...</div>;
+    return (
+      <SkeletonHome />
+    )
   }
 
   return (

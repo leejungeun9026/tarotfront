@@ -210,7 +210,6 @@ function ReadingCategory() {
           />
         )}
       </section>
-
       <section>
         <Swiper
           key={params.type}

@@ -1,102 +1,146 @@
-import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
+import ChatBubble from "@/components/common/ChatBubble";
+import PageTitle from "@/components/common/PageTitle";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useEffect } from "react";
+import memoji from "../../assets/memoji.jpg";
 
 export default function Info() {
+  useEffect(() => {
+    AOS.init();
+  }, [])
+
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 py-6">
-      <div className="mb-5">
-        <h1 className="ff_kyobo text-2xl font-semibold tracking-tight">
-          타로버블팁 소개
-        </h1>
-        <p className="text-muted-foreground mt-2 leading-relaxed">
-          타로버블팁은 “정답”을 찍어주는 서비스가 아니라, 지금의 마음과 상황을
-          카드의 상징으로 부드럽게 비춰보는 공간이에요.
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2 mb-4">
-        <Badge variant="secondary">AI 맞춤 해석</Badge>
-        <Badge variant="secondary">데일리 1장 운세</Badge>
-        <Badge variant="secondary">카테고리 리딩</Badge>
-        <Badge variant="secondary">보관함</Badge>
-      </div>
-
-      <div className="grid gap-4">
-        <Card className="rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-lg">
-              타로버블팁에서 할 수 있는 것
-            </CardTitle>
-            <CardDescription>
-              기능은 많아도 흐름은 단순하게, 감정은 더 편안하게.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 leading-relaxed">
-            <ul className="list-disc ps-5 space-y-2 text-sm">
-              <li>
-                <b>운세 보기</b>: 질문과 카드 조합에 따라 해석/조언을 받기
-              </li>
-              <li>
-                <b>오늘의 운세</b>: 하루의 흐름을 가볍게 체크하기
-              </li>
-              <li>
-                <b>보관함</b>: 결과를 저장하고, 북마크/코멘트로 기록하기
-              </li>
-            </ul>
-
-            <Separator />
-
-            <div className="rounded-2xl border p-4 bg-muted/40">
-              <p className="text-sm text-muted-foreground">
-                팁: “질문”을 조금만 구체적으로 적으면, 해석이 훨씬 내 상황에
-                가까워져요. (예: “연락 올까요?” → “이번 주 안에 먼저 연락이 올
-                가능성이 있을까요?”)
+    <div className="Info divide-gray-100 divide-y-10">
+      <section className="px-4 py-6 sm:py-8 border-0">
+        <PageTitle
+          title={
+            <>타로버블팁</>
+          }
+          subtitle={
+            <>
+              전문 타로 리더의 리딩 경험을 기반으로 한 <br />AI 개인 맞춤형 타로 해석 서비스
+            </>}
+        />
+      </section>
+      <section className="px-4 py-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-end items-end gap-3" data-aos="fade-up">
+            <ChatBubble
+              colorClass="text-violet-200"
+              tail="right-bottom"
+              className="max-w-4/5 mb-2"
+              contentClassName="rounded-3xl px-4 py-3 whitespace-pre-wrap text-start text-white ff_kyobo text-lg"
+            >
+              <p className="relative z-5 text-neutral-700">
+                “AI 리딩? <br />다 똑같은 대답만 하는거 아니야?”
+              </p>
+            </ChatBubble>
+            <div className="img_wrap size-14 border rounded-3xl overflow-hidden">
+              <img src={memoji} alt="미모지프로필" className="w-50 object-fit contain object-center" />
+            </div>
+          </div>
+          <div className="" data-aos="fade-up">
+            <ChatBubble
+              colorClass="text-violet-300"
+              tail="left-bottom"
+              className="max-w-4/5"
+              contentClassName="rounded-3xl px-4 py-3 bg_gradient whitespace-pre-wrap text-start text-white ff_kyobo text-lg"
+            >
+              <p className="relative z-5 text-violet-900 ">
+                그렇게 느껴졌다면, <br />
+                아직 ‘해석하는 AI 타로’를 만나지 못한 거예요.
+              </p>
+            </ChatBubble>
+          </div>
+        </div>
+        <ul className="pt-8 flex flex-col gap-8">
+          <li>
+            <h2 className="inline-flex gap-1 text-lg font-semibold mb-2">
+              <span className="tossface">1️⃣</span>
+              <span>
+                전문 타로 리더의 리딩 방식
+              </span>
+            </h2>
+            <div className="flex flex-col gap-2 ps-6.5">
+              <p>카드를 뽑자마자 의미부터 나열하지 않아요.</p>
+              <p>
+                먼저 당신이 어떤 질문을 던졌는지, <br />
+                지금 어떤 상황에서 이 질문을 하게 되었는지를 살펴봐요.
+              </p>
+              <p>
+                그리고 나서 카드가 놓인 포지션과 카드들 사이의 관계, <br />
+                흐름이 이어지는 방향을 천천히 읽어가요.
               </p>
             </div>
-
-            <div className="flex gap-2">
-              <Button asChild className="rounded-xl">
-                <Link to="/reading">운세 보러가기</Link>
-              </Button>
-              <Button asChild variant="secondary" className="rounded-xl">
-                <Link to="/reading/today">오늘 운세 보기</Link>
-              </Button>
+          </li>
+          <li>
+            <h2 className="inline-flex gap-1 text-lg font-semibold mb-2">
+              <span className="tossface">2️⃣</span>
+              <span>
+                사람이 섞는 흐름을 닮은 셔플 알고리즘
+              </span>
+            </h2>
+            <div className="flex flex-col gap-2 ps-6.5">
+              <p>
+                타로에서 카드를 <b>'어떻게 섞느냐'</b>는 생각보다 중요한 과정이에요.
+              </p>
+              <p>
+                무작위로 숫자를 뽑는 방식이 아니라, <br />
+                사람이 카드를 섞을 때 생기는 순서의 변화와 리듬을 <br />
+                알고리즘으로 구현했어요.
+              </p>
+              <p>
+                카드가 섞이는 속도, 중간에 흐트러지는 순서와 역방향, <br />
+                그리고 컷(cut) 후 다시 이어지는 배열까지.
+              </p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-lg">해석을 읽는 추천 순서</CardTitle>
-            <CardDescription>
-              한 번에 다 보려고 하지 않아도 돼요.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm leading-relaxed">
-            <div className="flex items-start gap-2">
-              <Badge>1</Badge>
-              <p>요약(한 줄)을 먼저 보고 전체 톤을 잡기</p>
+          </li>
+          <li>
+            <h2 className="inline-flex gap-1 text-lg font-semibold mb-2">
+              <span className="tossface">3️⃣</span>
+              <span>
+                같은 카드라도, 해석은 달라져요
+              </span>
+            </h2>
+            <div className="flex flex-col gap-2 ps-6.5">
+              <p>
+                타로카드 하나의 의미는 항상 하나로 정해져 있지 않아요.
+              </p>
+              <p>
+                같은 카드라도 <br />
+                연애를 묻는 질문인지, 커리어를 고민하는 상황인지, <br />
+                지금의 마음 상태가 어떤지에 따라 전혀 다른 메시지가 될 수 있어요.
+              </p>
+              <p>
+                카드의 기본 의미에 질문의 맥락을 겹쳐서, <br />
+                <b>지금 이 순간의 당신에게 더 필요한 해석</b>을 찾아드려요.
+              </p>
             </div>
-            <div className="flex items-start gap-2">
-              <Badge>2</Badge>
-              <p>카드별 해석에서 “내 상황과 맞는 문장”에 밑줄 긋듯 체크</p>
-            </div>
-            <div className="flex items-start gap-2">
-              <Badge>3</Badge>
-              <p>조언은 “오늘 할 수 있는 행동 1개”로 바꿔보기</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </li>
+        </ul>
+      </section>
+      <section className="px-4 py-6">
+        <h2 className="inline-flex gap-1 text-lg font-semibold mb-2">
+          <span className="tossface">👀</span>
+          <span>
+            더 좋은 타로 질문을 하려면
+          </span>
+        </h2>
+      </section>
+      <section className="px-4 py-6">
+        <h2 className="inline-flex gap-1 text-lg font-semibold mb-2">
+          <span className="tossface"></span>
+          <span>
+            더 좋은 타로 질문을 하려면
+          </span>
+        </h2>
+      </section>
+      <section className="px-4 py-6 text-center">
+        <p className="mb-3 text-neutral-700">타로점에 대해 더 알아볼까요?</p>
+        <Button>타로점 알아보기</Button>
+      </section>
     </div>
   );
 }
