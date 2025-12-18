@@ -53,7 +53,7 @@ const TERMS: Term[] = [
   },
 ];
 
-export default function TarotCardTerm() {
+export default function GuideTerm() {
   const [q, setQ] = useState("");
 
   const filtered = useMemo(() => {

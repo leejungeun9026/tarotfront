@@ -1,3 +1,5 @@
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "swiper/css";
@@ -13,33 +15,37 @@ import { bottomNavHeight } from "./constants/appHeight";
 import AuthGuard from "./guards/AuthGuard";
 import Home from "./pages/Home";
 import Archive from "./pages/archive/Archive";
+import AuthBootstrap from "./pages/auth/AuthBootstrap";
 import Join from "./pages/auth/Join";
 import Login from "./pages/auth/Login";
+import MyPage from "./pages/auth/MyPage";
 import OAuth from "./pages/auth/OAuth";
 import OAuthError from "./pages/auth/OAuthError";
 import NotFound from "./pages/error/NotFound";
 import UnAuthorized from "./pages/error/UnAuthorized";
+import GuideCard from "./pages/guide/GuideCard";
+import GuideHowTo from "./pages/guide/GuideHowTo";
+import GuideInfo from "./pages/guide/GuideInfo";
 import GuideLayout from "./pages/guide/GuideLayout";
-import HowTo from "./pages/guide/HowTo";
-import Info from "./pages/guide/Info";
-import TarotCard from "./pages/guide/TarotCard";
-import TarotCardTerm from "./pages/guide/TarotCardTerm";
+import GuideTerm from "./pages/guide/GuideTerm";
 import ReadingCategory from "./pages/reading/ReadingCategory";
 import ReadingLayout from "./pages/reading/ReadingLayout";
 import ReadingPick from "./pages/reading/ReadingPick";
 import ReadingResult from "./pages/reading/ReadingResult";
 import ReadingToday from "./pages/reading/ReadingToday";
-import MyPage from "./pages/auth/MyPage";
 import { useReadingStore } from "./stores/useReadingStore";
 import { useTarotCardStore } from "./stores/useTarotCardStore";
 import { useTermsStore } from "./stores/useTermsStore";
 import { UserRole } from "./types/enums";
-import AuthBootstrap from "./pages/auth/AuthBootstrap";
 
 function App() {
   const { fetchCategories, fetchQuestions } = useReadingStore();
   const { fetchTerms } = useTermsStore();
   const { fetchCards } = useTarotCardStore();
+
+  useEffect(() => {
+    AOS.init();
+  }, [])
 
   // 마스터 데이터 호출 (약관, 타로카드, 질문 등)
   useEffect(() => {
@@ -67,10 +73,10 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/guide" element={<GuideLayout />}>
                 <Route index element={<Navigate to="info" replace />} />
-                <Route path="info" element={<Info />} />
-                <Route path="howto" element={<HowTo />} />
-                <Route path="term" element={<TarotCardTerm />} />
-                <Route path="tarotcard" element={<TarotCard />} />
+                <Route path="info" element={<GuideInfo />} />
+                <Route path="howto" element={<GuideHowTo />} />
+                <Route path="tarotcard" element={<GuideCard />} />
+                <Route path="term" element={<GuideTerm />} />
               </Route>
               <Route path="/reading" element={<ReadingLayout />}>
                 <Route index element={<Navigate to="today" replace />} />
