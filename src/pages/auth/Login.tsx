@@ -227,9 +227,8 @@ function Login() {
                   onKeyDown={handleOnKeyDown}
                 />
                 <p
-                  className={`text-xs mt-1 ${
-                    valid.username ? "text-green-600" : "text-red-500"
-                  }`}
+                  className={`text-xs mt-1 ${valid.username ? "text-green-600" : "text-red-500"
+                    }`}
                 >
                   {validMessages.username}
                 </p>
@@ -250,9 +249,8 @@ function Login() {
                   onKeyDown={handleOnKeyDown}
                 />
                 <p
-                  className={`text-xs mt-1 ${
-                    valid.password ? "text-green-600" : "text-red-500"
-                  }`}
+                  className={`text-xs mt-1 ${valid.password ? "text-green-600" : "text-red-500"
+                    }`}
                 >
                   {validMessages.password}
                 </p>
@@ -271,11 +269,11 @@ function Login() {
                 회원가입
               </Button>
               <div className="mt-2 flex justify-center items-center h-5 space-x-6 text-sm">
-                <Link to="/" className="text-neutral-500">
+                <Link to="/" className="text-neutral-600">
                   아이디 찾기
                 </Link>
                 <Separator orientation="vertical" />
-                <Link to="/" className="text-neutral-500">
+                <Link to="/" className="text-neutral-600">
                   비밀번호 찾기
                 </Link>
               </div>

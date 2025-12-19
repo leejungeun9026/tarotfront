@@ -53,7 +53,7 @@ export default function ReadingLayout() {
 
   return (
     <div className="ReadingLayout">
-      <div className="nav py-2 border-b">
+      <div className="nav py-1.5 border-b">
         <Swiper
           slidesPerView={"auto"}
           centeredSlides
@@ -64,14 +64,13 @@ export default function ReadingLayout() {
           {typeTabs.map((item) => (
             <SwiperSlide
               key={item.key}
-              className="max-w-fit first:ms-2 last:me-2"
+              className="max-w-fit first:ms-2 me-1 last:me-2"
             >
               <div
-                className={`inline-flex items-center justify-center gap-1 whitespace-nowrap text-sm font-medium transition-all cursor-pointer hover:bg-accent hover:text-accent-foreground h-10 rounded-md px-3 ${
-                  activeKey === item.key
-                    ? "bg-accent text-accent-foreground"
-                    : ""
-                }`}
+                className={`inline-flex items-center justify-center gap-1 whitespace-nowrap text-sm font-medium transition-all cursor-pointer hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-2 ${activeKey === item.key
+                  ? "bg-accent text-accent-foreground"
+                  : ""
+                  }`}
                 onClick={() => navigate(item.to)}
               >
                 <span className="tossface">{item.emoji}</span>

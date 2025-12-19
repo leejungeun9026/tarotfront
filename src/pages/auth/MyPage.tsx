@@ -116,7 +116,7 @@ export default function MyPage() {
         <div className="text-center">
           <Button
             variant="ghost"
-            className="text-neutral-500"
+            className="text-neutral-600"
             onClick={() => {
               forceLogout("");
               navigate("/login", { replace: true });

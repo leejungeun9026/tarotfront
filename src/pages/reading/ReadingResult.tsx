@@ -470,7 +470,7 @@ function ReadingResult() {
         )}
       </section>
       <section className="px-4 py-8 text-center">
-        <div className="mx-auto text-sm text-neutral-500">
+        <div className="mx-auto text-sm text-neutral-600">
           {isOwner && (
             <div className="inline-flex items-start gap-1">
               <div>

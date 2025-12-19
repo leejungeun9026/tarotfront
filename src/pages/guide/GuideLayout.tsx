@@ -4,14 +4,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 const tabs = [
   { to: "info", label: "타로버블팁", emoji: "💜" },
   { to: "howto", label: "타로점", emoji: "🔮" },
-  { to: "term", label: "용어 소개", emoji: "📖" },
   { to: "tarotcard", label: "타로카드", emoji: "🪄" },
+  { to: "term", label: "용어 소개", emoji: "📖" },
 ] as const;
 
 export default function GuideLayout() {
   return (
     <div className="ReadingLayout">
-      <div className="nav py-2 border-b">
+      <div className="nav py-1.5 border-b">
         <Swiper
           slidesPerView="auto"
           centeredSlides
@@ -22,17 +22,14 @@ export default function GuideLayout() {
           {tabs.map((tab) => (
             <SwiperSlide
               key={tab.to}
-              className="max-w-fit first:ms-2 last:me-2"
+              className="max-w-fit first:ms-2 me-1 last:me-2"
             >
               <NavLink
                 to={tab.to}
                 end={tab.to === "info"} // info일 때만 /guide/info에서 정확히 active
                 className={({ isActive }) =>
                   [
-                    "inline-flex items-center justify-center gap-1 whitespace-nowrap",
-                    "text-sm font-medium transition-all cursor-pointer",
-                    "h-10 rounded-md px-3",
-                    "hover:bg-accent hover:text-accent-foreground",
+                    "inline-flex items-center justify-center gap-1 whitespace-nowrap text-sm font-medium transition-all cursor-pointer h-8 rounded-md px-2 hover:bg-accent hover:text-accent-foreground",
                     isActive ? "bg-accent text-accent-foreground" : "",
                   ].join(" ")
                 }

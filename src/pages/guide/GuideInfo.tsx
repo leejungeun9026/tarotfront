@@ -32,8 +32,8 @@ export default function GuideInfo() {
               className="max-w-4/5 mt-3"
               contentClassName="rounded-3xl px-4 py-3 whitespace-pre-wrap text-start text-white"
             >
-              <p className="relative z-5 text-neutral-700 ff_kyobo text-sm xs:text-lg">
-                “AI 리딩? <br className="block sm:hidden" />다 똑같은 대답만 하는거 아니야?”
+              <p className="relative z-5 text-neutral-700 ff_kyobo text-base xs:text-lg">
+                AI 리딩? <br className="block sm:hidden" />다 똑같은 대답만 하는거 아니야?
               </p>
             </ChatBubble>
             <div className="hidden xs:block img_wrap relative size-10 rounded-2xl sm:size-14 sm:rounded-3xl border overflow-hidden">
@@ -50,14 +50,14 @@ export default function GuideInfo() {
               className="max-w-4/5 mt-3"
               contentClassName="rounded-3xl px-4 py-3 bg_gradient whitespace-pre-wrap text-start text-white"
             >
-              <p className="relative z-5 text-violet-900 ff_kyobo text-sm xs:text-lg">
+              <p className="relative z-5 text-violet-900 ff_kyobo text-base xs:text-lg">
                 그렇게 느껴졌다면, <br />
-                아직 ‘해석하는 AI 타로’를 만나지 못한 거예요.
+                아직 해석하는 AI인 <b>"타로버블팁"</b>을 만나지 못한 거예요.
               </p>
             </ChatBubble>
           </div>
         </div>
-        <Card className="py-6 sm:py-8 mt-10 rounded-3xl">
+        <Card className="py-6 sm:py-8 mt-6 rounded-3xl">
           <CardContent>
             <ul className="flex flex-col gap-6 sm:gap-8">
               <li>
