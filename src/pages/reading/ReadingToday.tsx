@@ -6,7 +6,7 @@ function ReadingToday() {
     <div
       className="ReadingToday"
       style={{
-        height: `calc(100dvh - ${topNavHeight}px - ${bottomNavHeight}px - 57px)`,
+        height: `calc(100dvh - ${topNavHeight}px - ${bottomNavHeight}px - 45px)`,
         minHeight: "380px",
       }}
     >

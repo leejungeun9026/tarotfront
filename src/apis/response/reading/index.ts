@@ -1,9 +1,8 @@
-import type ReadingCategoryListResponseDTO from "./reading-category-list.response";
-import type ReadingCategoryResponseDTO from "./reading-category.response";
-import type ReadingQuestionListResponseDTO from "./reading-question-list.response";
-import type ReadingQuestionResponseDTO from "./reading-question.response";
-import type ReadingResultResponseDTO from "./reading-result.response";
-import type { ReadingPositionResponseDTO } from "./reading-result.response";
+import type { ReadingCategoryListResponseDTO, ReadingCategoryResponseDTO } from "./reading-category.response";
+import type { ReadingQuestionListResponseDTO, ReadingQuestionResponseDTO } from "./reading-question.response";
+import type { ReadingResultResponseDTO, ReadingPositionResponseDTO } from "./reading-result.response";
+import type { ReadingTopQuestionResponseDTO, ReadingTopQuestionListResponseDTO } from "./reading-top-question.response";
+
 
 export type {
   ReadingCategoryListResponseDTO,
@@ -12,4 +11,6 @@ export type {
   ReadingQuestionResponseDTO,
   ReadingResultResponseDTO,
   ReadingPositionResponseDTO,
+  ReadingTopQuestionListResponseDTO,
+  ReadingTopQuestionResponseDTO
 };

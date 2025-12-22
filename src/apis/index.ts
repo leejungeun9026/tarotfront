@@ -20,27 +20,34 @@ import type PageResponse from "./response/page.response";
 import type {
   ReadingCategoryListResponseDTO,
   ReadingQuestionListResponseDTO,
+  ReadingResultResponseDTO,
+  ReadingTopQuestionListResponseDTO
 } from "./response/reading";
-import type ReadingResultResponseDTO from "./response/reading/reading-result.response";
 import type ResponseDTO from "./response/response.dto";
 import type { TarotCardListResponseDTO } from "./response/tarotcard";
 import type TermsListResponseDTO from "./response/terms/terms-list.response";
 
+// auth
 export const SNS_SIGN_IN_URL = (provider: "kakao" | "naver") =>
   `http://localhost:8085/api/v1/auth/oauth2/${provider}`;
-
 const USER_ME_URL = () => "/auth/me";
 const SIGN_UP_URL = () => "/auth/sign-up";
 const SIGN_IN_URL = () => "/auth/sign-in";
 const EMAIL_CERTIFICATION_URL = () => "/auth/email-certification";
 const CHECK_CERTIFICATION_URL = () => "/auth/check-certification";
 
+// 약관
 const TERMS_LIST_URL = () => "/terms/terms-list";
 
+// 타로카드
 const TAROT_CARD_LIST_URL = () => "/tarotcard/tarotcard-list";
 
+// 운세 카테고리 & 질문
 const READING_CATEGORY_LIST_URL = () => "/category/category-list";
 const READING_QUESTION_LIST_URL = () => "/category/question-list";
+
+// 리딩
+const READING_TOP_QUESTION_LIST_URL = () => "/reading/top-questions";
 const READING_RESULT_URL = () => "/reading/result";
 const READING_TODAY_URL = () => "/reading/today-result";
 const READING_UUID_URL = (uuid: string) => `/reading/${uuid}`;
@@ -274,6 +281,24 @@ export const readingBookmarkToggleRequest = async (
 
   return result;
 };
+
+
+export const readingTopQuestionListRequest = async (): Promise<
+  ResponseDTO<ReadingTopQuestionListResponseDTO>
+> => {
+  console.log("[API] /category/top-questions 요청");
+
+  const result = await api
+    .get<ResponseDTO<ReadingTopQuestionListResponseDTO>>(
+      READING_TOP_QUESTION_LIST_URL()
+    )
+    .then(customResponseHandler<ResponseDTO<ReadingTopQuestionListResponseDTO>>);
+
+  console.log("[API] /category/top-questions 응답:", result);
+
+  return result;
+};
+
 
 /* ------------------------------------- */
 /* 아카이브                              */

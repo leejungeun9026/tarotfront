@@ -1,4 +1,8 @@
-export default interface ReadingCategoryResponseDTO {
+export interface ReadingCategoryListResponseDTO {
+  readingCategoryList: ReadingCategoryResponseDTO[];
+}
+
+export interface ReadingCategoryResponseDTO {
   id: number;
   typeEn: string;
   typeKr: string;

@@ -474,7 +474,7 @@ function ReadingResult() {
           {isOwner && (
             <div className="inline-flex items-start gap-1">
               <div>
-                <CircleAlert className="mt-0.5 w-4 h-4 text-red-700" />
+                <CircleAlert className="mt-0.5 w-4 h-4 text-red-600" />
               </div>
               <p>
                 운세 결과는 보관함에서 다시 볼 수 있어요. 다운로드 및 공유 시
@@ -491,7 +491,7 @@ function ReadingResult() {
                 <div>
                   <CircleAlert
                     size="16"
-                    className="mt-0.5 w-4 h-4 text-red-700"
+                    className="mt-0.5 w-4 h-4 text-red-600"
                   />
                 </div>
                 <p>

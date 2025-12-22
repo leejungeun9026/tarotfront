@@ -118,7 +118,7 @@ export default function GuideHowTo() {
           <h2 className="text-lg font-semibold mb-1">
             타로점 스프레드(배열) 종류
           </h2>
-          <p className="text-neutral-600 text-sm">카드를 어떤 순서와 위치로 펼쳐 해석할지 정하는 방식</p>
+          <p className="text-neutral-600 text-sm">카드를 어떤 순서와 위치로 펼쳐 해석할지 정하는 방식이에요.</p>
         </div>
         <div>
           <ul className="space-y-6 leading-relaxed text-sm">
@@ -126,14 +126,14 @@ export default function GuideHowTo() {
               <h6 className="text-base font-semibold"><span className="tossface">1️⃣</span> 원카드 스프레드</h6>
               <p>
                 가장 단순한 스프레드예요. <br />
-                카드 한 장으로 지금의 핵심 메시지를 살펴보기때문에 주로 오늘의 운세에 많이 사용해요.
+                카드 한 장으로 지금 이 순간의 핵심 메시지를 살펴보기 때문에 주로 오늘의 운세처럼 가볍고 직관적인 질문에 많이 사용해요.
               </p>
               <p className="ps-2 text-violet-600"><span className="tossface">🪄</span> 타로버블팁의 <span onClick={() => { navigate("/reading/today") }} className="underline underline-offset-2 font-semibold cursor-pointer">오늘의 운세보기</span>는 원카드로 해석하고 있어요!</p>
             </li>
             <li className="space-y-1.5">
               <h6 className="text-base font-semibold"><span className="tossface">3️⃣</span> 쓰리카드 스프레드</h6>
               <p>
-                타로에서 가장 많이 사용되는 스프레드로 카드 3장을 통해 상황의 흐름을 자연스럽게 읽을 수 있어요.
+                타로에서 가장 많이 사용되는 스프레드예요. <br />카드 3장을 통해 상황의 흐름을 자연스럽게 읽을 수 있어요.
               </p>
               <p>
                 보통은
@@ -152,21 +152,13 @@ export default function GuideHowTo() {
               <h6 className="text-base font-semibold"><span className="tossface">🔟</span> 켈틱 크로스 스프레드</h6>
               <p>
                 조금 더 깊은 질문에 사용하는 전통적인 스프레드예요. <br />
-                10장의 카드를 통해 상황, 장애물, 내면, 주변 환경, 가능성 등을 입체적이고 심층적으로 살펴봐요.
+                10장의 카드를 통해 상황, 장애물, 내면의 마음, 주변 환경, 가능성 등을 입체적이고 심층적으로 살펴봐요.</p>
+              <p>
+                복합적인 고민이나 "왜 이런 상황이 반복될까?"" 같은 질문에 잘 어울려요.
               </p>
               <p className="ps-2 text-violet-600"><span className="tossface">🪄</span> 타로버블팁의 <span onClick={() => { navigate("/") }} className="underline underline-offset-2 font-semibold cursor-pointer">심층 운세보기</span>는 켈틱 크로스로 해석하고 있어요!</p>
             </li>
           </ul>
-        </div>
-      </section>
-      <section className="px-4 py-6 sm:py-8">
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-1">
-            질문하는 방법
-          </h2>
-          <p className="text-neutral-600 text-sm">카드를 어떤 순서와 위치로 펼쳐 해석할지 정하는 방식</p>
-        </div>
-        <div>
         </div>
       </section>
       <section className="px-4 py-6 sm:py-8">

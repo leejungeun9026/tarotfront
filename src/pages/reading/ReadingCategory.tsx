@@ -15,10 +15,10 @@ import {
 } from "@/components/ui/card";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useReadingStore } from "@/stores/useReadingStore";
@@ -27,7 +27,7 @@ import ReadingSpreadKr from "@/types/enums/readingSpread-kr.enum";
 import { getCategoryImg } from "@/utils/imageMapper";
 import { READING_POSITION } from "@/utils/readingPosition";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -41,6 +41,9 @@ function ReadingCategory() {
   const spread = "THREE" as const;
   const spreadType = ReadingSpreadKr[spread];
   const spreadCount = ReadingSpreadCount[spread];
+
+  const [swiper, setSwiper] = useState<any>(null);
+
 
   type questionObj = {
     categoryId: number;
@@ -124,6 +127,27 @@ function ReadingCategory() {
       },
     });
   };
+
+  const hashCategoryId = useMemo(() => {
+    const raw = (window.location.hash || "").replace("#", "");
+    const m = raw.match(/^cat-(\d+)$/);
+    return m ? Number(m[1]) : null;
+  }, [params.type]);
+
+  // hashId에 해당하는 slide index 찾기
+  const hashIndex = useMemo(() => {
+    if (!hashCategoryId) return -1;
+    return categoryList.findIndex((c) => c.id === hashCategoryId);
+  }, [categoryList, hashCategoryId]);
+
+  useEffect(() => {
+    if (!swiper) return;
+    if (isLoading) return;
+    if (hashIndex < 0) return;
+
+    swiper.slideToLoop(hashIndex, 0);
+  }, [swiper, isLoading, hashIndex]);
+
 
   // 질문 리스트에서 질문 선택
   const handleQuestionSelectSubmit = (
@@ -213,6 +237,7 @@ function ReadingCategory() {
       <section>
         <Swiper
           key={params.type}
+          onSwiper={setSwiper}
           pagination={{
             el: ".askSwiper-pagination",
             clickable: true,
@@ -247,6 +272,7 @@ function ReadingCategory() {
                     <Card className="h-auto sm:h-full gap-3 bg-violet-50 border-violet-100 cursor-grab active:cursor-grabbing">
                       <CardHeader className="sm:flex-1 sm:grid-rows-none text-lg">
                         <CardTitle>
+                          <a id={`cat-${c.id}`} />
                           <span className="tossface">
                             {EMOJI_LIST[type as keyof typeof EMOJI_LIST]?.[
                               c.sortOrder - 1
@@ -263,7 +289,7 @@ function ReadingCategory() {
                           {categoryQuestions.map((q, index) => (
                             <li
                               key={index}
-                              className="w-full ff_kyobo"
+                              className="w-full"
                               onClick={() =>
                                 handleQuestionSelectSubmit(
                                   c.id,
@@ -272,7 +298,7 @@ function ReadingCategory() {
                                 )
                               }
                             >
-                              <div className="w-full inline-flex items-center justify-center gap-2 whitespace-wrap text-base font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 py-2 min-h-10 rounded-md px-3 md:px-4 has-[>svg]:px-4">
+                              <div className="w-full inline-flex items-center justify-center gap-2 whitespace-wrap text-base font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 py-2 min-h-12 rounded-md px-3 md:px-4 has-[>svg]:px-4">
                                 {q.questionText}
                               </div>
                             </li>
@@ -281,7 +307,7 @@ function ReadingCategory() {
                             {!openQuestionMap[c.id] && (
                               <Button
                                 size="lg"
-                                className="w-full  bg-violet-700"
+                                className="w-full h-12  bg-violet-700"
                                 data-num={c.id}
                                 onClick={handleOpenQuestion}
                               >
@@ -295,7 +321,7 @@ function ReadingCategory() {
                               >
                                 <Input
                                   type="text"
-                                  className="h-10 bg-background"
+                                  className="h-12 bg-background text-base"
                                   placeholder={`${c.category} 상황에서 내가 궁금한 점은...`}
                                   value={questionMessage[c.id]?.message ?? ""}
                                   id={String(c.id)}
@@ -309,7 +335,7 @@ function ReadingCategory() {
                                   onClick={() =>
                                     handleQuestionInputSubmit(c.id, c.category)
                                   }
-                                  className="h-10"
+                                  className="h-12"
                                 >
                                   확인
                                 </Button>

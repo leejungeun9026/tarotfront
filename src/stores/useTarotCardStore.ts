@@ -25,6 +25,8 @@ export const useTarotCardStore = create<TarotCardStoreState>((set, get) => ({
   loadingCards: false,
 
   fetchCards: async () => {
+    if (get().loadingCards) return; // 중복 호출 방지
+
     set({ loadingCards: true });
 
     const applyData = (list: TarotCardResponseDTO[]) => {

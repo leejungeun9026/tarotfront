@@ -1,4 +1,4 @@
-export default interface ReadingResultResponseDTO {
+export interface ReadingResultResponseDTO {
   uuid: string;
   isOwner: boolean;
   readingId: number;

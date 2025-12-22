@@ -23,10 +23,11 @@ import OAuth from "./pages/auth/OAuth";
 import OAuthError from "./pages/auth/OAuthError";
 import NotFound from "./pages/error/NotFound";
 import UnAuthorized from "./pages/error/UnAuthorized";
-import GuideCard from "./pages/guide/GuideCard";
 import GuideHowTo from "./pages/guide/GuideHowTo";
 import GuideInfo from "./pages/guide/GuideInfo";
 import GuideLayout from "./pages/guide/GuideLayout";
+import GuideQuestion from './pages/guide/GuideQuestion';
+import GuideTarotCard from './pages/guide/GuideTarotCard';
 import GuideTerm from "./pages/guide/GuideTerm";
 import ReadingCategory from "./pages/reading/ReadingCategory";
 import ReadingLayout from "./pages/reading/ReadingLayout";
@@ -36,12 +37,14 @@ import ReadingToday from "./pages/reading/ReadingToday";
 import { useReadingStore } from "./stores/useReadingStore";
 import { useTarotCardStore } from "./stores/useTarotCardStore";
 import { useTermsStore } from "./stores/useTermsStore";
+import { useTopQuestionStore } from './stores/useTopQuestion';
 import { UserRole } from "./types/enums";
 
 function App() {
   const { fetchCategories, fetchQuestions } = useReadingStore();
   const { fetchTerms } = useTermsStore();
   const { fetchCards } = useTarotCardStore();
+  const { fetchTopQuestion } = useTopQuestionStore();
 
   useEffect(() => {
     AOS.init();
@@ -54,8 +57,9 @@ function App() {
       fetchQuestions(),
       fetchTerms(),
       fetchCards(),
+      fetchTopQuestion()
     ]);
-  }, [fetchCategories, fetchQuestions, fetchTerms, fetchCards]);
+  }, [fetchCategories, fetchQuestions, fetchTerms, fetchCards, fetchTopQuestion]);
 
   return (
     <>
@@ -75,7 +79,8 @@ function App() {
                 <Route index element={<Navigate to="info" replace />} />
                 <Route path="info" element={<GuideInfo />} />
                 <Route path="howto" element={<GuideHowTo />} />
-                <Route path="tarotcard" element={<GuideCard />} />
+                <Route path="question" element={<GuideQuestion />} />
+                <Route path="tarotcard" element={<GuideTarotCard />} />
                 <Route path="term" element={<GuideTerm />} />
               </Route>
               <Route path="/reading" element={<ReadingLayout />}>
