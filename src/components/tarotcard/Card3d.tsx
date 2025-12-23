@@ -75,6 +75,7 @@ export default function Card3d({ cardId }: { cardId: number }) {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     };
+    handleResize();
     requestAnimationFrame(handleResize);
     window.addEventListener("resize", handleResize);
 
@@ -91,7 +92,7 @@ export default function Card3d({ cardId }: { cardId: number }) {
     ====================== */
     const W = 0.7;
     const H = 1.2;
-    const T = 0.004; // 두께
+    const T = 0.006; // 두께
     const R = 0.04; // 라운드
     const shape = roundedRect(W, H, R);
 
@@ -285,7 +286,10 @@ export default function Card3d({ cardId }: { cardId: number }) {
           snapRef.current = false;
 
           // 원위치 후 각도 상태 갱신
-          const ee = new THREE.Euler().setFromQuaternion(card.quaternion, "YXZ");
+          const ee = new THREE.Euler().setFromQuaternion(
+            card.quaternion,
+            "YXZ"
+          );
           yawRef.current = ee.y;
           pitchRef.current = ee.x;
 
@@ -309,8 +313,7 @@ export default function Card3d({ cardId }: { cardId: number }) {
 
           // 아주 작아지면 0으로 정리
           if (Math.abs(velYawRef.current) < stopEps) velYawRef.current = 0;
-          if (Math.abs(velPitchRef.current) < stopEps)
-            velPitchRef.current = 0;
+          if (Math.abs(velPitchRef.current) < stopEps) velPitchRef.current = 0;
 
           applyRotation();
         }
@@ -393,32 +396,24 @@ export default function Card3d({ cardId }: { cardId: number }) {
   };
 
   return (
-    <div
-      className="card3d_wrap relative"
-      style={{
-        width: "100%",
-        height: "100%",
-      }}
-    >
+    <div className="Card3d text-center">
       <div
         ref={mountRef}
+        className="card3d_wrap cursor-grab active:cursor-grabbing"
         style={{
           width: "100%",
-          height: "100%",
-          minHeight: "40dvh",
-          maxHeight: "50dvh",
+          height: "300px",
+          minHeight: "40vh",
+          maxHeight: "50vh",
         }}
-        className="cursor-grab active:cursor-grabbing"
       />
-      <Button
-        size="sm"
-        variant="outline"
+      <button
         onClick={handleFaceFront}
-        className="absolute left-1/2 bottom-0 -translate-x-1/2"
+        className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer bg-accent/20 hover:bg-accent/40 hover:text-accent-foreground dark:hover:bg-accent/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
       >
         <RotateCcw />
         카드 원위치
-      </Button>
+      </button>
     </div>
   );
 }
