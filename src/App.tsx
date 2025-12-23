@@ -39,6 +39,8 @@ import { useTarotCardStore } from "./stores/useTarotCardStore";
 import { useTermsStore } from "./stores/useTermsStore";
 import { useTopQuestionStore } from './stores/useTopQuestion';
 import { UserRole } from "./types/enums";
+import ThreeTest from './components/tarotcard/Card3d';
+import ViewCardDetail from './components/tarotcard/ViewCardDetail';
 
 function App() {
   const { fetchCategories, fetchQuestions } = useReadingStore();
@@ -117,6 +119,9 @@ function App() {
               <Route path="/401" element={<UnAuthorized />} />
               <Route path="/403" element={<UnAuthorized />} />
               <Route path="*" element={<NotFound />} />
+
+
+              <Route path="/theejs" element={<ViewCardDetail />} />
             </Routes>
           </div>
         </div>

@@ -5,7 +5,8 @@ type ImageMapNumber = Record<number, string>;
 // 타로카드
 const tarotModules = import.meta.glob("../assets/tarotcard/RWS_Tarot_*.jpg", {
   eager: true,
-}) as Record<string, { default: string }>;
+  import: "default",
+}) as Record<string, string>;
 
 // id(1~78) -> 이미지 URL 매핑 객체
 const TAROT_IMAGES: ImageMapNumber = {};
@@ -15,7 +16,7 @@ for (const path in tarotModules) {
   if (match) {
     const id = Number(match[1]); // "1" → 1
     // Vite에서 이미지 default export에 실제 URL이 들어 있음
-    TAROT_IMAGES[id] = tarotModules[path].default;
+    TAROT_IMAGES[id] = tarotModules[path]
   }
 }
 
