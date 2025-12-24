@@ -88,7 +88,7 @@ export default function GuideTerm() {
 
   return (
     <div className="GuideTerm ">
-      <section className="px-4 py-6 sm:py-8">
+      <section className="px-4 pt-6 sm:pt-8 border-0">
         <PageTitle
           title={
             <>
@@ -101,7 +101,7 @@ export default function GuideTerm() {
           }
         />
       </section>
-      <section className="px-4 py-6 sm:py-8 pt-0">
+      <section className="px-4 py-6 sm:py-8 ">
         <div className="search_input_wrap relative mb-3">
           <Input
             value={q}

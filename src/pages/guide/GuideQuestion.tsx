@@ -9,18 +9,24 @@ export default function GuideQuestion() {
 
   return (
     <div className="GuideQuestion divide-gray-100 divide-y-10">
-      <section className="px-4 py-6 sm:py-8">
+      <section className="px-4 pt-6 sm:pt-8 border-0">
         <PageTitle
-          wrapClassName="mb-5"
           title={
             <>
               <span className="tossface me-1">🎯</span>
               질문 방법
             </>
           }
+          subtitle={
+            <>
+              타로 운세를 볼 때 질문하는 방법에 대해 알려드려요.
+            </>
+          }
         />
-        <div className="space-y-6 leading-relaxed text-sm">
-          <p className="">
+      </section>
+      <section className="px-4 py-6 sm:py-8 ">
+        <div className="leading-relaxed text-sm">
+          <p className="mb-4">
             타로카드는 질문이 얼마나 또렷한지에 따라, <br />카드가 전하는 메시지의 깊이와 명확함도 크게 달라져요.
           </p>
           <ul className="space-y-6">

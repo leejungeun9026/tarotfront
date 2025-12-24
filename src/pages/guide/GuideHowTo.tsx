@@ -9,16 +9,22 @@ export default function GuideHowTo() {
 
   return (
     <div className="GuideHowTo divide-gray-100 divide-y-10">
-      <section className="px-4 py-6 sm:py-8">
+      <section className="px-4 pt-6 sm:pt-8 border-0">
         <PageTitle
-          wrapClassName="mb-5"
           title={
             <>
               <span className="tossface me-1">🔮</span>
               타로점이란?
             </>
           }
+          subtitle={
+            <>
+              타로점이 처음인 분들을 위한 안내서예요.
+            </>
+          }
         />
+      </section>
+      <section className="px-4 py-6 sm:py-8 ">
         <ul className="space-y-4 leading-relaxed text-sm">
           <li>
             <p>

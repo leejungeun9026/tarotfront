@@ -1,5 +1,5 @@
 import { getCardBack, getCardImg } from "@/utils/imageMapper";
-import { RotateCcw } from "lucide-react";
+import { Info, RotateCcw } from "lucide-react";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { Button } from "../ui/button";
@@ -396,7 +396,12 @@ export default function Card3d({ cardId }: { cardId: number }) {
   };
 
   return (
-    <div className="Card3d text-center">
+    <div className="Card3d">
+      <div className="absolute z-0 left-1/2 -translate-x-1/2 top-4 ">
+        <div className="select-none flex gap-1 justify-center items-center text-xs text-accent/50">
+          <Info className="size-3" /> 카드를 움직이면 돌려볼 수 있어요
+        </div>
+      </div>
       <div
         ref={mountRef}
         className="card3d_wrap cursor-grab active:cursor-grabbing"
@@ -407,13 +412,15 @@ export default function Card3d({ cardId }: { cardId: number }) {
           maxHeight: "50vh",
         }}
       />
-      <button
-        onClick={handleFaceFront}
-        className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer bg-accent/20 hover:bg-accent/40 hover:text-accent-foreground dark:hover:bg-accent/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
-      >
-        <RotateCcw />
-        카드 원위치
-      </button>
+      <div className="relative z-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+        <Button
+          variant="outline"
+          onClick={handleFaceFront}
+        >
+          <RotateCcw />
+          카드 원위치
+        </Button>
+      </div>
     </div>
   );
 }
