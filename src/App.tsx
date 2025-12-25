@@ -1,5 +1,5 @@
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "swiper/css";
@@ -10,6 +10,7 @@ import BottomNav from "./components/common/BottomNav";
 import GlobalAlertDialog from "./components/common/GlobalAlertDialog";
 import ScrollToTop from "./components/common/ScrollToTop";
 import TopNav from "./components/common/TopNav";
+import ViewCardDetail from "./components/tarotcard/ViewCardDetail";
 import { Toaster } from "./components/ui/sonner";
 import { bottomNavHeight } from "./constants/appHeight";
 import AuthGuard from "./guards/AuthGuard";
@@ -26,8 +27,8 @@ import UnAuthorized from "./pages/error/UnAuthorized";
 import GuideHowTo from "./pages/guide/GuideHowTo";
 import GuideInfo from "./pages/guide/GuideInfo";
 import GuideLayout from "./pages/guide/GuideLayout";
-import GuideQuestion from './pages/guide/GuideQuestion';
-import GuideTarotCard from './pages/guide/GuideTarotCard';
+import GuideQuestion from "./pages/guide/GuideQuestion";
+import GuideTarotCard from "./pages/guide/GuideTarotCard";
 import GuideTerm from "./pages/guide/GuideTerm";
 import ReadingCategory from "./pages/reading/ReadingCategory";
 import ReadingLayout from "./pages/reading/ReadingLayout";
@@ -37,10 +38,8 @@ import ReadingToday from "./pages/reading/ReadingToday";
 import { useReadingStore } from "./stores/useReadingStore";
 import { useTarotCardStore } from "./stores/useTarotCardStore";
 import { useTermsStore } from "./stores/useTermsStore";
-import { useTopQuestionStore } from './stores/useTopQuestion';
+import { useTopQuestionStore } from "./stores/useTopQuestion";
 import { UserRole } from "./types/enums";
-import ThreeTest from './components/tarotcard/Card3d';
-import ViewCardDetail from './components/tarotcard/ViewCardDetail';
 
 function App() {
   const { fetchCategories, fetchQuestions } = useReadingStore();
@@ -50,7 +49,7 @@ function App() {
 
   useEffect(() => {
     AOS.init();
-  }, [])
+  }, []);
 
   // 마스터 데이터 호출 (약관, 타로카드, 질문 등)
   useEffect(() => {
@@ -59,9 +58,15 @@ function App() {
       fetchQuestions(),
       fetchTerms(),
       fetchCards(),
-      fetchTopQuestion()
+      fetchTopQuestion(),
     ]);
-  }, [fetchCategories, fetchQuestions, fetchTerms, fetchCards, fetchTopQuestion]);
+  }, [
+    fetchCategories,
+    fetchQuestions,
+    fetchTerms,
+    fetchCards,
+    fetchTopQuestion,
+  ]);
 
   return (
     <>
@@ -90,11 +95,14 @@ function App() {
                 <Route path="today" element={<ReadingToday />} />
                 <Route path=":type" element={<ReadingCategory />} />
               </Route>
-              <Route path="/reading/pick" element={
-                <AuthGuard roles={[UserRole.ADMIN, UserRole.USER]}>
-                  <ReadingPick />
-                </AuthGuard>
-              } />
+              <Route
+                path="/reading/pick"
+                element={
+                  <AuthGuard roles={[UserRole.ADMIN, UserRole.USER]}>
+                    <ReadingPick />
+                  </AuthGuard>
+                }
+              />
               <Route path="/reading/result/:uuid" element={<ReadingResult />} />
               <Route
                 path="/archive"
@@ -119,9 +127,6 @@ function App() {
               <Route path="/401" element={<UnAuthorized />} />
               <Route path="/403" element={<UnAuthorized />} />
               <Route path="*" element={<NotFound />} />
-
-
-              <Route path="/theejs" element={<ViewCardDetail />} />
             </Routes>
           </div>
         </div>

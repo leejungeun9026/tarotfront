@@ -30,7 +30,7 @@ function BottomNav() {
         className="flex justify-center sm:justify-around items-center gap-2 border-t py-2 px-3"
         style={{ height: bottomNavHeight }}
       >
-        <NavItem title="메인" icon={<House />} link="/" />
+        <NavItem title="홈" icon={<House />} link="/" />
         <NavItem title="타로정보" icon={<BookMarked />} link="/guide" />
         <NavItem
           title="운세보기"

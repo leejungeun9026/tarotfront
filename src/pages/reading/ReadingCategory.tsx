@@ -21,10 +21,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { CATEGORY_EMOJI } from "@/constants/catagoryEmoji";
 import { useReadingStore } from "@/stores/useReadingStore";
 import ReadingSpreadCount from "@/types/enums/readingSpread-count.enum copy";
 import ReadingSpreadKr from "@/types/enums/readingSpread-kr.enum";
-import { getCategoryImg } from "@/utils/imageMapper";
 import { READING_POSITION } from "@/utils/readingPosition";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -43,7 +43,6 @@ function ReadingCategory() {
   const spreadCount = ReadingSpreadCount[spread];
 
   const [swiper, setSwiper] = useState<any>(null);
-
 
   type questionObj = {
     categoryId: number;
@@ -64,7 +63,7 @@ function ReadingCategory() {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const EMOJI_LIST = {
-    love: ["💗", "💞", "💓", "💘", "💔", "🙏", "💍"],
+    love: ["💗", "❤️‍🔥", "💓", "💘", "💔", "❤️‍🩹", "💍"],
     money: ["💰", "📈", "📋", "💎", "🛒"],
     job: ["💻", "📨", "🔄", "❎", "📑", "🦄"],
     study: ["📚", "📝", "🎯", "🤹‍♀️", "💡", "📉"],
@@ -148,7 +147,6 @@ function ReadingCategory() {
     swiper.slideToLoop(hashIndex, 0);
   }, [swiper, isLoading, hashIndex]);
 
-
   // 질문 리스트에서 질문 선택
   const handleQuestionSelectSubmit = (
     categoryId: number,
@@ -220,11 +218,10 @@ function ReadingCategory() {
         ) : (
           <PageTitle
             title={
-              <div className="flex gap-2 items-center">
-                <img
-                  src={getCategoryImg(params?.type ? params.type : undefined)}
-                  className="size-7 sm:size-8 animate-bounce"
-                />
+              <div className="flex gap-1 items-center">
+                <span className="tossface text-xl animate-bounce">
+                  {CATEGORY_EMOJI(typeEn ?? "")}
+                </span>
                 {currentTypeKr}운
               </div>
             }
@@ -298,7 +295,7 @@ function ReadingCategory() {
                                 )
                               }
                             >
-                              <div className="w-full inline-flex items-center justify-center gap-2 whitespace-wrap text-base font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 py-2 min-h-12 rounded-md px-3 md:px-4 has-[>svg]:px-4">
+                              <div className="ff_kyobo w-full inline-flex items-center justify-center gap-2 whitespace-wrap text-base font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 py-2 min-h-12 rounded-md px-3 md:px-4 has-[>svg]:px-4">
                                 {q.questionText}
                               </div>
                             </li>
@@ -321,7 +318,7 @@ function ReadingCategory() {
                               >
                                 <Input
                                   type="text"
-                                  className="h-12 bg-background text-base"
+                                  className="h-12 bg-background text-base ff_kyobo"
                                   placeholder={`${c.category} 상황에서 내가 궁금한 점은...`}
                                   value={questionMessage[c.id]?.message ?? ""}
                                   id={String(c.id)}

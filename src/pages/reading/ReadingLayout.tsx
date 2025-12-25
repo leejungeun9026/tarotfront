@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
+import { CATEGORY_EMOJI } from "@/constants/catagoryEmoji";
 
 type TabItem = {
   key: string;
@@ -12,8 +13,6 @@ type TabItem = {
   to: string;
 };
 
-const TYPE_EMOJIS = ["💖", "💸", "💼", "🎓", "🍀", "🤝"];
-
 export default function ReadingLayout() {
   const params = useParams();
   const location = useLocation();
@@ -21,7 +20,6 @@ export default function ReadingLayout() {
   const swiperRef = useRef<SwiperType | null>(null);
 
   const { categories, questions, fetchAllMasterData } = useReadingStore();
-
 
   useEffect(() => {
     if (categories.length === 0 || questions.length === 0) {
@@ -44,11 +42,11 @@ export default function ReadingLayout() {
     });
 
     const dynamic: TabItem[] = Array.from(map.entries()).map(
-      ([type, label], idx) => ({
+      ([type, label]) => ({
         key: type,
         type,
         label,
-        emoji: TYPE_EMOJIS[idx] ?? "✨",
+        emoji: CATEGORY_EMOJI(type.toUpperCase()) ?? "",
         to: `/reading/${type}`,
       })
     );
@@ -61,9 +59,7 @@ export default function ReadingLayout() {
     if (!swiperRef.current) return;
 
     // 현재 active 탭의 index를 찾아 Swiper 위치를 동기화
-    const activeIndex = typeTabs.findIndex(
-      (tab) => tab.key === activeKey
-    );
+    const activeIndex = typeTabs.findIndex((tab) => tab.key === activeKey);
 
     if (activeIndex >= 0) {
       // active 탭이 Swiper에서 잘 보이도록 위치 이동
@@ -87,10 +83,11 @@ export default function ReadingLayout() {
               className="max-w-fit first:ms-2 me-1 last:me-2"
             >
               <div
-                className={`inline-flex items-center justify-center gap-1 whitespace-nowrap text-sm font-medium transition-all cursor-pointer hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-2 ${activeKey === item.key
-                  ? "bg-accent text-accent-foreground"
-                  : ""
-                  }`}
+                className={`inline-flex items-center justify-center gap-1 whitespace-nowrap text-sm font-medium transition-all cursor-pointer hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-2 ${
+                  activeKey === item.key
+                    ? "bg-accent text-accent-foreground"
+                    : ""
+                }`}
                 onClick={() => navigate(item.to)}
               >
                 <span className="tossface">{item.emoji}</span>

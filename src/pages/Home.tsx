@@ -14,9 +14,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useReadingStore } from "@/stores/useReadingStore";
-import { getCategoryImg } from "@/utils/imageMapper";
 import { useMemo } from "react";
 import starsLottie from "../assets/lottie/stars.json";
+import { CATEGORY_EMOJI } from "@/constants/catagoryEmoji";
 
 function Home() {
   const { categories, loadingCategories } = useReadingStore();
@@ -33,9 +33,7 @@ function Home() {
   }, [categories]);
 
   if (loadingCategories && categories.length === 0) {
-    return (
-      <SkeletonHome />
-    )
+    return <SkeletonHome />;
   }
 
   return (
@@ -66,22 +64,28 @@ function Home() {
             </div>
           </CardContent>
         </Card>
-        <div className="grid grid-flow-row grid-cols-2 sm:grid-cols-3 gap-3 pt-4">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 pt-4">
           {uniqueTypes.map((category) => {
             const textLow = category.typeEn.toLowerCase();
             return (
-              <Link to={`/reading/${textLow}`} key={category.typeEn}>
-                <Card className="hover:bg-violet-50 hover:border-violet-200 hover:shadow-md transition-all group">
-                  <CardContent className="flex flex-col justify-center items-center gap-1">
-                    <div className="imgWrap group-hover:animate-bounce">
-                      <img
-                        src={getCategoryImg(textLow)}
-                        className="size-7 sm:size-8"
-                      />
-                    </div>
-                    <span className="ff_kyobo">{category.typeKr}</span>
-                  </CardContent>
-                </Card>
+              <Link
+                to={`/reading/${textLow}`}
+                key={category.typeEn}
+                className="group transition-all"
+              >
+                <div className="flex flex-col justify-center items-center p-2 pt-3 sm:p-3 sm:pt-4 rounded-lg hover:bg-muted/50">
+                  <div className="imgWrap group-hover:animate-bounce">
+                    <span className="tossface text-xl">
+                      {CATEGORY_EMOJI(category.typeEn)}
+                    </span>
+                  </div>
+                  <span
+                    className="ff_kyobo text-sm text-neutral-600 group-hover:font-semibold group-hover:tracking-tighter
+                  group-hover:text-neutral-800 text-nowrap"
+                  >
+                    {category.typeKr}
+                  </span>
+                </div>
               </Link>
             );
           })}
@@ -92,8 +96,6 @@ function Home() {
           <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
             타로 정보
           </h4>
-
-          {/* 우측 "전체 보기" */}
           <Button
             variant="ghost"
             size="sm"

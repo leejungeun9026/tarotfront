@@ -407,16 +407,11 @@ export default function Card3d({ cardId }: { cardId: number }) {
         className="card3d_wrap cursor-grab active:cursor-grabbing"
         style={{
           width: "100%",
-          height: "300px",
-          minHeight: "40vh",
-          maxHeight: "50vh",
+          height: "60vh",
         }}
       />
       <div className="relative z-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-        <Button
-          variant="outline"
-          onClick={handleFaceFront}
-        >
+        <Button variant="outline" onClick={handleFaceFront}>
           <RotateCcw />
           카드 원위치
         </Button>
